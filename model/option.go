@@ -5,13 +5,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/setting"
-	"github.com/QuantumNous/new-api/setting/config"
-	"github.com/QuantumNous/new-api/setting/operation_setting"
-	"github.com/QuantumNous/new-api/setting/performance_setting"
-	"github.com/QuantumNous/new-api/setting/ratio_setting"
-	"github.com/QuantumNous/new-api/setting/system_setting"
+	"github.com/yangjunyu/G-Master-API/common"
+	"github.com/yangjunyu/G-Master-API/setting"
+	"github.com/yangjunyu/G-Master-API/setting/config"
+	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
+	"github.com/yangjunyu/G-Master-API/setting/performance_setting"
+	"github.com/yangjunyu/G-Master-API/setting/ratio_setting"
+	"github.com/yangjunyu/G-Master-API/setting/system_setting"
 )
 
 type Option struct {

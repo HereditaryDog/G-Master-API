@@ -745,13 +745,13 @@ const SystemSetting = () => {
                   <Text>
                     {t('仅支持')}{' '}
                     <a
-                      href='https://github.com/Calcium-Ion/new-api-worker'
+                      href='https://github.com/yangjunyu/G-Master-API-worker'
                       target='_blank'
                       rel='noreferrer'
                     >
-                      new-api-worker
+                      G-Master API Worker
                     </a>{' '}
-                    {t('或其兼容new-api-worker格式的其他版本')}
+                    {t('或其兼容 G-Master API Worker 格式的其他版本')}
                   </Text>
                   <Row
                     gutter={{ xs: 8, sm: 16, md: 24, lg: 24, xl: 24, xxl: 24 }}

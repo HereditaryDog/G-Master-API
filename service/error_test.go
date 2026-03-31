@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/QuantumNous/new-api/types"
+	"github.com/yangjunyu/G-Master-API/types"
 	"github.com/stretchr/testify/require"
 )
 

@@ -27,9 +27,23 @@ const { vitePluginSemi } = pkg;
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+    alias: [
+      {
+        find: '@',
+        replacement: path.resolve(__dirname, './src'),
+      },
+      {
+        find: /^@douyinfe\/semi-ui\/lib\/es\/(.*)$/,
+        replacement: `${path.resolve(__dirname, './node_modules/@douyinfe/semi-ui/lib/es')}/$1`,
+      },
+      {
+        find: /^@douyinfe\/semi-ui\/dist\/css\/semi\.css$/,
+        replacement: path.resolve(
+          __dirname,
+          './node_modules/@douyinfe/semi-ui/dist/css/semi.css',
+        ),
+      },
+    ],
   },
   plugins: [
     codeInspectorPlugin({

@@ -23,6 +23,14 @@ import { Typography } from '@douyinfe/semi-ui';
 import { getFooterHTML, getLogo, getSystemName } from '../../helpers';
 import { StatusContext } from '../../context/Status';
 
+const PROJECT_REPO_URL = 'https://github.com/yangjunyu/G-Master-API';
+const PROJECT_LICENSE_URL = `${PROJECT_REPO_URL}/blob/main/LICENSE`;
+const PROJECT_ACK_URL = `${PROJECT_REPO_URL}/blob/main/ACKNOWLEDGMENTS.md`;
+const PROJECT_COMPOSE_URL = `${PROJECT_REPO_URL}/blob/main/docker-compose.yml`;
+const PROJECT_README_URL = `${PROJECT_REPO_URL}/blob/main/README.zh_CN.md`;
+const UPSTREAM_URL = 'https://github.com/QuantumNous/new-api';
+const ONE_API_URL = 'https://github.com/songquanpeng/one-api';
+
 const FooterBar = () => {
   const { t } = useTranslation();
   const [footer, setFooter] = useState(getFooterHTML());
@@ -63,28 +71,28 @@ const FooterBar = () => {
                 </p>
                 <div className='flex flex-col gap-4'>
                   <a
-                    href='https://docs.newapi.pro/wiki/project-introduction/'
+                    href={PROJECT_REPO_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    {t('关于项目')}
+                    GitHub Repository
                   </a>
                   <a
-                    href='https://docs.newapi.pro/support/community-interaction/'
+                    href={PROJECT_ACK_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    {t('联系我们')}
+                    ACKNOWLEDGMENTS
                   </a>
                   <a
-                    href='https://docs.newapi.pro/wiki/features-introduction/'
+                    href={PROJECT_LICENSE_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    {t('功能特性')}
+                    AGPL-3.0 License
                   </a>
                 </div>
               </div>
@@ -95,28 +103,28 @@ const FooterBar = () => {
                 </p>
                 <div className='flex flex-col gap-4'>
                   <a
-                    href='https://docs.newapi.pro/getting-started/'
+                    href={PROJECT_README_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    {t('快速开始')}
+                    README
                   </a>
                   <a
-                    href='https://docs.newapi.pro/installation/'
+                    href={PROJECT_COMPOSE_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    {t('安装指南')}
+                    Docker Compose
                   </a>
                   <a
-                    href='https://docs.newapi.pro/api/'
+                    href={PROJECT_REPO_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    {t('API 文档')}
+                    Local Deployment Notes
                   </a>
                 </div>
               </div>
@@ -127,7 +135,15 @@ const FooterBar = () => {
                 </p>
                 <div className='flex flex-col gap-4'>
                   <a
-                    href='https://github.com/songquanpeng/one-api'
+                    href={UPSTREAM_URL}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='!text-semi-color-text-1'
+                  >
+                    QuantumNous/new-api
+                  </a>
+                  <a
+                    href={ONE_API_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
@@ -135,20 +151,12 @@ const FooterBar = () => {
                     One API
                   </a>
                   <a
-                    href='https://github.com/novicezk/midjourney-proxy'
+                    href={PROJECT_ACK_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    Midjourney-Proxy
-                  </a>
-                  <a
-                    href='https://github.com/Calcium-Ion/neko-api-key-tool'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='!text-semi-color-text-1'
-                  >
-                    neko-api-key-tool
+                    Attribution Notes
                   </a>
                 </div>
               </div>
@@ -159,28 +167,28 @@ const FooterBar = () => {
                 </p>
                 <div className='flex flex-col gap-4'>
                   <a
-                    href='https://github.com/Calcium-Ion/new-api-horizon'
+                    href={PROJECT_REPO_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    new-api-horizon
+                    G-Master API
                   </a>
                   <a
-                    href='https://github.com/coaidev/coai'
+                    href={PROJECT_LICENSE_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    CoAI
+                    Open Source License
                   </a>
                   <a
-                    href='https://www.gpt-load.com/'
+                    href={PROJECT_COMPOSE_URL}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='!text-semi-color-text-1'
                   >
-                    GPT-Load
+                    Local Docker Stack
                   </a>
                 </div>
               </div>
@@ -200,12 +208,12 @@ const FooterBar = () => {
               {t('设计与开发由')}{' '}
             </span>
             <a
-              href='https://github.com/QuantumNous/new-api'
+              href={PROJECT_REPO_URL}
               target='_blank'
               rel='noopener noreferrer'
               className='!text-semi-color-primary font-medium'
             >
-              New API
+              G-Master API
             </a>
           </div>
         </div>
@@ -229,12 +237,12 @@ const FooterBar = () => {
           <div className='absolute bottom-2 right-4 text-xs !text-semi-color-text-2 opacity-70'>
             <span>{t('设计与开发由')} </span>
             <a
-              href='https://github.com/QuantumNous/new-api'
+              href={PROJECT_REPO_URL}
               target='_blank'
               rel='noopener noreferrer'
               className='!text-semi-color-primary font-medium'
             >
-              New API
+              G-Master API
             </a>
           </div>
         </div>

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/QuantumNous/new-api/common"
+	"github.com/yangjunyu/G-Master-API/common"
 )
 
 type OpenAIError struct {

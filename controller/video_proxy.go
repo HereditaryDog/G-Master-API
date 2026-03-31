@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/QuantumNous/new-api/constant"
-	"github.com/QuantumNous/new-api/logger"
-	"github.com/QuantumNous/new-api/model"
-	"github.com/QuantumNous/new-api/service"
+	"github.com/yangjunyu/G-Master-API/constant"
+	"github.com/yangjunyu/G-Master-API/logger"
+	"github.com/yangjunyu/G-Master-API/model"
+	"github.com/yangjunyu/G-Master-API/service"
 
 	"github.com/gin-gonic/gin"
 )

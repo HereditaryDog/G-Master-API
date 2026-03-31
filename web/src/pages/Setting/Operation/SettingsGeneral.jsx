@@ -185,7 +185,7 @@ export default function GeneralSettings(props) {
                   field={'general_setting.docs_link'}
                   label={t('文档地址')}
                   initValue={''}
-                  placeholder={t('例如 https://docs.newapi.pro')}
+                  placeholder={t('例如 https://github.com/yangjunyu/G-Master-API')}
                   onChange={handleFieldChange('general_setting.docs_link')}
                   showClear
                 />

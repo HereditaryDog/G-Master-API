@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/logger"
-	"github.com/QuantumNous/new-api/model"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	"github.com/QuantumNous/new-api/setting/model_setting"
-	"github.com/QuantumNous/new-api/types"
+	"github.com/yangjunyu/G-Master-API/common"
+	"github.com/yangjunyu/G-Master-API/logger"
+	"github.com/yangjunyu/G-Master-API/model"
+	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
+	"github.com/yangjunyu/G-Master-API/setting/model_setting"
+	"github.com/yangjunyu/G-Master-API/types"
 
 	"github.com/shopspring/decimal"
 

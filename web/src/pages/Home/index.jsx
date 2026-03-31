@@ -80,6 +80,7 @@ const Home = () => {
   const endpointItems = API_ENDPOINTS.map((e) => ({ value: e }));
   const [endpointIndex, setEndpointIndex] = useState(0);
   const isChinese = i18n.language.startsWith('zh');
+  const repoUrl = 'https://github.com/yangjunyu/G-Master-API';
 
   const displayHomePageContent = async () => {
     setHomePageContent(localStorage.getItem('home_page_content') || '');
@@ -230,10 +231,7 @@ const Home = () => {
                       className='flex items-center !rounded-3xl px-6 py-2'
                       icon={<IconGithubLogo />}
                       onClick={() =>
-                        window.open(
-                          'https://github.com/QuantumNous/new-api',
-                          '_blank',
-                        )
+                        window.open(repoUrl, '_blank')
                       }
                     >
                       {statusState.status.version}

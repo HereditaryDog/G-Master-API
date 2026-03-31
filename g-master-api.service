@@ -1,0 +1,18 @@
+# File path: /etc/systemd/system/g-master-api.service
+# sudo systemctl daemon-reload
+# sudo systemctl start g-master-api
+# sudo systemctl enable g-master-api
+# sudo systemctl status g-master-api
+[Unit]
+Description=G-Master API Service
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/path/to/G-Master-API
+ExecStart=/path/to/G-Master-API/g-master-api --port 3000 --log-dir /path/to/G-Master-API/logs
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,6 @@
 package system_setting
 
-import "github.com/QuantumNous/new-api/setting/config"
+import "github.com/yangjunyu/G-Master-API/setting/config"
 
 type OIDCSettings struct {
 	Enabled               bool   `json:"enabled"`

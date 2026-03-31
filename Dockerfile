@@ -1,14 +1,14 @@
-FROM oven/bun:1@sha256:0733e50325078969732ebe3b15ce4c4be5082f18c4ac1a0f0ca4839c2e4e42a7 AS builder
+FROM public.ecr.aws/docker/library/node:22-alpine AS web-builder
 
 WORKDIR /build
-COPY web/package.json .
-COPY web/bun.lock .
-RUN bun install
-COPY ./web .
-COPY ./VERSION .
-RUN DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) bun run build
+COPY web/package.json ./
+RUN npm install --legacy-peer-deps --no-audit --no-fund
+COPY ./web ./
+COPY ./VERSION ./
+ENV NODE_OPTIONS=--max-old-space-size=4096
+RUN DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build
 
-FROM golang:1.26.1-alpine@sha256:2389ebfa5b7f43eeafbd6be0c3700cc46690ef842ad962f6c5bd6be49ed82039 AS builder2
+FROM public.ecr.aws/docker/library/golang:1.25.1-alpine AS builder
 ENV GO111MODULE=on CGO_ENABLED=0
 
 ARG TARGETOS
@@ -22,17 +22,17 @@ ADD go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-COPY --from=builder /build/dist ./web/dist
-RUN go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$(cat VERSION)'" -o new-api
+COPY --from=web-builder /build/dist ./web/dist
+RUN go build -ldflags "-s -w -X 'github.com/yangjunyu/G-Master-API/common.Version=$(cat VERSION)'" -o g-master-api
 
-FROM debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a
+FROM public.ecr.aws/docker/library/debian:bookworm-slim
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates tzdata libasan8 wget \
     && rm -rf /var/lib/apt/lists/* \
     && update-ca-certificates
 
-COPY --from=builder2 /build/new-api /
+COPY --from=builder /build/g-master-api /
 EXPOSE 3000
 WORKDIR /data
-ENTRYPOINT ["/new-api"]
+ENTRYPOINT ["/g-master-api"]

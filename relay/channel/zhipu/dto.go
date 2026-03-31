@@ -3,7 +3,7 @@ package zhipu
 import (
 	"time"
 
-	"github.com/QuantumNous/new-api/dto"
+	"github.com/yangjunyu/G-Master-API/dto"
 )
 
 type ZhipuMessage struct {

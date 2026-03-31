@@ -1,6 +1,6 @@
 package common
 
-import "github.com/QuantumNous/new-api/constant"
+import "github.com/yangjunyu/G-Master-API/constant"
 
 // EndpointInfo 描述单个端点的默认请求信息
 // path: 上游路径

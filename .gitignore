@@ -11,7 +11,7 @@ logs
 web/dist
 .env
 one-api
-new-api
+g-master-api
 /__debug_bin*
 .DS_Store
 tiktoken_cache

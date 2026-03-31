@@ -32,6 +32,9 @@ const About = () => {
   const [about, setAbout] = useState('');
   const [aboutLoaded, setAboutLoaded] = useState(false);
   const currentYear = new Date().getFullYear();
+  const repoUrl = 'https://github.com/yangjunyu/G-Master-API';
+  const acknowledgmentsUrl = `${repoUrl}/blob/main/ACKNOWLEDGMENTS.md`;
+  const upstreamUrl = 'https://github.com/QuantumNous/new-api';
 
   const displayAbout = async () => {
     setAbout(localStorage.getItem('about') || '');
@@ -62,72 +65,50 @@ const About = () => {
   const customDescription = (
     <div style={{ textAlign: 'center' }}>
       <p>{t('可在设置页面设置关于内容，支持 HTML & Markdown')}</p>
-      {t('New API项目仓库地址：')}
-      <a
-        href='https://github.com/QuantumNous/new-api'
-        target='_blank'
-        rel='noopener noreferrer'
-        className='!text-semi-color-primary'
-      >
-        https://github.com/QuantumNous/new-api
-      </a>
       <p>
+        G-Master API repository:{' '}
         <a
-          href='https://github.com/QuantumNous/new-api'
+          href={repoUrl}
           target='_blank'
           rel='noopener noreferrer'
           className='!text-semi-color-primary'
         >
-          NewAPI
-        </a>{' '}
-        {t('© {{currentYear}}', { currentYear })}{' '}
-        <a
-          href='https://github.com/QuantumNous'
-          target='_blank'
-          rel='noopener noreferrer'
-          className='!text-semi-color-primary'
-        >
-          QuantumNous
-        </a>{' '}
-        {t('| 基于')}{' '}
-        <a
-          href='https://github.com/songquanpeng/one-api/releases/tag/v0.5.4'
-          target='_blank'
-          rel='noopener noreferrer'
-          className='!text-semi-color-primary'
-        >
-          One API v0.5.4
-        </a>{' '}
-        © 2023{' '}
-        <a
-          href='https://github.com/songquanpeng'
-          target='_blank'
-          rel='noopener noreferrer'
-          className='!text-semi-color-primary'
-        >
-          JustSong
+          {repoUrl}
         </a>
       </p>
       <p>
-        {t('本项目根据')}
         <a
-          href='https://github.com/songquanpeng/one-api/blob/v0.5.4/LICENSE'
+          href={repoUrl}
           target='_blank'
           rel='noopener noreferrer'
           className='!text-semi-color-primary'
         >
-          {t('MIT许可证')}
-        </a>
-        {t('授权，需在遵守')}
+          G-Master API
+        </a>{' '}
+        © {currentYear} yangjunyu.
+      </p>
+      <p>
+        Based on{' '}
         <a
-          href='https://www.gnu.org/licenses/agpl-3.0.html'
+          href={upstreamUrl}
           target='_blank'
           rel='noopener noreferrer'
           className='!text-semi-color-primary'
         >
-          {t('AGPL v3.0协议')}
+          QuantumNous/new-api
+        </a>{' '}
+        with the original AGPL-3.0 license retained.
+      </p>
+      <p>
+        <a
+          href={acknowledgmentsUrl}
+          target='_blank'
+          rel='noopener noreferrer'
+          className='!text-semi-color-primary'
+        >
+          ACKNOWLEDGMENTS.md
         </a>
-        {t('的前提下使用。')}
+        {' '}records upstream attribution, local modifications, and release notes for this fork.
       </p>
     </div>
   );

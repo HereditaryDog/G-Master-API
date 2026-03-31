@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/pkg/cachex"
+	"github.com/yangjunyu/G-Master-API/common"
+	"github.com/yangjunyu/G-Master-API/pkg/cachex"
 	"github.com/samber/hot"
 	"gorm.io/gorm"
 )
@@ -38,8 +38,8 @@ var (
 )
 
 const (
-	subscriptionPlanCacheNamespace     = "new-api:subscription_plan:v1"
-	subscriptionPlanInfoCacheNamespace = "new-api:subscription_plan_info:v1"
+	subscriptionPlanCacheNamespace     = "g-master-api:subscription_plan:v1"
+	subscriptionPlanInfoCacheNamespace = "g-master-api:subscription_plan_info:v1"
 )
 
 var (
