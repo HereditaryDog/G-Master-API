@@ -86,6 +86,23 @@ git checkout <commit-or-tag>
 
 升级或回滚之前，建议先备份数据库和 `data/`、`logs/` 目录。
 
+## 公网隧道内测
+
+如果你想做小规模内部测试，可以直接用下面这组脚本拉起一个临时公网地址：
+
+```bash
+./bin/start-quick-tunnel.sh
+./bin/smoke-test-public.sh
+```
+
+测试结束后关闭隧道：
+
+```bash
+./bin/stop-quick-tunnel.sh
+```
+
+这套方案基于临时 Cloudflare Quick Tunnel，只适合短时间内测，不适合长期生产暴露。
+
 ## 许可证与归属
 
 本项目继续使用 `AGPL-3.0`。上游归属、分叉来源和本次改造说明见 [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md)。

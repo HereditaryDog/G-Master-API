@@ -86,6 +86,23 @@ git checkout <commit-or-tag>
 
 Always create a database backup before upgrades or rollbacks.
 
+## Internal testing via public tunnel
+
+Use the helper scripts below to open a temporary public URL for small-scale internal testing:
+
+```bash
+./bin/start-quick-tunnel.sh
+./bin/smoke-test-public.sh
+```
+
+Stop the tunnel when testing is complete:
+
+```bash
+./bin/stop-quick-tunnel.sh
+```
+
+This uses a temporary Cloudflare Quick Tunnel and is intended for short-lived internal testing only, not production exposure.
+
 ## License and attribution
 
 This project continues to ship under `AGPL-3.0`. Upstream attribution and fork notes live in [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md).
