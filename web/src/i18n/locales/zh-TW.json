@@ -243,7 +243,7 @@
     "为一个 JSON 文本，键为组名称，值为倍率": "為一個 JSON 文本，鍵為組名稱，值為倍率",
     "为了保护账户安全，请验证您的两步验证码。": "為了保護帳號安全，請驗證您的兩步驗證碼。",
     "为了保护账户安全，请验证您的身份。": "為了保護帳號安全，請驗證您的身份。",
-    "为空则默认使用服务器地址，多个 Origin 用逗号分隔，例如 https://newapi.pro,https://newapi.com ,注意不能携带[]，需使用https": "為空則預設使用伺服器位址，多個 Origin 用逗號分隔，例如 https://newapi.pro,https://newapi.com ,注意不能攜帶[]，需使用https",
+    "为空则默认使用服务器地址，多个 Origin 用逗号分隔，例如 https://gmasterapi.example.com,https://api.example.com ,注意不能携带[]，需使用https": "為空則預設使用伺服器位址，多個 Origin 用逗號分隔，例如 https://gmasterapi.example.com,https://api.example.com ,注意不能攜帶[]，需使用https",
     "主页链接填": "首頁連結填",
     "之前的所有日志": "之前的所有日誌",
     "二步验证已重置": "二步驗證已重置",

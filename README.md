@@ -44,21 +44,22 @@ http://127.0.0.1:3000
 - [`.env.example`](./.env.example)
 - [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md)
 - [`docs/installation/BT.md`](./docs/installation/BT.md)
+- [`bin/backup-postgres.sh`](./bin/backup-postgres.sh)
+- [`bin/restore-postgres.sh`](./bin/restore-postgres.sh)
+- [`bin/rebuild-local.sh`](./bin/rebuild-local.sh)
 
 ## Backup and restore
 
 ### Backup PostgreSQL
 
 ```bash
-docker compose exec -T g-master-api-postgres \
-  pg_dump -U gmaster g_master_api > backup-g-master-api.sql
+./bin/backup-postgres.sh
 ```
 
 ### Restore PostgreSQL
 
 ```bash
-docker compose exec -T g-master-api-postgres \
-  psql -U gmaster g_master_api < backup-g-master-api.sql
+./bin/restore-postgres.sh backup-g-master-api.sql
 ```
 
 ### Backup mounted data
@@ -73,14 +74,14 @@ tar -czf g-master-api-data.tar.gz data logs
 
 ```bash
 git pull
-docker compose up -d --build
+./bin/rebuild-local.sh
 ```
 
 ### Roll back to a previous commit or tag
 
 ```bash
 git checkout <commit-or-tag>
-docker compose up -d --build
+./bin/rebuild-local.sh
 ```
 
 Always create a database backup before upgrades or rollbacks.

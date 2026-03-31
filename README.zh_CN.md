@@ -44,21 +44,22 @@ http://127.0.0.1:3000
 - [`.env.example`](./.env.example)
 - [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md)
 - [`docs/installation/BT.md`](./docs/installation/BT.md)
+- [`bin/backup-postgres.sh`](./bin/backup-postgres.sh)
+- [`bin/restore-postgres.sh`](./bin/restore-postgres.sh)
+- [`bin/rebuild-local.sh`](./bin/rebuild-local.sh)
 
 ## 备份与恢复
 
 ### 备份 PostgreSQL
 
 ```bash
-docker compose exec -T g-master-api-postgres \
-  pg_dump -U gmaster g_master_api > backup-g-master-api.sql
+./bin/backup-postgres.sh
 ```
 
 ### 恢复 PostgreSQL
 
 ```bash
-docker compose exec -T g-master-api-postgres \
-  psql -U gmaster g_master_api < backup-g-master-api.sql
+./bin/restore-postgres.sh backup-g-master-api.sql
 ```
 
 ### 备份挂载目录
@@ -73,14 +74,14 @@ tar -czf g-master-api-data.tar.gz data logs
 
 ```bash
 git pull
-docker compose up -d --build
+./bin/rebuild-local.sh
 ```
 
 ### 回滚到历史版本
 
 ```bash
 git checkout <commit-or-tag>
-docker compose up -d --build
+./bin/rebuild-local.sh
 ```
 
 升级或回滚之前，建议先备份数据库和 `data/`、`logs/` 目录。
