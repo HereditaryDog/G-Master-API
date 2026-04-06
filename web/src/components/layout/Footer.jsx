@@ -38,6 +38,15 @@ const FooterBar = () => {
   const logo = getLogo();
   const [statusState] = useContext(StatusContext);
   const isDemoSiteMode = statusState?.status?.demo_site_enabled || false;
+  const runtimeVersion =
+    typeof statusState?.status?.version === 'string'
+      ? statusState.status.version.trim()
+      : '';
+  const buildVersion =
+    typeof import.meta.env.VITE_REACT_APP_VERSION === 'string'
+      ? import.meta.env.VITE_REACT_APP_VERSION.trim()
+      : '';
+  const displayVersion = runtimeVersion || buildVersion;
 
   const loadFooter = () => {
     let footer_html = localStorage.getItem('footer_html');
@@ -50,12 +59,17 @@ const FooterBar = () => {
 
   const customFooter = useMemo(
     () => (
-      <footer className='relative h-auto py-16 px-6 md:px-24 w-full flex flex-col items-center justify-between overflow-hidden'>
-        <div className='absolute hidden md:block top-[204px] left-[-100px] w-[151px] h-[151px] rounded-full bg-[#FFD166]'></div>
-        <div className='absolute md:hidden bottom-[20px] left-[-50px] w-[80px] h-[80px] rounded-full bg-[#FFD166] opacity-60'></div>
+      <footer className='relative h-auto w-full overflow-hidden border-t border-semi-color-border px-6 pb-5 pt-8 md:px-20 md:pb-6 md:pt-9'>
+        <div
+          className='absolute inset-x-0 top-0 h-px opacity-60'
+          style={{
+            background:
+              'linear-gradient(90deg, transparent, var(--semi-color-primary), transparent)',
+          }}
+        ></div>
 
         {isDemoSiteMode && (
-          <div className='flex flex-col md:flex-row justify-between w-full max-w-[1110px] mb-10 gap-8'>
+          <div className='mb-8 flex w-full max-w-[1110px] flex-col justify-between gap-8 md:flex-row'>
             <div className='flex-shrink-0'>
               <img
                 src={logo}
@@ -196,11 +210,16 @@ const FooterBar = () => {
           </div>
         )}
 
-        <div className='flex flex-col md:flex-row items-center justify-between w-full max-w-[1110px] gap-6'>
+        <div className='flex w-full max-w-[1110px] flex-col items-center justify-between gap-3 md:flex-row md:gap-6'>
           <div className='flex flex-wrap items-center gap-2'>
             <Typography.Text className='text-sm !text-semi-color-text-1'>
               © {currentYear} {systemName}. {t('版权所有')}
             </Typography.Text>
+            {displayVersion && (
+              <Typography.Text className='text-sm !text-semi-color-text-2'>
+                {t('当前版本')} {displayVersion}
+              </Typography.Text>
+            )}
           </div>
 
           <div className='text-sm'>
@@ -219,7 +238,7 @@ const FooterBar = () => {
         </div>
       </footer>
     ),
-    [logo, systemName, t, currentYear, isDemoSiteMode],
+    [logo, systemName, t, currentYear, isDemoSiteMode, displayVersion],
   );
 
   useEffect(() => {
@@ -231,10 +250,17 @@ const FooterBar = () => {
       {footer ? (
         <footer className='relative h-auto py-4 px-6 md:px-24 w-full flex items-center justify-center overflow-hidden'>
           <div className='flex flex-col md:flex-row items-center justify-between w-full max-w-[1110px] gap-4'>
-            <div
-              className='custom-footer na-cb6feafeb3990c78 text-sm !text-semi-color-text-1'
-              dangerouslySetInnerHTML={{ __html: footer }}
-            ></div>
+            <div className='flex flex-wrap items-center gap-2'>
+              <div
+                className='custom-footer na-cb6feafeb3990c78 text-sm !text-semi-color-text-1'
+                dangerouslySetInnerHTML={{ __html: footer }}
+              ></div>
+              {displayVersion && (
+                <Typography.Text className='text-sm !text-semi-color-text-2'>
+                  {t('当前版本')} {displayVersion}
+                </Typography.Text>
+              )}
+            </div>
             <div className='text-sm flex-shrink-0'>
               <span className='!text-semi-color-text-1'>
                 {t('设计与开发由')}{' '}

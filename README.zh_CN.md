@@ -103,6 +103,76 @@ git checkout <commit-or-tag>
 
 这套方案基于临时 Cloudflare Quick Tunnel，只适合短时间内测，不适合长期生产暴露。
 
+## 自有域名 + Cloudflare Tunnel
+
+如果你已经买了自己的域名，比如 `gmapi.fun`，并且当前服务还跑在本机上，推荐把临时 Quick Tunnel 升级成“Cloudflare Tunnel + 自有域名”的固定入口。这样本地测试阶段就能用正式域名，后面再迁移到腾讯云服务器时，只需要切换回源方式，不必改对外访问地址。
+
+### 1. 先在 Cloudflare 接管 `gmapi.fun`
+
+1. 在 Cloudflare 添加站点 `gmapi.fun`
+2. 按 Cloudflare 提示，把腾讯云域名控制台里的 nameserver 改成 Cloudflare 分配的那两条
+3. 等待 Cloudflare 把站点状态变成 `Active`
+
+### 2. 在 Cloudflare 控制台创建 Tunnel
+
+推荐用 Cloudflare Dashboard 创建一个远程托管的 Tunnel：
+
+1. 打开 Zero Trust 控制台
+2. 创建一个 `Cloudflared` Tunnel，例如命名为 `g-master-api-local`
+3. 给这个 Tunnel 添加一个 Public Hostname：
+
+```text
+Hostname: gmapi.fun
+Service: http://127.0.0.1:3000
+```
+
+4. 保存后，Cloudflare 会给你一条带 `--token` 的安装命令
+5. 复制里面的 token
+
+### 3. 在本机填入 token 并启动
+
+```bash
+cp .cloudflared-domain.env.example .cloudflared-domain.env
+```
+
+把 `.cloudflared-domain.env` 里的 token 和域名改好：
+
+```text
+CLOUDFLARE_TUNNEL_TOKEN=你的_tunnel_token
+CLOUDFLARE_TUNNEL_HOSTNAME=gmapi.fun
+TUNNEL_TARGET=http://127.0.0.1:3000
+```
+
+然后启动命名隧道：
+
+```bash
+./bin/start-domain-tunnel.sh
+```
+
+停止命名隧道：
+
+```bash
+./bin/stop-domain-tunnel.sh
+```
+
+### 4. 把系统里的对外地址切成正式域名
+
+```bash
+./bin/update-server-address.sh https://gmapi.fun
+./bin/smoke-test-public.sh https://gmapi.fun
+```
+
+这样后台生成的回调地址、OAuth 重定向地址、Passkey origin、页面里展示的服务器地址就会统一走 `https://gmapi.fun`。
+
+### 5. 以后迁移到腾讯云服务器
+
+等你后面把项目迁到腾讯云服务器，有两种做法：
+
+- 继续用 Cloudflare：把 Tunnel 的回源改成腾讯云服务器
+- 不再用 Cloudflare：把 `gmapi.fun` 的 DNS/回源切回腾讯云，再执行一次 `./bin/update-server-address.sh https://gmapi.fun`
+
+无论走哪条路，只要域名还是 `gmapi.fun`，客户端接入地址都不用变。
+
 ## 许可证与归属
 
 本项目继续使用 `AGPL-3.0`。上游归属、分叉来源和本次改造说明见 [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md)。

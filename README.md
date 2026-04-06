@@ -103,6 +103,58 @@ Stop the tunnel when testing is complete:
 
 This uses a temporary Cloudflare Quick Tunnel and is intended for short-lived internal testing only, not production exposure.
 
+## Custom domain via Cloudflare Tunnel
+
+If you already own a domain such as `gmapi.fun` and the stack is still running on your local machine, you can replace the temporary Quick Tunnel with a named Cloudflare Tunnel and keep a stable public hostname during the local testing phase.
+
+### 1. Move `gmapi.fun` to Cloudflare DNS
+
+1. Add `gmapi.fun` to Cloudflare
+2. Replace the Tencent Cloud nameservers with the two nameservers assigned by Cloudflare
+3. Wait until the zone becomes `Active`
+
+### 2. Create a Cloudflare Tunnel in the dashboard
+
+Use the Cloudflare dashboard to create a remotely-managed `Cloudflared` tunnel, for example `g-master-api-local`, and add this public hostname:
+
+```text
+Hostname: gmapi.fun
+Service: http://127.0.0.1:3000
+```
+
+Cloudflare will show you an install command containing a `--token` value. Copy that token.
+
+### 3. Store the token locally and start the tunnel
+
+```bash
+cp .cloudflared-domain.env.example .cloudflared-domain.env
+```
+
+Fill in the token and hostname, then start the named tunnel:
+
+```bash
+./bin/start-domain-tunnel.sh
+```
+
+Stop it when needed:
+
+```bash
+./bin/stop-domain-tunnel.sh
+```
+
+### 4. Update the public server address
+
+```bash
+./bin/update-server-address.sh https://gmapi.fun
+./bin/smoke-test-public.sh https://gmapi.fun
+```
+
+This keeps callbacks, OAuth redirects, Passkey origin values, and UI-facing server links aligned with `https://gmapi.fun`.
+
+### 5. Later migration to Tencent Cloud
+
+When you move the stack to a Tencent Cloud server later, you can either keep Cloudflare in front and point the tunnel/origin to the VPS, or switch DNS/origin handling back to Tencent Cloud and run `./bin/update-server-address.sh https://gmapi.fun` again. As long as the public domain stays `gmapi.fun`, clients do not need a base URL change.
+
 ## License and attribution
 
 This project continues to ship under `AGPL-3.0`. Upstream attribution and fork notes live in [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md).

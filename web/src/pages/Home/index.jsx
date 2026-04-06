@@ -81,6 +81,103 @@ const Home = () => {
   const [endpointIndex, setEndpointIndex] = useState(0);
   const isChinese = i18n.language.startsWith('zh');
   const repoUrl = 'https://github.com/yangjunyu/G-Master-API';
+  const featureCards = isChinese
+    ? [
+        {
+          index: '01',
+          title: '统一模型入口',
+          description:
+            '把不同供应商的调用方式收拢成一个兼容 OpenAI 的访问地址，减少切换成本。',
+        },
+        {
+          index: '02',
+          title: '渠道池化调度',
+          description:
+            '支持多密钥聚合、分组和轮询，适合小团队做内测、分流和稳定性验证。',
+        },
+        {
+          index: '03',
+          title: '本地优先部署',
+          description:
+            'Docker 即可启动，方便先在本地跑通，再逐步迁移到云服务器和正式环境。',
+        },
+      ]
+    : [
+        {
+          index: '01',
+          title: 'Unified Model Access',
+          description:
+            'Use one OpenAI-compatible gateway instead of switching between multiple upstream formats.',
+        },
+        {
+          index: '02',
+          title: 'Pooled Channel Routing',
+          description:
+            'Aggregate multiple keys with grouping and round-robin routing for small team testing.',
+        },
+        {
+          index: '03',
+          title: 'Local-First Deployment',
+          description:
+            'Start with Docker locally, validate quickly, then move to a server when you are ready.',
+        },
+      ];
+  const quickSteps = isChinese
+    ? [
+        '添加上游渠道并完成测试',
+        '创建令牌并分配分组',
+        '用标准 SDK 或 curl 开始调用',
+      ]
+    : [
+        'Add upstream channels and verify them',
+        'Create tokens and assign groups',
+        'Start calling with SDKs or curl',
+      ];
+  const valueTitle = isChinese ? '为什么选择 G-Master API' : 'Why G-Master API';
+  const valueDescription = isChinese
+    ? '把渠道、密钥、转发和测试流程集中到一个入口，更适合先做内部验证，再逐步上线。'
+    : 'Bring channels, keys, routing, and testing into one entry point before rolling out more broadly.';
+  const quickStartTitle = isChinese
+    ? '从接入到可用，通常只需要这 3 步'
+    : 'From setup to usable in 3 steps';
+  const quickStartDescription = isChinese
+    ? '适合个人项目、小团队共享账号池，以及本地 Docker 的快速验证。'
+    : 'Well suited for solo projects, small teams, and quick Docker-based validation.';
+  const providerSectionTitle = isChinese
+    ? '兼容生态矩阵'
+    : 'Compatible provider ecosystem';
+  const providerSectionDescription = isChinese
+    ? '统一接入不同供应商与能力类型，用同一个网关管理文本、推理、图像和音频模型。'
+    : 'Bring multiple providers and capability types into one gateway for text, reasoning, image, and audio workloads.';
+  const providerHighlights = isChinese
+    ? ['OpenAI 兼容', '多渠道调度', '文本 / 图像 / 音频']
+    : ['OpenAI Compatible', 'Multi-channel Routing', 'Text / Image / Audio'];
+  const providerRows = [
+    [
+      { label: 'OpenAI', icon: <OpenAI size={24} /> },
+      { label: 'Claude', icon: <Claude.Color size={24} /> },
+      { label: 'Gemini', icon: <Gemini.Color size={24} /> },
+      { label: 'Moonshot', icon: <Moonshot size={24} /> },
+      { label: 'DeepSeek', icon: <DeepSeek.Color size={24} /> },
+      { label: 'Qwen', icon: <Qwen.Color size={24} /> },
+      { label: 'Zhipu', icon: <Zhipu.Color size={24} /> },
+      { label: 'Volcengine', icon: <Volcengine.Color size={24} /> },
+      { label: 'MiniMax', icon: <Minimax.Color size={24} /> },
+      { label: 'Azure AI', icon: <AzureAI.Color size={24} /> },
+    ],
+    [
+      { label: 'xAI', icon: <XAI size={24} /> },
+      { label: 'Cohere', icon: <Cohere.Color size={24} /> },
+      { label: 'Suno', icon: <Suno size={24} /> },
+      { label: 'Spark', icon: <Spark.Color size={24} /> },
+      { label: 'Qingyan', icon: <Qingyan.Color size={24} /> },
+      { label: 'Wenxin', icon: <Wenxin.Color size={24} /> },
+      { label: 'Hunyuan', icon: <Hunyuan.Color size={24} /> },
+      { label: 'Midjourney', icon: <Midjourney size={24} /> },
+      { label: 'Grok', icon: <Grok size={24} /> },
+      { label: 'Xinference', icon: <Xinference.Color size={24} /> },
+    ],
+  ];
 
   const displayHomePageContent = async () => {
     setHomePageContent(localStorage.getItem('home_page_content') || '');
@@ -252,85 +349,132 @@ const Home = () => {
 
                 {/* 框架兼容性图标 */}
                 <div className='mt-12 md:mt-16 lg:mt-20 w-full'>
-                  <div className='flex items-center mb-6 md:mb-8 justify-center'>
-                    <Text
-                      type='tertiary'
-                      className='text-lg md:text-xl lg:text-2xl font-light'
-                    >
-                      {t('支持众多的大模型供应商')}
-                    </Text>
-                  </div>
-                  <div className='flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-5xl mx-auto px-4'>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Moonshot size={40} />
+                  <div className='provider-showcase'>
+                    <div className='provider-showcase-header'>
+                      <div className='text-left'>
+                        <div className='provider-showcase-title'>
+                          {providerSectionTitle}
+                        </div>
+                        <p className='provider-showcase-description'>
+                          {providerSectionDescription}
+                        </p>
+                      </div>
+                      <div className='provider-showcase-count'>
+                        <span className='provider-showcase-count-number'>
+                          20+
+                        </span>
+                        <span>{t('支持众多的大模型供应商')}</span>
+                      </div>
                     </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <OpenAI size={40} />
+
+                    <div className='provider-highlight-row'>
+                      {providerHighlights.map((item) => (
+                        <span key={item} className='provider-highlight-pill'>
+                          {item}
+                        </span>
+                      ))}
                     </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <XAI size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Zhipu.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Volcengine.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Cohere.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Claude.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Gemini.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Suno size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Minimax.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Wenxin.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Spark.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Qingyan.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <DeepSeek.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Qwen.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Midjourney size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Grok size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <AzureAI.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Hunyuan.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Xinference.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Typography.Text className='!text-lg sm:!text-xl md:!text-2xl lg:!text-3xl font-bold'>
-                        30+
-                      </Typography.Text>
-                    </div>
+
+                    {providerRows.map((row, rowIndex) => (
+                      <div
+                        key={`row-${rowIndex}`}
+                        className={`provider-marquee ${rowIndex % 2 === 1 ? 'reverse' : ''}`}
+                      >
+                        <div className='provider-marquee-track'>
+                          {[...row, ...row].map((provider, index) => (
+                            <div
+                              key={`${provider.label}-${rowIndex}-${index}`}
+                              className='provider-chip'
+                            >
+                              <div className='provider-chip-icon'>
+                                {provider.icon}
+                              </div>
+                              <span className='provider-chip-label'>
+                                {provider.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <section className='w-full border-b border-semi-color-border px-4 py-12 md:py-14'>
+            <div className='mx-auto max-w-6xl'>
+              <div className='mx-auto mb-8 max-w-3xl text-center md:mb-10'>
+                <Text className='!text-2xl md:!text-3xl !font-semibold !text-semi-color-text-0'>
+                  {valueTitle}
+                </Text>
+                <p className='mt-3 text-sm leading-7 text-semi-color-text-1 md:text-base'>
+                  {valueDescription}
+                </p>
+              </div>
+
+              <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
+                {featureCards.map((card) => (
+                  <div
+                    key={card.index}
+                    className='rounded-3xl border border-semi-color-border p-6 backdrop-blur'
+                    style={{
+                      backgroundColor: 'var(--semi-color-bg-0)',
+                      boxShadow:
+                        '0 12px 40px -24px rgba(var(--gm-brand-primary-rgb), 0.45)',
+                    }}
+                  >
+                    <div className='mb-4 inline-flex rounded-full bg-semi-color-primary-light-default px-3 py-1 text-xs font-semibold text-semi-color-primary'>
+                      {card.index}
+                    </div>
+                    <h3 className='text-lg font-semibold text-semi-color-text-0'>
+                      {card.title}
+                    </h3>
+                    <p className='mt-3 text-sm leading-7 text-semi-color-text-1'>
+                      {card.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className='mt-6 rounded-[28px] border border-semi-color-border p-6 md:mt-8 md:p-7'
+                style={{
+                  background:
+                    'linear-gradient(90deg, var(--semi-color-primary-light-default), var(--semi-color-tertiary-light-default))',
+                }}
+              >
+                <div className='flex flex-col gap-6 md:flex-row md:items-center md:justify-between'>
+                  <div className='max-w-xl'>
+                    <Text className='!text-xl md:!text-2xl !font-semibold !text-semi-color-text-0'>
+                      {quickStartTitle}
+                    </Text>
+                    <p className='mt-2 text-sm leading-7 text-semi-color-text-1 md:text-base'>
+                      {quickStartDescription}
+                    </p>
+                  </div>
+
+                  <div className='grid flex-1 grid-cols-1 gap-3 md:grid-cols-3'>
+                    {quickSteps.map((step, index) => (
+                      <div
+                        key={step}
+                        className='rounded-2xl px-4 py-4 shadow-sm backdrop-blur'
+                        style={{ backgroundColor: 'var(--semi-color-bg-0)' }}
+                      >
+                        <div className='text-xs font-semibold uppercase tracking-[0.18em] text-semi-color-primary'>
+                          Step {index + 1}
+                        </div>
+                        <div className='mt-2 text-sm font-medium leading-6 text-semi-color-text-0'>
+                          {step}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       ) : (
         <div className='overflow-x-hidden w-full'>

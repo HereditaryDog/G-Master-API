@@ -32,3 +32,6 @@ data/
 .tools/
 .cloudflared.pid
 .cloudflared.url
+.cloudflared-domain.env
+.cloudflared-domain.pid
+.cloudflared-domain.url
