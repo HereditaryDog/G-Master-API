@@ -2,6 +2,10 @@
 
 G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with the current focus on local Docker verification first and small-scope rollout second.
 
+Current release: `v0.12.1-gmaster.2`
+
+Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
+
 ## What changed in this fork
 
 - The public product name is now `G-Master API`
@@ -9,6 +13,13 @@ G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](http
 - Default service, container, binary, and systemd names now use `g-master-api`
 - Project-facing links point to this repository
 - The upstream `AGPL-3.0` license is preserved
+
+## Latest release highlights
+
+- A rebuilt landing page styled after the `Zen-AI` one-page experience, adapted to `G-Master API` branding and copy
+- A unified dashboard and model pricing theme with refreshed gradients, glassmorphism cards, and updated header/sidebar visuals
+- A refreshed default logo treatment and page background system for more consistent brand presentation
+- Fixes for homepage typing animation stability and dashboard stat icon visibility
 
 ## Stack
 

@@ -95,7 +95,11 @@ const PricingTable = ({
 
   const ModelTable = useMemo(
     () => (
-      <Card className='!rounded-xl overflow-hidden' bordered={false}>
+      <Card
+        className='gm-pricing-table-card !rounded-[28px] overflow-hidden'
+        bordered={false}
+        bodyStyle={{ padding: 0 }}
+      >
         <Table
           columns={processedColumns}
           dataSource={filteredModels}

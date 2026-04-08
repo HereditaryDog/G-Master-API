@@ -91,14 +91,16 @@ const PricingSidebar = ({
     });
 
   return (
-    <div className='p-2'>
+    <div className='gm-pricing-sidebar-panel p-3'>
       <div className='flex items-center justify-between mb-6'>
-        <div className='text-lg font-semibold text-gray-800'>{t('筛选')}</div>
+        <div className='gm-pricing-sidebar-title text-lg font-semibold text-gray-800'>
+          {t('筛选')}
+        </div>
         <Button
           theme='outline'
           type='tertiary'
           onClick={handleResetFilters}
-          className='text-gray-500 hover:text-gray-700'
+          className='gm-pricing-reset-button text-gray-500 hover:text-gray-700'
         >
           {t('重置')}
         </Button>

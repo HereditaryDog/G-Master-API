@@ -58,7 +58,7 @@ const UserArea = ({
           position='bottomRight'
           getPopupContainer={() => dropdownRef.current}
           render={
-            <Dropdown.Menu className='!bg-semi-color-bg-overlay !border-semi-color-border !shadow-lg !rounded-lg dark:!bg-gray-700 dark:!border-gray-600'>
+            <Dropdown.Menu className='gm-user-dropdown !bg-semi-color-bg-overlay !border-semi-color-border !shadow-lg !rounded-lg dark:!bg-gray-700 dark:!border-gray-600'>
               <Dropdown.Item
                 onClick={() => {
                   navigate('/console/personal');
@@ -119,7 +119,7 @@ const UserArea = ({
           <Button
             theme='borderless'
             type='tertiary'
-            className='flex items-center gap-1.5 !p-1 !rounded-full hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-700 !bg-semi-color-fill-0 dark:!bg-semi-color-fill-1 dark:hover:!bg-semi-color-fill-2'
+            className='gm-user-trigger flex items-center gap-1.5 !p-1 !rounded-full hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-700 !bg-semi-color-fill-0 dark:!bg-semi-color-fill-1 dark:hover:!bg-semi-color-fill-2'
           >
             <Avatar
               size='extra-small'
@@ -174,7 +174,7 @@ const UserArea = ({
           <Button
             theme='borderless'
             type='tertiary'
-            className={loginButtonClasses}
+            className={`gm-user-login-button ${loginButtonClasses}`}
           >
             <span className={loginButtonTextSpanClass}>{t('登录')}</span>
           </Button>
@@ -185,7 +185,7 @@ const UserArea = ({
               <Button
                 theme='solid'
                 type='primary'
-                className={registerButtonClasses}
+                className={`gm-user-register-button ${registerButtonClasses}`}
               >
                 <span className={registerButtonTextSpanClass}>{t('注册')}</span>
               </Button>

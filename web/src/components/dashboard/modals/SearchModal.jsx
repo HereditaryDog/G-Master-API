@@ -46,6 +46,7 @@ const SearchModal = ({
 
   return (
     <Modal
+      className='gm-console-search-modal'
       title={t('搜索条件')}
       visible={searchModalVisible}
       onOk={handleSearchConfirm}

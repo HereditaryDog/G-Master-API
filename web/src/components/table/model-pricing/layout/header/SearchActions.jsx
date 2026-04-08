@@ -65,9 +65,10 @@ const SearchActions = memo(
     }, [tokenUnit, setTokenUnit]);
 
     return (
-      <div className='flex items-center gap-2 w-full'>
+      <div className='gm-pricing-actions flex items-center gap-2 w-full'>
         <div className='flex-1'>
           <Input
+            className='gm-pricing-search-input'
             prefix={<IconSearch />}
             placeholder={t('模糊搜索模型名称')}
             value={searchValue}
@@ -84,7 +85,7 @@ const SearchActions = memo(
           icon={<IconCopy />}
           onClick={handleCopyClick}
           disabled={selectedRowKeys.length === 0}
-          className='!bg-blue-500 hover:!bg-blue-600 !text-white disabled:!bg-gray-300 disabled:!text-gray-500'
+          className='gm-pricing-copy-button !text-white disabled:!bg-gray-300 disabled:!text-gray-500'
         >
           {t('复制')}
         </Button>
@@ -107,6 +108,7 @@ const SearchActions = memo(
             {/* 货币单位选择 */}
             {supportsCurrencyDisplay && showWithRecharge && (
               <Select
+                className='gm-pricing-inline-select'
                 value={currency}
                 onChange={setCurrency}
                 optionList={[
@@ -128,6 +130,7 @@ const SearchActions = memo(
               theme={viewMode === 'table' ? 'solid' : 'outline'}
               type={viewMode === 'table' ? 'primary' : 'tertiary'}
               onClick={handleViewModeToggle}
+              className='gm-pricing-toggle-button'
             >
               {t('表格视图')}
             </Button>
@@ -137,6 +140,7 @@ const SearchActions = memo(
               theme={tokenUnit === 'K' ? 'solid' : 'outline'}
               type={tokenUnit === 'K' ? 'primary' : 'tertiary'}
               onClick={handleTokenUnitToggle}
+              className='gm-pricing-toggle-button'
             >
               {tokenUnit}
             </Button>
@@ -149,6 +153,7 @@ const SearchActions = memo(
             type='tertiary'
             icon={<IconFilter />}
             onClick={handleFilterClick}
+            className='gm-pricing-filter-button'
           >
             {t('筛选')}
           </Button>

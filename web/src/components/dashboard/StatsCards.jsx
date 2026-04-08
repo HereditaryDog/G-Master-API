@@ -33,33 +33,35 @@ const StatsCards = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   return (
-    <div className='mb-4'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+    <div className='mb-6'>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {groupedStatsData.map((group, idx) => (
           <Card
             key={idx}
             {...CARD_PROPS}
-            className={`${group.color} border-0 !rounded-2xl w-full`}
+            className={`gm-console-stat-card ${group.color} border-0 !rounded-[28px] w-full`}
             title={group.title}
           >
             <div className='space-y-4'>
               {group.items.map((item, itemIdx) => (
                 <div
                   key={itemIdx}
-                  className='flex items-center justify-between cursor-pointer'
+                  className='gm-console-stat-item flex items-center justify-between cursor-pointer'
                   onClick={item.onClick}
                 >
                   <div className='flex items-center'>
                     <Avatar
-                      className='mr-3'
+                      className={`mr-3 gm-console-stat-avatar gm-console-stat-avatar-${item.avatarColor}`}
                       size='small'
                       color={item.avatarColor}
                     >
                       {item.icon}
                     </Avatar>
                     <div>
-                      <div className='text-xs text-gray-500'>{item.title}</div>
-                      <div className='text-lg font-semibold'>
+                      <div className='gm-console-stat-label text-xs text-gray-500'>
+                        {item.title}
+                      </div>
+                      <div className='gm-console-stat-value text-lg font-semibold'>
                         <Skeleton
                           loading={loading}
                           active
@@ -85,6 +87,7 @@ const StatsCards = ({
                       color='white'
                       shape='circle'
                       size='large'
+                      className='gm-console-topup-tag'
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate('/console/topup');
@@ -95,7 +98,7 @@ const StatsCards = ({
                   ) : (
                     (loading ||
                       (item.trendData && item.trendData.length > 0)) && (
-                      <div className='w-24 h-10'>
+                      <div className='gm-console-mini-chart w-24 h-10'>
                         <VChart
                           spec={getTrendSpec(item.trendData, item.trendColor)}
                           option={CHART_CONFIG}

@@ -320,7 +320,7 @@ const PricingVendorIntro = memo(
     const renderHeaderCard = useCallback(
       ({ title, count, description, rightContent, primaryDarkerChannel }) => (
         <Card
-          className='!rounded-2xl shadow-sm border-0'
+          className='gm-pricing-hero-card !rounded-[28px] shadow-sm border-0'
           cover={
             <div
               className='relative h-full'

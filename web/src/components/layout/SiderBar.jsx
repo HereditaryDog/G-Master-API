@@ -388,7 +388,7 @@ const SiderBar = ({ onNavigate = () => {} }) => {
 
   return (
     <div
-      className='sidebar-container'
+      className='sidebar-container gm-sidebar-shell'
       style={{
         width: 'var(--sidebar-current-width)',
       }}
@@ -401,7 +401,7 @@ const SiderBar = ({ onNavigate = () => {} }) => {
         showAdmin={isAdmin()}
       >
         <Nav
-          className='sidebar-nav'
+          className='sidebar-nav gm-sidebar-nav'
           defaultIsCollapsed={collapsed}
           isCollapsed={collapsed}
           onCollapseChange={toggleCollapsed}
@@ -503,6 +503,7 @@ const SiderBar = ({ onNavigate = () => {} }) => {
             theme='outline'
             type='tertiary'
             size='small'
+            className='gm-sidebar-collapse-trigger'
             icon={
               <ChevronLeft
                 size={16}

@@ -1,20 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" fill="none">
   <defs>
     <linearGradient id="ring" x1="36" y1="34" x2="146" y2="148" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#27E0D1" />
-      <stop offset="0.52" stop-color="#0F9D8F" />
-      <stop offset="1" stop-color="#FF9B54" />
+      <stop stop-color="#60A5FA" />
+      <stop offset="0.52" stop-color="#6366F1" />
+      <stop offset="1" stop-color="#A855F7" />
     </linearGradient>
     <linearGradient id="bar" x1="94" y1="90" x2="132" y2="90" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#139E90" />
-      <stop offset="1" stop-color="#FF9B54" />
+      <stop stop-color="#60A5FA" />
+      <stop offset="1" stop-color="#8B5CF6" />
     </linearGradient>
     <linearGradient id="spark" x1="66" y1="63" x2="98" y2="96" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#EDFFFE" />
-      <stop offset="1" stop-color="#C8FFF4" />
+      <stop stop-color="#F8FAFF" />
+      <stop offset="1" stop-color="#DBEAFE" />
     </linearGradient>
     <filter id="glow" x="0" y="0" width="180" height="180" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#082C2B" flood-opacity="0.16" />
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#312E81" flood-opacity="0.18" />
     </filter>
   </defs>
   <g filter="url(#glow)">

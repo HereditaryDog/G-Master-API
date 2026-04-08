@@ -38,13 +38,13 @@ const HeaderLogo = ({
   }
 
   return (
-    <Link to='/' className='group flex items-center gap-2'>
-      <div className='relative w-8 h-8 md:w-8 md:h-8'>
+    <Link to='/' className='gm-header-logo-link group flex items-center gap-3'>
+      <div className='gm-header-logo-mark relative w-10 h-10 md:w-10 md:h-10'>
         <SkeletonWrapper loading={isLoading || !logoLoaded} type='image' />
         <img
           src={logo}
           alt='logo'
-          className={`absolute inset-0 w-full h-full object-contain transition-all duration-200 group-hover:scale-110 rounded-full ${!isLoading && logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`gm-header-logo-image absolute inset-0 w-full h-full object-contain transition-all duration-200 group-hover:scale-110 ${!isLoading && logoLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </div>
       <div className='hidden md:flex items-center gap-2'>
@@ -57,7 +57,7 @@ const HeaderLogo = ({
           >
             <Typography.Title
               heading={4}
-              className='!text-lg !font-semibold !mb-0'
+              className='gm-header-system-name !text-lg !font-semibold !mb-0'
             >
               {systemName}
             </Typography.Title>

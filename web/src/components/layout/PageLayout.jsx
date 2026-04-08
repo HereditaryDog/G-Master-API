@@ -145,7 +145,7 @@ const PageLayout = () => {
 
   return (
     <Layout
-      className='app-layout'
+      className='app-layout gm-root-layout'
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -153,6 +153,7 @@ const PageLayout = () => {
       }}
     >
       <Header
+        className='gm-app-header-frame'
         style={{
           padding: 0,
           height: 'auto',
@@ -169,6 +170,7 @@ const PageLayout = () => {
         />
       </Header>
       <Layout
+        className='gm-app-body'
         style={{
           overflow: isMobile ? 'visible' : 'auto',
           display: 'flex',
@@ -177,7 +179,7 @@ const PageLayout = () => {
       >
         {showSider && (
           <Sider
-            className='app-sider'
+            className='app-sider gm-app-sider'
             style={{
               position: 'fixed',
               left: 0,
@@ -196,6 +198,7 @@ const PageLayout = () => {
           </Sider>
         )}
         <Layout
+          className='gm-app-main'
           style={{
             marginLeft: isMobile
               ? '0'
@@ -208,6 +211,7 @@ const PageLayout = () => {
           }}
         >
           <Content
+            className='gm-app-content'
             style={{
               flex: '1 0 auto',
               overflowY: isMobile ? 'visible' : 'hidden',
@@ -220,6 +224,7 @@ const PageLayout = () => {
           </Content>
           {!shouldHideFooter && (
             <Layout.Footer
+              className='gm-app-footer'
               style={{
                 flex: '0 0 auto',
                 width: '100%',

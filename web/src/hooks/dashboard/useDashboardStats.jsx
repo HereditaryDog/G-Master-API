@@ -46,7 +46,7 @@ export const useDashboardStats = (
     () => [
       {
         title: createSectionTitle(Wallet, t('账户数据')),
-        color: 'bg-blue-50',
+        color: 'gm-console-stat-card-blue',
         items: [
           {
             title: t('当前余额'),
@@ -68,7 +68,7 @@ export const useDashboardStats = (
       },
       {
         title: createSectionTitle(Activity, t('使用统计')),
-        color: 'bg-green-50',
+        color: 'gm-console-stat-card-green',
         items: [
           {
             title: t('请求次数'),
@@ -90,7 +90,7 @@ export const useDashboardStats = (
       },
       {
         title: createSectionTitle(Zap, t('资源消耗')),
-        color: 'bg-yellow-50',
+        color: 'gm-console-stat-card-amber',
         items: [
           {
             title: t('统计额度'),
@@ -112,7 +112,7 @@ export const useDashboardStats = (
       },
       {
         title: createSectionTitle(Gauge, t('性能指标')),
-        color: 'bg-indigo-50',
+        color: 'gm-console-stat-card-indigo',
         items: [
           {
             title: t('平均RPM'),
