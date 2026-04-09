@@ -187,9 +187,9 @@ const Home = () => {
   const modelCards = isChinese
     ? [
         {
-          title: '推理模型 系列',
+          title: '高性能推理',
           description:
-            '包括 deepseek-r1、o1、o3 等高性能大语言推理模型，适用于复杂理解与创作任务。',
+            '覆盖复杂分析、代码理解、长链路思考等高难度任务，适合对推理质量要求更高的场景。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path>
@@ -199,8 +199,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'GPT-4o 系列',
-          description: '高性价比的 GPT-4o 系列模型，适合日常对话与内容创作场景。',
+          title: '多模态对话',
+          description: '支持文本、图像、结构化输出和工具调用，适合客服、助手、Agent 与内容生成场景。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <circle cx='12' cy='12' r='10'></circle>
@@ -211,8 +211,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'Claude 系列',
-          description: '包括 Claude 3.7 / Sonnet / Haiku 等模型，提供出色的理解能力与上下文处理。',
+          title: '长上下文模型',
+          description: '适合长文档阅读、知识库问答、复杂指令跟随和企业级流程处理。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <rect x='2' y='3' width='20' height='14' rx='2' ry='2'></rect>
@@ -222,8 +222,8 @@ const Home = () => {
           ),
         },
         {
-          title: '绘图 系列',
-          description: '支持 DALL-E 3、flux、midjourney 等图像生成模型，将文字描述转化为精美图像。',
+          title: '图像生成与编辑',
+          description: '覆盖文生图、参考图编辑、风格迁移与视觉内容生成，适合海报、封面和营销素材。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'></path>
@@ -232,8 +232,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'Embedding 模型',
-          description: '提供多种嵌入模型，用于文本向量化、相似度计算和语义搜索。',
+          title: 'Embedding 与检索',
+          description: '支持文本向量化、相似度检索、语义召回与知识库场景，便于构建 RAG 能力。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <polygon points='12 2 2 7 12 12 22 7 12 2'></polygon>
@@ -243,8 +243,8 @@ const Home = () => {
           ),
         },
         {
-          title: '更多模型',
-          description: '持续引入国内外最新 AI 模型，覆盖文本、图像、音频等多领域应用需求。',
+          title: '音频、视频与更多能力',
+          description: '持续接入音频转写、语音、视频生成和更多新能力，覆盖多类型 AI 工作流。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'></path>
@@ -256,9 +256,9 @@ const Home = () => {
       ]
     : [
         {
-          title: 'Reasoning models',
+          title: 'High-performance reasoning',
           description:
-            'Includes deepseek-r1, o1, o3, and other high-performance reasoning models for complex tasks.',
+            'Built for complex analysis, coding, long-form reasoning, and tasks where output quality matters most.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path>
@@ -268,8 +268,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'GPT-4o family',
-          description: 'A high-value GPT-4o lineup for everyday chat, writing, and multimodal tasks.',
+          title: 'Multimodal chat',
+          description: 'Supports text, vision, structured output, and tool calling for assistants, workflows, and content generation.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <circle cx='12' cy='12' r='10'></circle>
@@ -280,8 +280,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'Claude family',
-          description: 'Claude 3.7, Sonnet, and Haiku with strong comprehension and long-context handling.',
+          title: 'Long-context models',
+          description: 'Well suited for large documents, knowledge-grounded Q&A, instruction-heavy tasks, and enterprise workflows.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <rect x='2' y='3' width='20' height='14' rx='2' ry='2'></rect>
@@ -292,7 +292,7 @@ const Home = () => {
         },
         {
           title: 'Image generation',
-          description: 'Supports DALL-E 3, flux, midjourney, and other image generation workflows.',
+          description: 'Covers text-to-image, editing, reference-image workflows, and production-ready visual generation.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'></path>
@@ -301,8 +301,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'Embedding models',
-          description: 'Use embeddings for vectorization, similarity search, and semantic retrieval.',
+          title: 'Embeddings and retrieval',
+          description: 'Use embeddings for vector search, semantic recall, ranking, and RAG-style applications.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <polygon points='12 2 2 7 12 12 22 7 12 2'></polygon>
@@ -312,8 +312,8 @@ const Home = () => {
           ),
         },
         {
-          title: 'More models',
-          description: 'Continuously add new global AI models across text, image, and audio scenarios.',
+          title: 'Audio, video, and more',
+          description: 'Continually expands into transcription, speech, video generation, and new AI workflow capabilities.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'></path>
@@ -587,18 +587,16 @@ const Home = () => {
                 <div className='gm-zen-code-example'>
                   <pre>
                     <code>{`// Node.js 接入示例
-const { Configuration, OpenAIApi } = require("openai");
+import OpenAI from "openai";
 
-const configuration = new Configuration({
+const client = new OpenAI({
   apiKey: "sk-xxxxxxxxxxxxx", // 您的${displayName}密钥
-  basePath: "${serverAddress}/v1"
+  baseURL: "${serverAddress}/v1"
 });
 
-const openai = new OpenAIApi(configuration);
-
 // 创建聊天请求
-const response = await openai.createChatCompletion({
-  model: "gpt-3.5-turbo",
+const response = await client.chat.completions.create({
+  model: "your-chat-model",
   messages: [
     { role: "system", content: "你是一个智能助手" },
     { role: "user", content: "你好，请介绍一下自己" }

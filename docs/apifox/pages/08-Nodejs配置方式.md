@@ -11,7 +11,7 @@ const client = new OpenAI({
 });
 
 const resp = await client.chat.completions.create({
-  model: "gpt-4o-mini",
+  model: "your-chat-model",
   messages: [
     { role: "system", content: "你是一个简洁的技术助手。" },
     { role: "user", content: "介绍一下 G-Master API。" },
@@ -32,7 +32,7 @@ const client = new OpenAI({
 });
 
 const resp = await client.responses.create({
-  model: "gpt-4.1-mini",
+  model: "your-chat-model",
   input: "请总结 Responses API 的用法。",
 });
 
@@ -56,3 +56,5 @@ const resp = await client.embeddings.create({
 
 console.log(resp.data[0].embedding.length);
 ```
+
+请将 `your-chat-model` 替换为控制台可见且令牌允许访问的模型名。

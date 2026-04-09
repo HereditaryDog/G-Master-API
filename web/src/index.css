@@ -1547,6 +1547,12 @@ html.dark .with-pastel-balls::before {
   line-height: 1.85;
 }
 
+.gm-docs-description-compact {
+  margin-top: 10px;
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
+
 .gm-docs-hero-actions {
   display: flex;
   flex-wrap: wrap;

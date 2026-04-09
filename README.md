@@ -1,8 +1,8 @@
 # G-Master API
 
-G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with production now running at `https://gmapi.fun` and local Docker retained as the review-first workflow.
+G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with production running at `https://gmapi.fun` and local Docker retained as the review-first workflow for UI and release verification.
 
-Current release: `v0.12.1-gmaster.3`
+Current release: `v0.12.1-gmaster.4`
 
 Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -16,10 +16,10 @@ Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
 ## Latest release highlights
 
-- Fixed the playground desktop layout so the left model configuration panel no longer sits under the global console sidebar
-- Fixed the multi-key polling warning so it only appears when Redis or in-memory cache is actually unavailable
-- Exposed runtime cache status in `/api/status` for frontend dependency checks
-- Kept the Tencent Cloud production deployment and local Docker preview aligned under the same versioned release
+- Replaced outdated homepage model-name marketing copy with stable capability-based descriptions that are safer for a public production site
+- Cleaned the public `/docs` experience and Apifox source content so examples, labels, and helper text are production-facing instead of rollout-facing
+- Standardized public SDK examples around neutral `your-chat-model` placeholders and current OpenAI-compatible client patterns
+- Kept local preview, GitHub, and the Tencent Cloud production deployment aligned under the same release version
 
 ## Stack
 
@@ -174,5 +174,5 @@ This project continues to ship under `AGPL-3.0`. Upstream attribution and fork n
 ## Next stage
 
 - Continue review-first UI refinements locally before each production release
-- Clean up remaining old-brand compatibility text in low-traffic UI areas
+- Continue removing stale upstream model-name copy from low-traffic UI surfaces and helper text
 - Add stronger production hardening, monitoring, and release automation

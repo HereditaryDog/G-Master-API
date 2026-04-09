@@ -11,7 +11,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="your-chat-model",
     messages=[
         {"role": "system", "content": "你是一个简洁的技术助手。"},
         {"role": "user", "content": "介绍一下 G-Master API。"},
@@ -20,6 +20,8 @@ resp = client.chat.completions.create(
 
 print(resp.choices[0].message.content)
 ```
+
+请将 `your-chat-model` 替换为控制台可见且令牌允许访问的模型名。
 
 ## Python Embeddings 示例
 

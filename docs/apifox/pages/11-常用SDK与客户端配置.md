@@ -11,7 +11,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="your-chat-model",
     messages=[
         {"role": "user", "content": "你好"}
     ],
@@ -31,7 +31,7 @@ const client = new OpenAI({
 });
 
 const resp = await client.chat.completions.create({
-  model: "gpt-4o-mini",
+  model: "your-chat-model",
   messages: [{ role: "user", content: "你好" }],
 });
 
@@ -45,7 +45,7 @@ curl https://gmapi.fun/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-your-token" \
   -d '{
-    "model": "gpt-4o-mini",
+    "model": "your-chat-model",
     "messages": [
       {
         "role": "user",
@@ -54,6 +54,8 @@ curl https://gmapi.fun/v1/chat/completions \
     ]
   }'
 ```
+
+请将 `your-chat-model` 替换为控制台可见且令牌允许访问的模型名。
 
 ## Cherry Studio / ChatBox / 其他 OpenAI 兼容客户端
 

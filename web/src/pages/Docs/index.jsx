@@ -18,7 +18,7 @@ const NAV_SECTIONS = [
   { id: 'video', label: '视频模型' },
   { id: 'system', label: '系统 API' },
   { id: 'python', label: 'Python 配置方式' },
-  { id: 'plugin', label: '各种插件/软件使用教程' },
+  { id: 'plugin', label: '客户端与工具接入' },
   { id: 'faq', label: '帮助中心' },
 ];
 
@@ -194,7 +194,7 @@ const DOC_GROUPS = [
     eyebrow: '系统 API',
     title: '用户中心与令牌管理',
     description:
-      '这部分更接近 ZEN-AI 文档里的“系统 API”，用于自助管理账号和令牌。',
+      '用于查看系统状态、管理个人令牌、查询账号信息和获取控制台所需的数据接口。',
     items: [
       {
         title: '获取系统状态',
@@ -280,10 +280,10 @@ const DOC_GROUPS = [
   },
   {
     id: 'plugin',
-    eyebrow: '各种插件/软件使用教程',
+    eyebrow: '客户端与工具接入',
     title: '客户端与工具接入',
     description:
-      '把 ZEN-AI 文档里常见的工具入口整理成站内索引，方便后续继续拆成独立页。',
+      '整理常见客户端、开发工具和工作流平台的接入方式，便于按统一基址快速完成配置。',
     items: [
       {
         title: 'Codex 配置教程',
@@ -372,7 +372,7 @@ const FAQ_ITEMS = [
   {
     question: '为什么调试页请求到了 api.openai.com',
     answer:
-      '说明客户端或调试工具没有改 Base URL，仍在使用官方默认地址，需要切到 G-Master API 的 /v1。',
+      '说明客户端或调试工具仍在使用默认官方地址，需要把 Base URL 改成 G-Master API 的 /v1。',
   },
   {
     question: '如何确认当前网关版本',
@@ -388,7 +388,7 @@ const CODE_SNIPPETS = {
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer sk-your-token" \\
   -d '{
-    "model": "gpt-4o-mini",
+    "model": "your-chat-model",
     "messages": [
       {
         "role": "system",
@@ -412,7 +412,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="your-chat-model",
     messages=[
         {"role": "user", "content": "请介绍一下 G-Master API"}
     ],
@@ -430,7 +430,7 @@ const client = new OpenAI({
 });
 
 const resp = await client.responses.create({
-  model: "gpt-4.1-mini",
+  model: "your-chat-model",
   input: "请介绍一下 G-Master API",
 });
 
@@ -572,12 +572,14 @@ const Docs = () => {
         <main className='gm-docs-main'>
           <section id='intro' className='gm-docs-hero gm-docs-card'>
             <div className='gm-docs-hero-copy'>
-              <div className='gm-docs-kicker'>ZEN-AI 风格文档首页</div>
+              <div className='gm-docs-kicker'>Developer Docs</div>
               <h1 className='gm-docs-title'>G-Master API 接口文档</h1>
               <p className='gm-docs-description'>
-                这不是简单入口页，而是按完整文档首页重组后的站内文档：
-                现在包含快速开始、在线调试、接口分组、SDK 示例、系统 API 和帮助中心，
-                用来承接你后续的 Apifox 文档体系。
+                统一整理接入基址、认证方式、常用接口、SDK 示例、系统 API 和帮助中心，
+                方便开发者直接完成联调、排错和工具接入。
+              </p>
+              <p className='gm-docs-description gm-docs-description-compact'>
+                具体可用模型以控制台展示和 <code>GET /v1/models</code> 返回结果为准。
               </p>
 
               <div className='gm-docs-hero-actions'>
@@ -610,14 +612,14 @@ const Docs = () => {
             <div>
               <div className='gm-docs-block-title'>搜索文档内容</div>
               <div className='gm-docs-block-description'>
-                支持按接口名、路径、模型类型、教程关键词筛选当前文档首页内容。
+                支持按接口名、路径、功能分类和工具关键词筛选当前文档内容。
               </div>
             </div>
             <div className='gm-docs-search-box'>
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder='搜索接口、模型、教程关键词，例如 chat / token / Claude / Cursor'
+                placeholder='搜索接口、路径或工具关键词，例如 chat / token / embeddings / cursor'
                 className='gm-docs-search-input'
               />
               <div className='gm-docs-search-result'>

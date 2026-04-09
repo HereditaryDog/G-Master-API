@@ -23,7 +23,7 @@ curl https://gmapi.fun/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-your-token" \
   -d '{
-    "model": "gpt-4o-mini",
+    "model": "your-chat-model",
     "messages": [
       {
         "role": "user",
@@ -40,7 +40,7 @@ curl https://gmapi.fun/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-your-token" \
   -d '{
-    "model": "gpt-4o-mini",
+    "model": "your-chat-model",
     "stream": true,
     "messages": [
       {
@@ -50,6 +50,8 @@ curl https://gmapi.fun/v1/chat/completions \
     ]
   }'
 ```
+
+建议先通过 `GET /v1/models` 确认可用模型，再把 `your-chat-model` 替换为实际模型名。
 
 ## 6. 常见错误
 

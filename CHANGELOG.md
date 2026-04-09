@@ -2,6 +2,14 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.1-gmaster.4 - 2026-04-09
+
+### Changed
+
+- Refreshed the public homepage model capability copy so it describes stable capability categories instead of short-lived upstream model names.
+- Updated the homepage SDK example and the public docs snippets to use neutral `your-chat-model` placeholders and current OpenAI SDK patterns.
+- Cleaned the public `/docs` page and Apifox source pages to remove internal rollout wording and make the published documentation read like a production-facing developer portal.
+
 ## v0.12.1-gmaster.3 - 2026-04-09
 
 ### Changed
