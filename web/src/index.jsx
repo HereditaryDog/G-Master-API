@@ -37,7 +37,7 @@ import en_GB from '@douyinfe/semi-ui/lib/es/locale/source/en_GB';
 // Welcome message (Do not remove this without permission from the original developer)
 if (typeof window !== 'undefined') {
   console.log(
-    '%cWE ❤ G-MASTER API%c Github: https://github.com/yangjunyu/G-Master-API',
+    '%cWE ❤ G-MASTER API%c Github: https://github.com/HereditaryDog/G-Master-API',
     'color: #10b981; font-weight: bold; font-size: 24px;',
     'color: inherit; font-size: 14px;',
   );

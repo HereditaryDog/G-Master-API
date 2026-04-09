@@ -23,11 +23,11 @@ import { Typography } from '@douyinfe/semi-ui';
 import { getFooterHTML, getLogo, getSystemName } from '../../helpers';
 import { StatusContext } from '../../context/Status';
 
-const PROJECT_REPO_URL = 'https://github.com/yangjunyu/G-Master-API';
+const PROJECT_REPO_URL = 'https://github.com/HereditaryDog/G-Master-API';
 const PROJECT_LICENSE_URL = `${PROJECT_REPO_URL}/blob/main/LICENSE`;
 const PROJECT_ACK_URL = `${PROJECT_REPO_URL}/blob/main/ACKNOWLEDGMENTS.md`;
 const PROJECT_COMPOSE_URL = `${PROJECT_REPO_URL}/blob/main/docker-compose.yml`;
-const PROJECT_README_URL = `${PROJECT_REPO_URL}/blob/main/README.zh_CN.md`;
+const PROJECT_README_URL = `${PROJECT_REPO_URL}/blob/main/README.md`;
 const UPSTREAM_URL = 'https://github.com/QuantumNous/new-api';
 const ONE_API_URL = 'https://github.com/songquanpeng/one-api';
 

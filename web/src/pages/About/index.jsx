@@ -32,7 +32,7 @@ const About = () => {
   const [about, setAbout] = useState('');
   const [aboutLoaded, setAboutLoaded] = useState(false);
   const currentYear = new Date().getFullYear();
-  const repoUrl = 'https://github.com/yangjunyu/G-Master-API';
+  const repoUrl = 'https://github.com/HereditaryDog/G-Master-API';
   const acknowledgmentsUrl = `${repoUrl}/blob/main/ACKNOWLEDGMENTS.md`;
   const upstreamUrl = 'https://github.com/QuantumNous/new-api';
 

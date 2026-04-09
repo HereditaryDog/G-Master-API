@@ -50,7 +50,7 @@ const Home = () => {
   const displayVersion = runtimeVersion || buildVersion;
   const isChinese = i18n.language.startsWith('zh');
   const systemName = getSystemName();
-  const repoUrl = 'https://github.com/yangjunyu/G-Master-API';
+  const repoUrl = 'https://github.com/HereditaryDog/G-Master-API';
   const ackUrl = `${repoUrl}/blob/main/ACKNOWLEDGMENTS.md`;
   const licenseUrl = `${repoUrl}/blob/main/LICENSE`;
   const pricingUrl = '/pricing';
@@ -66,6 +66,10 @@ const Home = () => {
   const heroStatusText = isChinese
     ? '仅需 1 行接入，开启智能化之旅，让 AI 调用更简单高效！'
     : 'Just one line to integrate and make AI access simpler and more efficient.';
+  const docsTarget = docsLink || '/docs';
+  const docsDisplayTarget = docsTarget.startsWith('/')
+    ? `${window.location.origin}${docsTarget}`
+    : docsTarget;
 
   const featureCards = isChinese
     ? [
@@ -682,13 +686,17 @@ const response = await openai.createChatCompletion({
                   </svg>
                   <span>
                     Docs:
-                    <a
-                      href={docsLink || repoUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      {docsLink || repoUrl}
-                    </a>
+                    {docsTarget.startsWith('/') ? (
+                      <Link to={docsTarget}>{docsDisplayTarget}</Link>
+                    ) : (
+                      <a
+                        href={docsTarget}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        {docsDisplayTarget}
+                      </a>
+                    )}
                   </span>
                 </div>
                 <div className='gm-zen-contact-item'>

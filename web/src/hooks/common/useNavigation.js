@@ -21,6 +21,9 @@ import { useMemo } from 'react';
 
 export const useNavigation = (t, docsLink, headerNavModules) => {
   const mainNavLinks = useMemo(() => {
+    const isInternalDocsLink =
+      typeof docsLink === 'string' && docsLink.startsWith('/');
+
     // 默认配置，如果没有传入配置则显示所有模块
     const defaultModules = {
       home: true,
@@ -54,8 +57,12 @@ export const useNavigation = (t, docsLink, headerNavModules) => {
             {
               text: t('文档'),
               itemKey: 'docs',
-              isExternal: true,
-              externalLink: docsLink,
+              ...(isInternalDocsLink
+                ? { to: docsLink }
+                : {
+                    isExternal: true,
+                    externalLink: docsLink,
+                  }),
             },
           ]
         : []),
