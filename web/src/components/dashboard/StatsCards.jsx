@@ -49,7 +49,7 @@ const StatsCards = ({
                   className='gm-console-stat-item flex items-center justify-between cursor-pointer'
                   onClick={item.onClick}
                 >
-                  <div className='flex items-center'>
+                  <div className='gm-console-stat-main flex items-center'>
                     <Avatar
                       className={`mr-3 gm-console-stat-avatar gm-console-stat-avatar-${item.avatarColor}`}
                       size='small'
@@ -57,7 +57,7 @@ const StatsCards = ({
                     >
                       {item.icon}
                     </Avatar>
-                    <div>
+                    <div className='gm-console-stat-copy'>
                       <div className='gm-console-stat-label text-xs text-gray-500'>
                         {item.title}
                       </div>
@@ -82,30 +82,32 @@ const StatsCards = ({
                       </div>
                     </div>
                   </div>
-                  {item.title === t('当前余额') ? (
-                    <Tag
-                      color='white'
-                      shape='circle'
-                      size='large'
-                      className='gm-console-topup-tag'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate('/console/topup');
-                      }}
-                    >
-                      {t('充值')}
-                    </Tag>
-                  ) : (
-                    (loading ||
-                      (item.trendData && item.trendData.length > 0)) && (
-                      <div className='gm-console-mini-chart w-24 h-10'>
-                        <VChart
-                          spec={getTrendSpec(item.trendData, item.trendColor)}
-                          option={CHART_CONFIG}
-                        />
-                      </div>
-                    )
-                  )}
+                  <div className='gm-console-stat-aside'>
+                    {item.title === t('当前余额') ? (
+                      <Tag
+                        color='white'
+                        shape='circle'
+                        size='large'
+                        className='gm-console-topup-tag'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/console/topup');
+                        }}
+                      >
+                        {t('充值')}
+                      </Tag>
+                    ) : (
+                      (loading ||
+                        (item.trendData && item.trendData.length > 0)) && (
+                        <div className='gm-console-mini-chart w-24 h-10'>
+                          <VChart
+                            spec={getTrendSpec(item.trendData, item.trendColor)}
+                            option={CHART_CONFIG}
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

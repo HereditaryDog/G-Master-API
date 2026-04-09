@@ -2,6 +2,26 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.6-gmaster.1 - 2026-04-09
+
+### Changed
+
+- Synced the fork forward from upstream `new-api v0.12.1` to `v0.12.6` while preserving the `G-Master API` homepage, docs portal, branding, and public-facing copy.
+- Brought in the upstream settings and pricing-management refresh, including the newer grouped ratio management flow and related admin-side UI updates.
+- Brought in the upstream dashboard enhancements, including stronger analytics views, chart sorting/axis fixes, and copy actions in the API info panel.
+- Regenerated the published Apifox import artifacts so the public developer docs align with the new release version.
+
+### Added
+
+- Added upstream support for `MiniMax` image generation relay.
+- Added upstream support for forced `AUTH LOGIN` in SMTP configuration for stricter email provider compatibility.
+- Added upstream support for channel affinity rules that include explicit model-name matching.
+
+### Fixed
+
+- Fixed the dashboard stat cards so their inner content aligns consistently instead of drifting between cards.
+- Fixed the upstream sync artifacts that referenced `new-api` module paths or example domains where the branded fork should keep `G-Master API` and `gmapi.fun`.
+
 ## v0.12.1-gmaster.4 - 2026-04-09
 
 ### Changed

@@ -2,7 +2,7 @@
 
 G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with production running at `https://gmapi.fun` and local Docker retained as the review-first workflow for UI and release verification.
 
-Current release: `v0.12.1-gmaster.4`
+Current release: `v0.12.6-gmaster.1`
 
 Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -16,10 +16,10 @@ Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
 ## Latest release highlights
 
-- Replaced outdated homepage model-name marketing copy with stable capability-based descriptions that are safer for a public production site
-- Cleaned the public `/docs` experience and Apifox source content so examples, labels, and helper text are production-facing instead of rollout-facing
-- Standardized public SDK examples around neutral `your-chat-model` placeholders and current OpenAI-compatible client patterns
-- Kept local preview, GitHub, and the Tencent Cloud production deployment aligned under the same release version
+- Synced the fork to upstream `new-api v0.12.6` while preserving `G-Master API` branding, homepage, docs portal, and public-facing copy
+- Pulled in the newer admin-side pricing and grouped-ratio management flow from upstream
+- Pulled in the newer dashboard analytics and API info panel improvements from upstream
+- Fixed the dashboard stat-card inner alignment so the metric blocks now sit on a consistent grid
 
 ## Stack
 

@@ -4122,6 +4122,7 @@ html.dark .gm-home-icon-orb {
   z-index: 1;
   padding: 14px 2px;
   border-radius: 18px;
+  gap: 14px;
   transition:
     transform 180ms ease,
     background-color 180ms ease,
@@ -4134,7 +4135,22 @@ html.dark .gm-home-icon-orb {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
 }
 
+.gm-console-stat-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gm-console-stat-copy {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
 .gm-console-stat-avatar {
+  flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.78);
   background: rgba(255, 255, 255, 0.92) !important;
   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.16);
@@ -4186,13 +4202,24 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-stat-label {
+  white-space: nowrap;
+  line-height: 1.25;
   letter-spacing: 0.02em;
 }
 
 .gm-console-stat-value {
   color: #0f172a;
   font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.03em;
+}
+
+.gm-console-stat-aside {
+  display: flex;
+  min-width: 88px;
+  flex: 0 0 88px;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .gm-console-topup-tag {
@@ -4203,8 +4230,26 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-mini-chart {
+  width: 88px;
+  min-width: 88px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.56);
+}
+
+@media (max-width: 767px) {
+  .gm-console-stat-label {
+    white-space: normal;
+  }
+
+  .gm-console-stat-aside {
+    min-width: 72px;
+    flex-basis: 72px;
+  }
+
+  .gm-console-mini-chart {
+    width: 72px;
+    min-width: 72px;
+  }
 }
 
 .gm-console-page .semi-tabs {

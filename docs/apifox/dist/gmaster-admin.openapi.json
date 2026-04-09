@@ -3,7 +3,7 @@
   "info": {
     "title": "G-Master API - 后台与用户接口",
     "description": "G-Master API 后台管理与用户中心接口。\n\n生产地址：`https://gmapi.fun`\n后台接口基址：`https://gmapi.fun/api`\n仓库地址：`https://github.com/HereditaryDog/G-Master-API`",
-    "version": "v0.12.1-gmaster.4"
+    "version": "v0.12.6-gmaster.1"
   },
   "tags": [
     {
