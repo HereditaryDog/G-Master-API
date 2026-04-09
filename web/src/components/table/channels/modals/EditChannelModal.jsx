@@ -17,7 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   API,
@@ -85,6 +85,7 @@ import {
   IconSearch,
   IconChevronDown,
 } from '@douyinfe/semi-icons';
+import { StatusContext } from '../../../../context/Status';
 
 const { Text, Title } = Typography;
 
@@ -162,6 +163,7 @@ function type2secretPrompt(type) {
 
 const EditChannelModal = (props) => {
   const { t } = useTranslation();
+  const [statusState] = useContext(StatusContext);
   const channelId = props.editingChannel.id;
   const isEdit = channelId !== undefined;
   const [loading, setLoading] = useState(isEdit);
@@ -250,6 +252,12 @@ const EditChannelModal = (props) => {
   const [keyMode, setKeyMode] = useState('append'); // 密钥模式：replace（覆盖）或 append（追加）
   const [isEnterpriseAccount, setIsEnterpriseAccount] = useState(false); // 是否为企业账户
   const [doubaoApiEditUnlocked, setDoubaoApiEditUnlocked] = useState(false); // 豆包渠道自定义 API 地址隐藏入口
+  const memoryCacheEnabled = Boolean(statusState?.status?.memory_cache_enabled);
+  const redisEnabled = Boolean(statusState?.status?.redis_enabled);
+  const pollingModeDependencyMissing =
+    inputs.multi_key_mode === 'polling' &&
+    statusState?.status &&
+    (!memoryCacheEnabled || !redisEnabled);
   const redirectModelList = useMemo(() => {
     const mapping = inputs.model_mapping;
     if (typeof mapping !== 'string') return [];
@@ -3121,7 +3129,7 @@ const EditChannelModal = (props) => {
                             handleInputChange('multi_key_mode', value);
                           }}
                         />
-                        {inputs.multi_key_mode === 'polling' && (
+                        {pollingModeDependencyMissing && (
                           <Banner
                             type='warning'
                             description={t(
