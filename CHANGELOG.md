@@ -2,6 +2,19 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.1-gmaster.3 - 2026-04-09
+
+### Changed
+
+- Promoted the current `G-Master API` stack to the Tencent Cloud production deployment at `https://gmapi.fun` while keeping the local Docker workflow for review-first changes.
+- Refreshed repository release metadata and generated docs assets so the published version stays aligned across the UI, README, and Apifox import files.
+
+### Fixed
+
+- Fixed the playground desktop layout so the model configuration panel no longer collides with the global console sidebar.
+- Fixed the multi-key polling warning to reflect the real runtime cache state instead of showing unconditionally when polling mode is selected.
+- Exposed `redis_enabled` and `memory_cache_enabled` in `/api/status` so the frontend can make correct cache-dependent UI decisions.
+
 ## v0.12.1-gmaster.2 - 2026-04-08
 
 ### Changed

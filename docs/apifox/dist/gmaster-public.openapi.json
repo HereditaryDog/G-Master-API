@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "G-Master API - 公开接口文档",
-    "version": "v0.12.1-gmaster.2",
+    "version": "v0.12.1-gmaster.3",
     "description": "适合导入 Apifox 并对外发布的公开接口集合。\n\n包含：模型中转接口、用户侧令牌管理接口、系统状态与个人数据接口。\n生产地址：`https://gmapi.fun`\nOpenAI 兼容基址：`https://gmapi.fun/v1`\n后台接口基址：`https://gmapi.fun/api`\n仓库地址：`https://github.com/HereditaryDog/G-Master-API`"
   },
   "servers": [
@@ -2326,7 +2326,7 @@
                   "data": {
                     "system_name": "G-Master API",
                     "server_address": "https://gmapi.fun",
-                    "version": "v0.12.1-gmaster.2",
+                    "version": "v0.12.1-gmaster.3",
                     "top_up_link": "https://gmtoken.shop"
                   }
                 }

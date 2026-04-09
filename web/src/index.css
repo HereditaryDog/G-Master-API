@@ -481,6 +481,81 @@ code {
 }
 
 /* ==================== 聊天界面样式 ==================== */
+.gm-playground-page {
+  height: 100%;
+}
+
+.gm-playground-shell {
+  height: 100%;
+  padding: 76px 20px 20px;
+  gap: 20px;
+}
+
+.gm-playground-settings-sider {
+  position: relative;
+  z-index: 1;
+  width: 320px !important;
+  min-width: 320px;
+  max-width: 320px;
+  height: calc(100vh - 96px);
+  height: calc(100dvh - 96px);
+}
+
+.gm-playground-content {
+  min-width: 0;
+}
+
+.gm-playground-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: calc(100vh - 96px);
+  height: calc(100dvh - 96px);
+}
+
+.gm-playground-chat {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gm-playground-debug {
+  width: 384px;
+  max-width: 384px;
+  flex: 0 0 384px;
+}
+
+@media (max-width: 767px) {
+  .gm-playground-shell {
+    padding: 64px 0 0;
+    gap: 0;
+  }
+
+  .gm-playground-settings-sider {
+    width: 100% !important;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .gm-playground-workspace {
+    gap: 0;
+    height: calc(100vh - 64px);
+    height: calc(100dvh - 64px);
+  }
+
+  .gm-playground-debug {
+    width: 100%;
+    max-width: none;
+    flex: 1 1 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gm-playground-workspace {
+    flex-direction: row;
+  }
+}
+
 .semi-chat {
   padding-top: 0 !important;
   padding-bottom: 0 !important;

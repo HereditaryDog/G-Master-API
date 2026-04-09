@@ -459,16 +459,16 @@ const Playground = () => {
 
   return (
     <PlaygroundProvider value={playgroundContextValue}>
-      <div className='h-full'>
-        <Layout className='h-full bg-transparent flex flex-col md:flex-row'>
+      <div className='gm-playground-page'>
+        <Layout className='gm-playground-shell bg-transparent'>
           {(showSettings || !isMobile) && (
             <Layout.Sider
               className={`
-              bg-transparent border-r-0 flex-shrink-0 overflow-auto mt-[60px]
+              gm-playground-settings-sider bg-transparent border-r-0 flex-shrink-0 overflow-auto
               ${
                 isMobile
                   ? 'fixed top-0 left-0 right-0 bottom-0 z-[1000] w-full h-auto bg-white shadow-lg'
-                  : 'relative z-[1] w-80 h-[calc(100vh-66px)]'
+                  : 'relative'
               }
             `}
               width={isMobile ? '100%' : 320}
@@ -496,9 +496,9 @@ const Playground = () => {
             </Layout.Sider>
           )}
 
-          <Layout.Content className='relative flex-1 overflow-hidden'>
-            <div className='overflow-hidden flex flex-col lg:flex-row h-[calc(100vh-66px)] mt-[60px]'>
-              <div className='flex-1 flex flex-col'>
+          <Layout.Content className='gm-playground-content relative flex-1 overflow-hidden'>
+            <div className='gm-playground-workspace overflow-hidden'>
+              <div className='gm-playground-chat flex flex-col'>
                 <ChatArea
                   chatRef={chatRef}
                   message={message}
@@ -520,7 +520,7 @@ const Playground = () => {
 
               {/* 调试面板 - 桌面端 */}
               {showDebugPanel && !isMobile && (
-                <div className='w-96 flex-shrink-0 h-full'>
+                <div className='gm-playground-debug h-full'>
                   <OptimizedDebugPanel
                     debugData={debugData}
                     activeDebugTab={activeDebugTab}

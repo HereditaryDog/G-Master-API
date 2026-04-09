@@ -1,8 +1,8 @@
 # G-Master API
 
-G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with the current focus on local Docker verification first and small-scope rollout second.
+G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with production now running at `https://gmapi.fun` and local Docker retained as the review-first workflow.
 
-Current release: `v0.12.1-gmaster.2`
+Current release: `v0.12.1-gmaster.3`
 
 Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -16,16 +16,17 @@ Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
 ## Latest release highlights
 
-- A rebuilt landing page styled after the `Zen-AI` one-page experience, adapted to `G-Master API` branding and copy
-- A unified dashboard and model pricing theme with refreshed gradients, glassmorphism cards, and updated header/sidebar visuals
-- A refreshed default logo treatment and page background system for more consistent brand presentation
-- Fixes for homepage typing animation stability and dashboard stat icon visibility
+- Fixed the playground desktop layout so the left model configuration panel no longer sits under the global console sidebar
+- Fixed the multi-key polling warning so it only appears when Redis or in-memory cache is actually unavailable
+- Exposed runtime cache status in `/api/status` for frontend dependency checks
+- Kept the Tencent Cloud production deployment and local Docker preview aligned under the same versioned release
 
 ## Stack
 
 - Backend: Go + Gin
 - Frontend: React + Vite
 - Runtime: Docker Compose + PostgreSQL + Redis
+- Production edge: Tencent Cloud + Nginx + Cloudflare DNS / TLS
 
 ## Local quick start
 
@@ -172,7 +173,6 @@ This project continues to ship under `AGPL-3.0`. Upstream attribution and fork n
 
 ## Next stage
 
-- Finish local Docker verification
+- Continue review-first UI refinements locally before each production release
 - Clean up remaining old-brand compatibility text in low-traffic UI areas
-- Move the stack to a VPS for small-scale public testing
-- Set up release automation for your own repository and registry
+- Add stronger production hardening, monitoring, and release automation
