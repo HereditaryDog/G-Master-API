@@ -2,7 +2,7 @@
 
 G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with production running at `https://gmapi.fun` and local Docker retained as the review-first workflow for UI and release verification.
 
-Current release: `v0.12.6-gmaster.2`
+Current release: `v0.12.6-gmaster.3`
 
 Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -16,8 +16,9 @@ Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
 ## Latest release highlights
 
-- New users now enter `标准用户组` consistently across password registration, admin-created accounts, OAuth first-login, and first-run root initialization
-- Any successful wallet recharge now upgrades the account to `VIP用户组` immediately, regardless of top-up amount
+- New users still enter `标准用户组` by default, while first-run root initialization now remains in `VIP用户组`
+- Any successful wallet recharge now upgrades the account to `VIP用户组` across `epay/alipay/wxpay`, Waffo, Stripe, Creem, and admin manual completion
+- Session-authenticated users now refresh their current group from persisted state, so permissions and group-based views stop drifting after an upgrade
 - Synced the fork to upstream `new-api v0.12.6` while preserving `G-Master API` branding, homepage, docs portal, and public-facing copy
 - Pulled in the newer admin-side pricing and grouped-ratio management flow from upstream
 - Pulled in the newer dashboard analytics and API info panel improvements from upstream

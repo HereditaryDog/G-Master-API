@@ -10,6 +10,7 @@ import (
 
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
+	"github.com/yangjunyu/G-Master-API/setting"
 
 	"github.com/glebarez/sqlite"
 	"gorm.io/driver/mysql"
@@ -82,6 +83,7 @@ func createRootAccountIfNeed() error {
 			DisplayName: "Root User",
 			AccessToken: nil,
 			Quota:       100000000,
+			Group:       setting.GetDefaultRootGroup(),
 		}
 		DB.Create(&rootUser)
 	}

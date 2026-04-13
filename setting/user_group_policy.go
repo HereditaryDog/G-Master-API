@@ -3,6 +3,7 @@ package setting
 import "strings"
 
 var DefaultRegisterGroup = "标准用户组"
+var DefaultRootGroup = "VIP用户组"
 var TopUpUpgradeGroup = "VIP用户组"
 
 func GetDefaultRegisterGroup() string {
@@ -11,4 +12,8 @@ func GetDefaultRegisterGroup() string {
 
 func GetTopUpUpgradeGroup() string {
 	return strings.TrimSpace(TopUpUpgradeGroup)
+}
+
+func GetDefaultRootGroup() string {
+	return strings.TrimSpace(DefaultRootGroup)
 }

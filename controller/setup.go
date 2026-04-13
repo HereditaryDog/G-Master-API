@@ -119,7 +119,7 @@ func PostSetup(c *gin.Context) {
 			DisplayName: "Root User",
 			AccessToken: nil,
 			Quota:       100000000,
-			Group:       setting.GetDefaultRegisterGroup(),
+			Group:       setting.GetDefaultRootGroup(),
 		}
 		err = model.DB.Create(&rootUser).Error
 		if err != nil {

@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/model"
 	"github.com/yangjunyu/G-Master-API/service"
 	"github.com/yangjunyu/G-Master-API/setting/ratio_setting"
-	"github.com/yangjunyu/G-Master-API/common"
 
 	"github.com/gin-gonic/gin"
 )
@@ -43,9 +43,10 @@ func GetPricing(c *gin.Context) {
 	}
 	var group string
 	if exists {
-		user, err := model.GetUserCache(userId.(int))
+		userID := userId.(int)
+		currentGroup, err := model.GetUserGroup(userID, true)
 		if err == nil {
-			group = user.Group
+			group = currentGroup
 			for g := range groupRatio {
 				ratio, ok := ratio_setting.GetGroupGroupRatio(group, g)
 				if ok {

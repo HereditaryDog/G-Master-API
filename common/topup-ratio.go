@@ -9,6 +9,8 @@ var topupGroupRatio = map[string]float64{
 	"default": 1,
 	"vip":     1,
 	"svip":    1,
+	"标准用户组":   1,
+	"VIP用户组":  1,
 }
 var topupGroupRatioMutex sync.RWMutex
 

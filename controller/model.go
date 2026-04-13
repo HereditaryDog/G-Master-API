@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/samber/lo"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/dto"
@@ -19,8 +21,6 @@ import (
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 	"github.com/yangjunyu/G-Master-API/setting/ratio_setting"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/gin-gonic/gin"
-	"github.com/samber/lo"
 )
 
 // https://platform.openai.com/docs/api-reference/models/list
@@ -154,7 +154,7 @@ func ListModels(c *gin.Context, modelType int) {
 		}
 	} else {
 		userId := c.GetInt("id")
-		userGroup, err := model.GetUserGroup(userId, false)
+		userGroup, err := model.GetUserGroup(userId, true)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,

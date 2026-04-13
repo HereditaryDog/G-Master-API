@@ -125,13 +125,31 @@ func authHelper(c *gin.Context, minRole int) {
 		c.Abort()
 		return
 	}
+	currentGroup, err := model.GetUserGroup(apiUserId, true)
+	if err != nil || strings.TrimSpace(currentGroup) == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无权进行此操作，用户分组无效",
+		})
+		c.Abort()
+		return
+	}
+	if !useAccessToken {
+		sessionGroup, _ := session.Get("group").(string)
+		if sessionGroup != currentGroup {
+			session.Set("group", currentGroup)
+			if err := session.Save(); err != nil {
+				common.SysLog("failed to refresh session group: " + err.Error())
+			}
+		}
+	}
 	// 防止不同newapi版本冲突，导致数据不通用
 	c.Header("Auth-Version", "864b7076dbcd0a3c01b5520316720ebf")
 	c.Set("username", username)
 	c.Set("role", role)
-	c.Set("id", id)
-	c.Set("group", session.Get("group"))
-	c.Set("user_group", session.Get("group"))
+	c.Set("id", apiUserId)
+	c.Set("group", currentGroup)
+	c.Set("user_group", currentGroup)
 	c.Set("use_access_token", useAccessToken)
 
 	c.Next()

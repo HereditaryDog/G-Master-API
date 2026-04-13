@@ -2,6 +2,20 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.6-gmaster.3 - 2026-04-14
+
+### Changed
+
+- Unified online wallet top-up completion so `epay/alipay/wxpay`, Waffo, Stripe, Creem, and admin manual completion now share the same post-payment path for quota settlement and user-group promotion.
+- Split root-user default group policy from normal registration so first-run super-admin initialization now stays in `VIP用户组`, while regular sign-ups still enter `标准用户组`.
+- Updated the default group-ratio and top-up-ratio fallback maps to include both legacy `default/vip/svip` keys and the current `标准用户组 / VIP用户组` business groups.
+
+### Fixed
+
+- Fixed the production bug where successful online `epay` recharges added quota but did not promote the user into `VIP用户组`.
+- Fixed the stale session-group problem that could leave already-upgraded users, including super-admin accounts, seeing permissions and group-dependent data as if they were still in the old group.
+- Fixed group-aware pricing/model/group endpoints to read the current persisted user group instead of relying on cached login-time state.
+
 ## v0.12.6-gmaster.2 - 2026-04-13
 
 ### Changed
