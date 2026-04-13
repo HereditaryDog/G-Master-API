@@ -3,24 +3,47 @@ package model
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/logger"
+	"github.com/yangjunyu/G-Master-API/setting"
 
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
 type TopUp struct {
-	Id               int     `json:"id"`
-	UserId           int     `json:"user_id" gorm:"index"`
-	Amount           int64   `json:"amount"`
-	Money            float64 `json:"money"`
-	TradeNo          string  `json:"trade_no" gorm:"unique;type:varchar(255);index"`
-	PaymentMethod    string  `json:"payment_method" gorm:"type:varchar(50)"`
-	CreateTime       int64   `json:"create_time"`
-	CompleteTime     int64   `json:"complete_time"`
-	Status           string  `json:"status"`
+	Id            int     `json:"id"`
+	UserId        int     `json:"user_id" gorm:"index"`
+	Amount        int64   `json:"amount"`
+	Money         float64 `json:"money"`
+	TradeNo       string  `json:"trade_no" gorm:"unique;type:varchar(255);index"`
+	PaymentMethod string  `json:"payment_method" gorm:"type:varchar(50)"`
+	CreateTime    int64   `json:"create_time"`
+	CompleteTime  int64   `json:"complete_time"`
+	Status        string  `json:"status"`
+}
+
+func upgradeUserGroupAfterTopUpTx(tx *gorm.DB, userId int) (string, error) {
+	upgradeGroup := setting.GetTopUpUpgradeGroup()
+	if tx == nil || userId <= 0 || upgradeGroup == "" {
+		return "", nil
+	}
+
+	currentGroup, err := getUserGroupByIdTx(tx, userId)
+	if err != nil {
+		return "", err
+	}
+	currentGroup = strings.TrimSpace(currentGroup)
+	if currentGroup == upgradeGroup {
+		return "", nil
+	}
+
+	if err := tx.Model(&User{}).Where("id = ?", userId).Update("group", upgradeGroup).Error; err != nil {
+		return "", err
+	}
+	return upgradeGroup, nil
 }
 
 func (topUp *TopUp) Insert() error {
@@ -61,6 +84,7 @@ func Recharge(referenceId string, customerId string) (err error) {
 	}
 
 	var quota float64
+	upgradedGroup := ""
 	topUp := &TopUp{}
 
 	refCol := "`trade_no`"
@@ -91,12 +115,20 @@ func Recharge(referenceId string, customerId string) (err error) {
 			return err
 		}
 
+		upgradedGroup, err = upgradeUserGroupAfterTopUpTx(tx, topUp.UserId)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
 	if err != nil {
 		common.SysError("topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")
+	}
+	if upgradedGroup != "" {
+		_ = UpdateUserGroupCache(topUp.UserId, upgradedGroup)
 	}
 
 	RecordLog(topUp.UserId, LogTypeTopup, fmt.Sprintf("使用在线充值成功，充值金额: %v，支付金额：%d", logger.FormatQuota(int(quota)), topUp.Amount))
@@ -249,6 +281,7 @@ func ManualCompleteTopUp(tradeNo string) error {
 	var userId int
 	var quotaToAdd int
 	var payMoney float64
+	upgradedGroup := ""
 
 	err := DB.Transaction(func(tx *gorm.DB) error {
 		topUp := &TopUp{}
@@ -293,6 +326,12 @@ func ManualCompleteTopUp(tradeNo string) error {
 			return err
 		}
 
+		group, upgradeErr := upgradeUserGroupAfterTopUpTx(tx, topUp.UserId)
+		if upgradeErr != nil {
+			return upgradeErr
+		}
+		upgradedGroup = group
+
 		userId = topUp.UserId
 		payMoney = topUp.Money
 		return nil
@@ -300,6 +339,9 @@ func ManualCompleteTopUp(tradeNo string) error {
 
 	if err != nil {
 		return err
+	}
+	if upgradedGroup != "" {
+		_ = UpdateUserGroupCache(userId, upgradedGroup)
 	}
 
 	// 事务外记录日志，避免阻塞
@@ -312,6 +354,7 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 	}
 
 	var quota int64
+	upgradedGroup := ""
 	topUp := &TopUp{}
 
 	refCol := "`trade_no`"
@@ -364,12 +407,20 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 			return err
 		}
 
+		upgradedGroup, err = upgradeUserGroupAfterTopUpTx(tx, topUp.UserId)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
 	if err != nil {
 		common.SysError("creem topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")
+	}
+	if upgradedGroup != "" {
+		_ = UpdateUserGroupCache(topUp.UserId, upgradedGroup)
 	}
 
 	RecordLog(topUp.UserId, LogTypeTopup, fmt.Sprintf("使用Creem充值成功，充值额度: %v，支付金额：%.2f", quota, topUp.Money))
@@ -383,6 +434,7 @@ func RechargeWaffo(tradeNo string) (err error) {
 	}
 
 	var quotaToAdd int
+	upgradedGroup := ""
 	topUp := &TopUp{}
 
 	refCol := "`trade_no`"
@@ -421,12 +473,20 @@ func RechargeWaffo(tradeNo string) (err error) {
 			return err
 		}
 
+		upgradedGroup, err = upgradeUserGroupAfterTopUpTx(tx, topUp.UserId)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
 	if err != nil {
 		common.SysError("waffo topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")
+	}
+	if upgradedGroup != "" {
+		_ = UpdateUserGroupCache(topUp.UserId, upgradedGroup)
 	}
 
 	if quotaToAdd > 0 {

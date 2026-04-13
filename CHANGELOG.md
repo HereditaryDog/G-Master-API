@@ -2,6 +2,18 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.6-gmaster.2 - 2026-04-13
+
+### Changed
+
+- Standardized new-user onboarding so password registration, admin-created accounts, OAuth first-login accounts, and first-run root initialization all enter the `标准用户组` user group by default.
+- Standardized successful top-up handling so wallet recharge completion now upgrades the user to `VIP用户组` immediately, regardless of recharge amount.
+
+### Fixed
+
+- Fixed the previous behavior where newly created users silently fell back to the legacy database default group instead of the configured business group layout.
+- Fixed the gap between recharge success and user-group promotion by applying the group upgrade inside the same top-up completion transaction and refreshing the cached user group afterwards.
+
 ## v0.12.6-gmaster.1 - 2026-04-09
 
 ### Changed

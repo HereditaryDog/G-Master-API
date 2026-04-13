@@ -11,6 +11,7 @@ import (
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/dto"
 	"github.com/yangjunyu/G-Master-API/logger"
+	"github.com/yangjunyu/G-Master-API/setting"
 
 	"github.com/bytedance/gopkg/util/gopool"
 	"gorm.io/gorm"
@@ -384,6 +385,9 @@ func (user *User) Insert(inviterId int) error {
 			return err
 		}
 	}
+	if strings.TrimSpace(user.Group) == "" {
+		user.Group = setting.GetDefaultRegisterGroup()
+	}
 	user.Quota = common.QuotaForNewUser
 	//user.SetAccessToken(common.GetUUID())
 	user.AffCode = common.GetRandomString(4)
@@ -442,6 +446,9 @@ func (user *User) InsertWithTx(tx *gorm.DB, inviterId int) error {
 		if err != nil {
 			return err
 		}
+	}
+	if strings.TrimSpace(user.Group) == "" {
+		user.Group = setting.GetDefaultRegisterGroup()
 	}
 	user.Quota = common.QuotaForNewUser
 	user.AffCode = common.GetRandomString(4)

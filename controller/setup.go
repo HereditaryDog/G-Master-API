@@ -3,11 +3,12 @@ package controller
 import (
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/model"
+	"github.com/yangjunyu/G-Master-API/setting"
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
-	"github.com/gin-gonic/gin"
 )
 
 type Setup struct {
@@ -118,6 +119,7 @@ func PostSetup(c *gin.Context) {
 			DisplayName: "Root User",
 			AccessToken: nil,
 			Quota:       100000000,
+			Group:       setting.GetDefaultRegisterGroup(),
 		}
 		err = model.DB.Create(&rootUser).Error
 		if err != nil {
