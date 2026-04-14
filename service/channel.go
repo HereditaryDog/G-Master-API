@@ -2,11 +2,9 @@ package service
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/yangjunyu/G-Master-API/common"
-	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/dto"
 	"github.com/yangjunyu/G-Master-API/model"
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
@@ -63,12 +61,12 @@ func ShouldDisableChannel(channelType int, err *types.NewAPIError) bool {
 	//if err.StatusCode == http.StatusUnauthorized {
 	//	return true
 	//}
-	if err.StatusCode == http.StatusForbidden {
-		switch channelType {
-		case constant.ChannelTypeGemini:
-			return true
-		}
-	}
+	//if err.StatusCode == http.StatusForbidden {
+	//	switch channelType {
+	//	case constant.ChannelTypeGemini:
+	//		return true
+	//	}
+	//}
 	oaiErr := err.ToOpenAIError()
 	switch oaiErr.Code {
 	case "invalid_api_key":

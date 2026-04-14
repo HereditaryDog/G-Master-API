@@ -35,3 +35,4 @@ data/
 .cloudflared-domain.env
 .cloudflared-domain.pid
 .cloudflared-domain.url
+token_estimator_test.go
