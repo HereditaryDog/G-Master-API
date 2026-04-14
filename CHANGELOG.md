@@ -2,6 +2,20 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.9-gmaster.1 - 2026-04-14
+
+### Changed
+
+- Synced the fork forward from upstream `new-api v0.12.6` to `v0.12.9` while preserving `G-Master API` branding, the custom homepage and docs portal, and the existing business-group behavior.
+- Pulled in the upstream dashboard and settings refinements, including better chart dimension handling, ranking logic, amount-first quota adjustment flow, subscription-card next-reset display, and the GroupTable input behavior fixes.
+- Regenerated the published Apifox import artifacts so the public developer documentation stays aligned with the new release version and current production base URLs.
+
+### Fixed
+
+- Fixed the public-site dark-mode regression where the branded homepage still rendered in a light theme because the active `gm-zen-*` style set had no dark-mode coverage.
+- Fixed the shared public header in dark mode so homepage, docs, auth, pricing, and about pages no longer keep a light top bar after the theme switches to dark.
+- Pulled in the upstream fixes for Azure `/v1/responses/compact` routing, Claude `TopP` request handling, token-auth error hardening, and `isStream` error-log status reporting.
+
 ## v0.12.6-gmaster.3 - 2026-04-14
 
 ### Changed

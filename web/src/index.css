@@ -238,6 +238,76 @@ html.dark body {
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12) !important;
 }
 
+html.dark .gm-header-shell {
+  border-bottom-color: rgba(99, 110, 140, 0.28);
+  background:
+    linear-gradient(180deg, rgba(8, 13, 25, 0.92), rgba(12, 19, 34, 0.86));
+  box-shadow:
+    0 12px 30px rgba(2, 6, 23, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html.dark .gm-header-logo-mark {
+  border-color: rgba(129, 140, 248, 0.26);
+  background:
+    linear-gradient(135deg, rgba(29, 40, 74, 0.92), rgba(42, 24, 72, 0.9));
+  box-shadow:
+    0 14px 28px rgba(15, 23, 42, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html.dark .gm-header-system-name {
+  color: #e2e8f0 !important;
+}
+
+html.dark .gm-main-nav-link {
+  color: #cbd5e1;
+}
+
+html.dark .gm-main-nav-link:hover {
+  color: #ddd6fe;
+  background: rgba(99, 102, 241, 0.18);
+}
+
+html.dark .gm-main-nav-link-active {
+  color: #f5f3ff;
+  background: rgba(99, 102, 241, 0.24);
+  border-color: rgba(129, 140, 248, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+html.dark .gm-header-actions {
+  border-color: rgba(99, 110, 140, 0.26);
+  background: rgba(15, 23, 42, 0.68);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html.dark .gm-header-action-icon {
+  color: #dbe4ff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+html.dark .gm-header-action-icon:hover {
+  border-color: rgba(129, 140, 248, 0.22) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+html.dark .gm-user-trigger {
+  background: rgba(15, 23, 42, 0.72) !important;
+}
+
+html.dark .gm-user-login-button {
+  color: #e2e8f0 !important;
+  border-color: rgba(99, 110, 140, 0.28) !important;
+  background: rgba(15, 23, 42, 0.84) !important;
+}
+
+html.dark .gm-user-dropdown {
+  background: rgba(12, 18, 32, 0.96) !important;
+  border-color: rgba(99, 110, 140, 0.28) !important;
+  box-shadow: 0 24px 40px rgba(2, 6, 23, 0.4) !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -3010,6 +3080,130 @@ html.dark .gm-docs-search-input:focus {
   height: 20px;
   color: #3b82f6;
   flex-shrink: 0;
+}
+
+html.dark .gm-zen-home {
+  color: #e2e8f0;
+  background:
+    radial-gradient(circle at top left, rgba(79, 70, 229, 0.2), transparent 24%),
+    radial-gradient(circle at top right, rgba(168, 85, 247, 0.16), transparent 22%),
+    linear-gradient(180deg, #09101d 0%, #0d1527 45%, #0a1222 100%);
+}
+
+html.dark .gm-zen-shape {
+  background: linear-gradient(
+    135deg,
+    rgba(129, 140, 248, 0.08),
+    rgba(192, 132, 252, 0.07)
+  );
+}
+
+html.dark .gm-zen-shape:nth-child(1) {
+  background: radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.14), transparent);
+}
+
+html.dark .gm-zen-shape:nth-child(2) {
+  background: radial-gradient(circle at 70% 70%, rgba(192, 132, 252, 0.14), transparent);
+}
+
+html.dark .gm-zen-shape:nth-child(3) {
+  background: radial-gradient(circle at 50% 50%, rgba(129, 140, 248, 0.11), transparent);
+}
+
+html.dark .gm-zen-shape:nth-child(4) {
+  background: radial-gradient(circle at 40% 60%, rgba(59, 130, 246, 0.12), transparent);
+}
+
+html.dark .gm-zen-subtitle {
+  color: #f1f5f9;
+}
+
+html.dark .gm-zen-status {
+  color: #a8b4c9;
+}
+
+html.dark .gm-zen-btn-secondary {
+  color: #c7d2fe;
+  background: rgba(15, 23, 42, 0.86);
+  border-color: rgba(129, 140, 248, 0.24);
+}
+
+html.dark .gm-zen-btn-secondary:hover {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(129, 140, 248, 0.44);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.22);
+}
+
+html.dark .gm-zen-section {
+  border-color: rgba(71, 85, 105, 0.34);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(11, 18, 32, 0.95)),
+    radial-gradient(circle at top right, rgba(99, 102, 241, 0.12), transparent 32%);
+  box-shadow: 0 18px 50px rgba(2, 6, 23, 0.34);
+}
+
+html.dark .gm-zen-section:hover {
+  box-shadow: 0 26px 70px rgba(2, 6, 23, 0.48);
+}
+
+html.dark .gm-zen-section h2 {
+  background: linear-gradient(135deg, #f8fafc, #c4b5fd);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+html.dark .gm-zen-feature-card,
+html.dark .gm-zen-dashboard-mockup,
+html.dark .gm-zen-logo-placeholder,
+html.dark .gm-zen-step,
+html.dark .gm-zen-contact-info {
+  border-color: rgba(71, 85, 105, 0.34);
+  background: rgba(15, 23, 42, 0.76);
+  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.24);
+}
+
+html.dark .gm-zen-feature-card:hover,
+html.dark .gm-zen-logo-placeholder:hover,
+html.dark .gm-zen-step:hover {
+  border-color: rgba(129, 140, 248, 0.44);
+  box-shadow: 0 22px 44px rgba(2, 6, 23, 0.38);
+}
+
+html.dark .gm-zen-feature-card::after {
+  background: linear-gradient(135deg, transparent, rgba(129, 140, 248, 0.12));
+}
+
+html.dark .gm-zen-feature-card h3,
+html.dark .gm-zen-keys-info h3,
+html.dark .gm-zen-supported-frameworks h3,
+html.dark .gm-zen-step h3 {
+  color: #f8fafc;
+}
+
+html.dark .gm-zen-feature-card p,
+html.dark .gm-zen-keys-info p,
+html.dark .gm-zen-supported-frameworks p,
+html.dark .gm-zen-step p,
+html.dark .gm-zen-dashboard-features li,
+html.dark .gm-zen-keys-info li,
+html.dark .gm-zen-contact-item,
+html.dark .gm-zen-home-footer-title,
+html.dark .gm-zen-home-footer-links {
+  color: #94a3b8;
+}
+
+html.dark .gm-zen-dashboard-features li:hover,
+html.dark .gm-zen-keys-info li:hover {
+  color: #e2e8f0;
+}
+
+html.dark .gm-zen-logo-placeholder {
+  color: #cbd5e1;
+}
+
+html.dark .gm-zen-logo-placeholder:hover {
+  color: #e9d5ff;
+  background: rgba(30, 41, 59, 0.92);
 }
 
 @media (max-width: 1024px) {

@@ -3,7 +3,7 @@
   "info": {
     "title": "G-Master API - 模型中转接口",
     "description": "G-Master API 对外模型调用接口。\n\n生产地址：`https://gmapi.fun`\nOpenAI 兼容基址：`https://gmapi.fun/v1`\n仓库地址：`https://github.com/HereditaryDog/G-Master-API`",
-    "version": "v0.12.6-gmaster.1"
+    "version": "v0.12.9-gmaster.1"
   },
   "tags": [
     {
