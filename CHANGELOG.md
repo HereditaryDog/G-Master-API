@@ -2,6 +2,20 @@
 
 All notable changes to `G-Master API` are documented in this file.
 
+## v0.12.10-gmaster.1 - 2026-04-15
+
+### Changed
+
+- Synced the fork forward from upstream `new-api v0.12.9` to `v0.12.10` while preserving `G-Master API` branding, deployment links, and the existing business-group behavior.
+- Pulled in the upstream Claude relay controls for `cache_control` passthrough and optional `speed` passthrough, including the related admin-side channel settings and relay schema updates.
+- Regenerated the published Apifox import artifacts so the public developer documentation stays aligned with the new release version and the refreshed relay request schema.
+
+### Fixed
+
+- Fixed Stripe Checkout webhook handling for delayed payment methods so async success and async failure events now settle or fail pending recharge orders correctly instead of relying only on synchronous completion.
+- Fixed `/v1/responses` compatibility when upstream returns a non-string or `null` `instructions` field by aligning the response DTO with `json.RawMessage`.
+- Fixed admin quota adjustment logs so they now record the acting administrator username, and fixed the multi-key management modal to display key indexes starting from `#1`.
+
 ## v0.12.9-gmaster.1 - 2026-04-14
 
 ### Changed

@@ -2,7 +2,7 @@
 
 G-Master API is a self-hosted AI gateway derived from [QuantumNous/new-api](https://github.com/QuantumNous/new-api). This repository is the branded fork maintained by `yangjunyu`, with production running at `https://gmapi.fun` and local Docker retained as the review-first workflow for UI and release verification.
 
-Current release: `v0.12.9-gmaster.1`
+Current release: `v0.12.10-gmaster.1`
 
 Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
@@ -16,11 +16,11 @@ Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
 
 ## Latest release highlights
 
-- Synced the fork to upstream `new-api v0.12.9` while preserving `G-Master API` branding, homepage, docs portal, and production-facing copy
+- Synced the fork to upstream `new-api v0.12.10` while preserving `G-Master API` branding, homepage, docs portal, and production-facing copy
 - Kept the current business-group automation: new users enter `标准用户组` by default, while successful wallet recharges still promote accounts to `VIP用户组`
-- Pulled in the upstream `v0.12.7`-`v0.12.9` admin refinements, including improved dashboard chart handling, ranked analytics, next quota reset time in subscription cards, and smoother grouped-ratio editing
-- Pulled in the upstream fixes for Azure `/v1/responses/compact`, Claude `TopP` handling, token-auth error hardening, and stream-status error logs
-- Fixed the public-site dark mode so the branded homepage and shared public header now render correctly across homepage, docs, pricing, about, and auth pages
+- Added upstream Claude passthrough controls for `cache_control` and optional `speed`, including the related relay filtering and channel configuration toggles
+- Fixed Stripe async Checkout webhook handling for delayed payment methods, `/v1/responses` `instructions` parsing, admin quota logs, and the multi-key index display in channel management
+- Regenerated the branded Apifox import artifacts so the published docs match the `v0.12.10-gmaster.1` release schema
 
 ## Stack
 

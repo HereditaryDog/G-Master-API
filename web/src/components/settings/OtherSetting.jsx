@@ -303,7 +303,7 @@ const OtherSetting = () => {
   // Function to open GitHub release page
   const openGitHubRelease = () => {
     window.open(
-      `https://github.com/yangjunyu/G-Master-API/releases/tag/${updateData.tag_name}`,
+      `https://github.com/HereditaryDog/G-Master-API/releases/tag/${updateData.tag_name}`,
       '_blank',
     );
   };

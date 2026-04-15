@@ -3,7 +3,7 @@
   "info": {
     "title": "G-Master API - 模型中转接口",
     "description": "G-Master API 对外模型调用接口。\n\n生产地址：`https://gmapi.fun`\nOpenAI 兼容基址：`https://gmapi.fun/v1`\n仓库地址：`https://github.com/HereditaryDog/G-Master-API`",
-    "version": "v0.12.9-gmaster.1"
+    "version": "v0.12.10-gmaster.1"
   },
   "tags": [
     {
@@ -3784,6 +3784,13 @@
               }
             ]
           },
+          "cache_control": {
+            "type": "object",
+            "properties": {}
+          },
+          "inference_geo": {
+            "type": "string"
+          },
           "max_tokens": {
             "type": "integer",
             "minimum": 1
@@ -3836,7 +3843,8 @@
                     "enum": [
                       "auto",
                       "any",
-                      "tool"
+                      "tool",
+                      "none"
                     ]
                   },
                   "name": {
@@ -3861,6 +3869,36 @@
               }
             }
           },
+          "context_management": {
+            "type": "object",
+            "properties": {}
+          },
+          "output_config": {
+            "type": "object",
+            "properties": {}
+          },
+          "output_format": {
+            "type": "object",
+            "properties": {}
+          },
+          "container": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {}
+              }
+            ]
+          },
+          "mcp_servers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
           "metadata": {
             "type": "object",
             "properties": {
@@ -3868,6 +3906,20 @@
                 "type": "string"
               }
             }
+          },
+          "speed": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "fast"
+            ]
+          },
+          "service_tier": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "standard_only"
+            ]
           }
         }
       },

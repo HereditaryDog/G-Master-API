@@ -24,7 +24,7 @@ var (
 func printHelp() {
 	fmt.Println("G-Master API " + Version + " - AI gateway and model asset management built for self-hosted deployments.")
 	fmt.Println("Original Project: OneAPI by JustSong - https://github.com/songquanpeng/one-api")
-	fmt.Println("Maintainer: yangjunyu - https://github.com/yangjunyu/G-Master-API")
+	fmt.Println("Maintainer: yangjunyu - https://github.com/HereditaryDog/G-Master-API")
 	fmt.Println("Usage: g-master-api [--port <port>] [--log-dir <log directory>] [--version] [--help]")
 }
 

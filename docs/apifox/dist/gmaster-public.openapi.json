@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "G-Master API - 公开接口文档",
-    "version": "v0.12.9-gmaster.1",
+    "version": "v0.12.10-gmaster.1",
     "description": "适合导入 Apifox 并对外发布的公开接口集合。\n\n包含：模型中转接口、用户侧令牌管理接口、系统状态与个人数据接口。\n生产地址：`https://gmapi.fun`\nOpenAI 兼容基址：`https://gmapi.fun/v1`\n后台接口基址：`https://gmapi.fun/api`\n仓库地址：`https://github.com/HereditaryDog/G-Master-API`"
   },
   "servers": [
@@ -5945,6 +5945,13 @@
               }
             ]
           },
+          "cache_control": {
+            "type": "object",
+            "properties": {}
+          },
+          "inference_geo": {
+            "type": "string"
+          },
           "max_tokens": {
             "type": "integer",
             "minimum": 1
@@ -5997,7 +6004,8 @@
                     "enum": [
                       "auto",
                       "any",
-                      "tool"
+                      "tool",
+                      "none"
                     ]
                   },
                   "name": {
@@ -6022,6 +6030,36 @@
               }
             }
           },
+          "context_management": {
+            "type": "object",
+            "properties": {}
+          },
+          "output_config": {
+            "type": "object",
+            "properties": {}
+          },
+          "output_format": {
+            "type": "object",
+            "properties": {}
+          },
+          "container": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {}
+              }
+            ]
+          },
+          "mcp_servers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
           "metadata": {
             "type": "object",
             "properties": {
@@ -6029,6 +6067,20 @@
                 "type": "string"
               }
             }
+          },
+          "speed": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "fast"
+            ]
+          },
+          "service_tier": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "standard_only"
+            ]
           }
         }
       },

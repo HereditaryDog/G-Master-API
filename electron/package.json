@@ -21,7 +21,7 @@
   "author": "yangjunyu",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yangjunyu/G-Master-API"
+    "url": "https://github.com/HereditaryDog/G-Master-API"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

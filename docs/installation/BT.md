@@ -7,7 +7,7 @@
 优先使用源码目录 + Docker Compose：
 
 ```bash
-git clone https://github.com/yangjunyu/G-Master-API.git
+git clone https://github.com/HereditaryDog/G-Master-API.git
 cd G-Master-API
 cp .env.example .env
 docker compose up -d --build
