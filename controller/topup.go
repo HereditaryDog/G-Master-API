@@ -335,6 +335,15 @@ func EpayNotify(c *gin.Context) {
 		log.Println(verifyInfo)
 		LockOrder(verifyInfo.ServiceTradeNo)
 		defer UnlockOrder(verifyInfo.ServiceTradeNo)
+		topUp := model.GetTopUpByTradeNo(verifyInfo.ServiceTradeNo)
+		if topUp == nil {
+			log.Printf("易支付回调未找到订单: %v", verifyInfo)
+			return
+		}
+		if topUp.PaymentMethod == "stripe" || topUp.PaymentMethod == "creem" || topUp.PaymentMethod == "waffo" {
+			log.Printf("易支付回调订单支付方式不匹配: %s, 订单号: %s", topUp.PaymentMethod, verifyInfo.ServiceTradeNo)
+			return
+		}
 		result, completeErr := model.CompleteTopUpByTradeNo(verifyInfo.ServiceTradeNo)
 		if completeErr != nil {
 			log.Printf("易支付回调处理订单失败: trade_no=%s err=%v", verifyInfo.ServiceTradeNo, completeErr)

@@ -55,7 +55,7 @@ func upgradeUserGroupAfterTopUpTx(tx *gorm.DB, userId int) (string, error) {
 	return upgradeGroup, nil
 }
 
-func CompleteTopUpByTradeNo(tradeNo string) (*TopUpCompletionResult, error) {
+func CompleteTopUpByTradeNo(tradeNo string, expectedMethods ...string) (*TopUpCompletionResult, error) {
 	if strings.TrimSpace(tradeNo) == "" {
 		return nil, errors.New("未提供订单号")
 	}
@@ -75,6 +75,19 @@ func CompleteTopUpByTradeNo(tradeNo string) (*TopUpCompletionResult, error) {
 		result.UserId = topUp.UserId
 		result.PaymentMethod = topUp.PaymentMethod
 		result.PaymentMoney = topUp.Money
+
+		if len(expectedMethods) > 0 {
+			matched := false
+			for _, expectedMethod := range expectedMethods {
+				if strings.TrimSpace(expectedMethod) == topUp.PaymentMethod {
+					matched = true
+					break
+				}
+			}
+			if !matched {
+				return ErrPaymentMethodMismatch
+			}
+		}
 
 		if topUp.Status == common.TopUpStatusSuccess {
 			result.AlreadySuccess = true
@@ -124,6 +137,8 @@ func CompleteTopUpByTradeNo(tradeNo string) (*TopUpCompletionResult, error) {
 
 	return result, nil
 }
+
+var ErrPaymentMethodMismatch = errors.New("payment method mismatch")
 
 func (topUp *TopUp) Insert() error {
 	var err error
@@ -175,6 +190,10 @@ func Recharge(referenceId string, customerId string) (err error) {
 		err := tx.Set("gorm:query_option", "FOR UPDATE").Where(refCol+" = ?", referenceId).First(topUp).Error
 		if err != nil {
 			return errors.New("充值订单不存在")
+		}
+
+		if topUp.PaymentMethod != "stripe" {
+			return ErrPaymentMethodMismatch
 		}
 
 		if topUp.Status != common.TopUpStatusPending {
@@ -380,6 +399,10 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 			return errors.New("充值订单不存在")
 		}
 
+		if topUp.PaymentMethod != "creem" {
+			return ErrPaymentMethodMismatch
+		}
+
 		if topUp.Status != common.TopUpStatusPending {
 			return errors.New("充值订单状态错误")
 		}
@@ -441,7 +464,7 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 }
 
 func RechargeWaffo(tradeNo string) (err error) {
-	result, err := CompleteTopUpByTradeNo(tradeNo)
+	result, err := CompleteTopUpByTradeNo(tradeNo, "waffo")
 	if err != nil {
 		common.SysError("waffo topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")

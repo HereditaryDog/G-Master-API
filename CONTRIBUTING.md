@@ -40,7 +40,7 @@ docker compose up -d --build
 - `feat/xxx`
 - `fix/xxx`
 - `docs/xxx`
-- `sync/upstream-v0.12.10`
+- `sync/upstream-v0.12.11`
 
 ### Commit 信息
 
@@ -50,7 +50,7 @@ docker compose up -d --build
 
 - `Fix Stripe async webhook settlement`
 - `Rewrite README in Chinese`
-- `Release v0.12.10-gmaster.1 with upstream sync`
+- `Release v0.12.11-gmaster.1 with upstream sync`
 
 ## Pull Request 要求
 
