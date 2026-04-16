@@ -1,11 +1,10 @@
-# G-Master API
+# G-Master API（繁體中文入口）
 
-此倉庫是 `G-Master API` 的品牌化版本，基於 `QuantumNous/new-api` 改造而來。
+本倉庫的主要文件目前以簡體中文維護，請優先閱讀：
 
-目前優先維護的文件是：
+- [主 README](./README.md)
+- [更新日誌](./CHANGELOG.md)
+- [部署說明](./docs/installation/BT.md)
+- [上游致謝與授權說明](./ACKNOWLEDGMENTS.md)
 
-- [簡體中文 README](./README.zh_CN.md)
-- [English README](./README.md)
-- [上游與授權說明](./ACKNOWLEDGMENTS.md)
-
-如果你準備本地驗收，請直接依照 `README.zh_CN.md` 或 `README.md` 中的 Docker Compose 步驟操作。
+目前穩定版本：[`v0.12.10-gmaster.1`](https://github.com/HereditaryDog/G-Master-API/releases/tag/v0.12.10-gmaster.1)

@@ -1,24 +1,24 @@
-# Acknowledgments
+# 上游致谢与授权说明
 
-## Upstream lineage
+## 上游来源
 
-- This repository started from the fork `HereditaryDog/G-MasterAPI_01`
-- That repository itself is forked from [`QuantumNous/new-api`](https://github.com/QuantumNous/new-api)
-- `QuantumNous/new-api` was originally built on top of `One API`
+- 当前仓库最初来自 `HereditaryDog/G-MasterAPI_01`
+- 上述仓库继续上溯至 [`QuantumNous/new-api`](https://github.com/QuantumNous/new-api)
+- `QuantumNous/new-api` 又建立在 `One API` 的基础之上
 
-## What this fork changes
+## 本分支的主要调整
 
-- Rebrands the product as `G-Master API`
-- Switches default local deployment to a source-built Docker Compose workflow
-- Renames default binaries, containers, and service files to `g-master-api`
-- Redirects project-facing links and defaults to this repository
+- 将对外产品名统一为 `G-Master API`
+- 默认部署方式改为直接构建当前仓库源码
+- 将默认二进制、容器与服务名统一为 `g-master-api`
+- 将仓库链接、公开文档与发布入口切换到当前分支维护的品牌化版本
 
-## License
+## 许可证
 
-- The original upstream project is licensed under `AGPL-3.0`
-- This fork keeps `AGPL-3.0`
-- Source redistribution, attribution, and network-use obligations still apply
+- 上游项目使用 `AGPL-3.0`
+- 当前分支继续保留 `AGPL-3.0`
+- 在源码分发、再发布以及网络服务场景下，相关授权义务仍然适用
 
-## Maintainer note
+## 维护者说明
 
-This fork is maintained by `yangjunyu` as an independently branded deployment and release track. It does not claim authorship over upstream work and should retain this attribution file when redistributed.
+本分支由 `yangjunyu` 维护，作为独立品牌与独立发布节奏的交付分支存在。它并不主张对上游工作的原创所有权；如需继续再分发，请保留本文件以及相关授权说明。

@@ -9,13 +9,21 @@ assignees: ''
 
 ## 提交前必读（请勿删除本节）
 
-- 文档：https://github.com/yangjunyu/G-Master-API/blob/main/README.zh_CN.md
-- 仓库主页：https://github.com/yangjunyu/G-Master-API
+- 文档：https://github.com/HereditaryDog/G-Master-API/blob/main/README.md
+- 仓库主页：https://github.com/HereditaryDog/G-Master-API
 - 警告：删除本模板、删除小节标题或随意清空内容的 issue，可能会被直接关闭；重复恶意提交者可能会被 block。
 
-**您当前的 G-Master API 版本**
+**当前版本**
 
 请填写，例如：`v1.0.0`
+
+**部署方式 / 环境信息**
+
+请尽量说明你的使用场景，例如：
+
+- 本地部署 / 公网部署
+- 面向个人使用 / 团队使用 / 商业服务
+- 是否依赖某个模型、渠道或支付流程
 
 **提交确认**
 
@@ -26,5 +34,11 @@ assignees: ''
 + [ ] 我理解项目维护者精力有限，不遵循模板要求的 issue 可能会被无视或直接关闭
 
 **功能描述**
+
+**当前痛点**
+
+**目标效果**
+
+**建议方案（可选）**
 
 **应用场景**

@@ -1,11 +1,12 @@
 # G-Master API
 
-Ce dépôt est la version rebrandée de `G-Master API`, dérivée de `QuantumNous/new-api`.
+La documentation principale de ce dépôt est désormais maintenue en **chinois simplifié**.
 
-La documentation maintenue en priorité se trouve ici :
+Points d’entrée recommandés :
 
-- [README.zh_CN.md](./README.zh_CN.md)
-- [README.md](./README.md)
-- [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md)
+- [README principal](./README.md)
+- [Journal des changements](./CHANGELOG.md)
+- [Guide de déploiement](./docs/installation/BT.md)
+- [Attribution et licence](./ACKNOWLEDGMENTS.md)
 
-Pour une validation locale, suivez directement les étapes Docker Compose dans `README.zh_CN.md` ou `README.md`.
+Version stable actuelle : [`v0.12.10-gmaster.1`](https://github.com/HereditaryDog/G-Master-API/releases/tag/v0.12.10-gmaster.1)

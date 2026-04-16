@@ -1,38 +1,38 @@
-# Security Policy
+# 安全策略
 
-## Supported versions
+## 支持版本
 
-| Version | Supported |
-| ------- | --------- |
-| Latest  | Yes       |
-| Older   | No        |
+| 版本 | 是否继续接收安全修复 |
+| --- | --- |
+| 最新稳定版本 | 是 |
+| 历史旧版本 | 否 |
 
-## Reporting a vulnerability
+## 漏洞反馈方式
 
-Please do not report security issues in public GitHub issues.
+请不要在公开 Issue 中直接披露安全漏洞。
 
-Use one of these channels instead:
+推荐使用以下渠道：
 
-- GitHub Security Advisories: [Open a draft advisory](https://github.com/yangjunyu/G-Master-API/security/advisories/new)
-- A previously agreed private maintainer contact channel, if available
+- GitHub Security Advisories：<https://github.com/HereditaryDog/G-Master-API/security/advisories/new>
+- 如果你已经与维护者约定了私密沟通方式，也可以通过既有渠道提交
 
-## What to include
+## 提交时建议包含的信息
 
-Please include:
+请尽量提供：
 
-1. Affected component or endpoint
-2. Reproduction steps
-3. Impact assessment
-4. Proof of concept if safe to share
-5. Suggested fix if available
+1. 受影响组件、接口或页面
+2. 复现步骤
+3. 影响范围与可能后果
+4. 若适合公开，提供最小 PoC
+5. 如有想法，可附带修复建议
 
-## Deployment reminders
+## 部署侧安全提醒
 
-- Set strong values for `SESSION_SECRET`, `CRYPTO_SECRET`, and database passwords
-- Keep PostgreSQL and Redis off the public internet whenever possible
-- Use HTTPS and a reverse proxy before public rollout
-- Create and test database backups before upgrades
+- 请为 `SESSION_SECRET`、`CRYPTO_SECRET` 与数据库密码使用强随机值
+- PostgreSQL 与 Redis 尽量不要直接暴露到公网
+- 对公网开放前请配好 HTTPS 与反向代理
+- 升级前请先验证备份链路是否可恢复
 
-## Disclaimer
+## 免责声明
 
-This project is provided as-is. You are responsible for evaluating its security posture in your own environment.
+本项目按现状提供。实际部署环境中的安全基线、访问控制、审计、监控与合规责任仍需由使用者自行承担。

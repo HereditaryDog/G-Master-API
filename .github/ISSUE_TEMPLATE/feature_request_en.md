@@ -9,13 +9,21 @@ assignees: ''
 
 ## Read This First (Do Not Remove This Section)
 
-- Docs: https://github.com/yangjunyu/G-Master-API/blob/main/README.md
-- Repository: https://github.com/yangjunyu/G-Master-API
+- Docs: https://github.com/HereditaryDog/G-Master-API/blob/main/README.md
+- Repository: https://github.com/HereditaryDog/G-Master-API
 - Warning: issues with this template removed, section headings deleted, or content cleared may be closed directly. Repeated abusive submissions may result in a block.
 
-**Your current G-Master API version**
+**Current version**
 
 Please fill this in, for example: `v1.0.0`
+
+**Deployment / environment**
+
+Please describe the usage context when possible:
+
+- Local deployment / public deployment
+- Personal use / team use / commercial use
+- Whether this request depends on a specific model, channel, or payment flow
 
 **Submission Checks**
 
@@ -26,5 +34,11 @@ Please fill this in, for example: `v1.0.0`
 + [ ] I understand that maintainers have limited time and issues that do not follow this template may be ignored or closed directly
 
 **Feature Description**
+
+**Current Pain Point**
+
+**Desired Outcome**
+
+**Suggested Approach (Optional)**
 
 **Use Case**

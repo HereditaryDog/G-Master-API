@@ -9,13 +9,22 @@ assignees: ''
 
 ## 提交前必读（请勿删除本节）
 
-- 文档：https://github.com/yangjunyu/G-Master-API/blob/main/README.zh_CN.md
-- 仓库主页：https://github.com/yangjunyu/G-Master-API
+- 文档：https://github.com/HereditaryDog/G-Master-API/blob/main/README.md
+- 仓库主页：https://github.com/HereditaryDog/G-Master-API
 - 警告：删除本模板、删除小节标题或随意清空内容的 issue，可能会被直接关闭；重复恶意提交者可能会被 block。
 
-**您当前的 G-Master API 版本**
+**当前版本**
 
 请填写，例如：`v1.0.0`
+
+**部署方式 / 环境信息**
+
+请尽量说明，例如：
+
+- 本地 Docker Compose / VPS / 宝塔 / 自定义部署
+- 数据库类型：SQLite / MySQL / PostgreSQL
+- 是否启用 Redis
+- 浏览器或客户端名称（如问题与前端有关）
 
 **提交确认**
 
@@ -29,6 +38,10 @@ assignees: ''
 
 **复现步骤**
 
+**实际结果**
+
 **预期结果**
+
+**日志 / Request ID / 报错信息**
 
 **相关截图**

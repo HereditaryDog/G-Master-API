@@ -1,0 +1,55 @@
+changelog:
+  exclude:
+    labels:
+      - skip-release-notes
+      - duplicate
+      - invalid
+      - question
+    authors:
+      - github-actions[bot]
+      - dependabot[bot]
+  categories:
+    - title: 🚀 新功能
+      labels:
+        - feature
+        - enhancement
+    - title: 🐛 问题修复
+      labels:
+        - bug
+        - fix
+    - title: ⚡ 优化与重构
+      labels:
+        - refactor
+        - performance
+        - cleanup
+    - title: 📘 文档与仓库维护
+      labels:
+        - documentation
+        - docs
+        - chore
+    - title: 🔐 安全、运维与 CI
+      labels:
+        - security
+        - ops
+        - infra
+        - ci
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+change-title-escapes: '\<*_&`'
+template: |
+  ## G-Master API Release Notes
+
+  本页为 GitHub 自动汇总的发布说明，便于快速查看当前版本涉及的 Pull Request 变化。
+
+  升级前建议：
+
+  - 先备份数据库与 `data/`、`logs/` 目录
+  - 阅读仓库中的 `CHANGELOG.md` 与部署说明
+  - 升级后检查 `/api/status` 返回的 `version`
+
+  ### 变更汇总
+
+  $CHANGES
+
+  ### 贡献者
+
+  $CONTRIBUTORS

@@ -9,13 +9,22 @@ assignees: ''
 
 ## Read This First (Do Not Remove This Section)
 
-- Docs: https://github.com/yangjunyu/G-Master-API/blob/main/README.md
-- Repository: https://github.com/yangjunyu/G-Master-API
+- Docs: https://github.com/HereditaryDog/G-Master-API/blob/main/README.md
+- Repository: https://github.com/HereditaryDog/G-Master-API
 - Warning: issues with this template removed, section headings deleted, or content cleared may be closed directly. Repeated abusive submissions may result in a block.
 
-**Your current G-Master API version**
+**Current version**
 
 Please fill this in, for example: `v1.0.0`
+
+**Deployment / environment**
+
+Please include details when possible:
+
+- Local Docker Compose / VPS / BT Panel / custom deployment
+- Database: SQLite / MySQL / PostgreSQL
+- Whether Redis is enabled
+- Browser or client name if the issue is frontend-related
 
 **Submission Checks**
 
@@ -29,6 +38,10 @@ Please fill this in, for example: `v1.0.0`
 
 **Steps to Reproduce**
 
+**Actual Result**
+
 **Expected Result**
+
+**Logs / Request ID / Error Details**
 
 **Related Screenshots**

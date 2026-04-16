@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: 项目说明 / Project README
-    url: https://github.com/yangjunyu/G-Master-API/blob/main/README.zh_CN.md
-    about: 提交 issue 前请先查阅 README、部署说明和归属说明。
+    url: https://github.com/HereditaryDog/G-Master-API/blob/main/README.md
+    about: 提交 issue 前请先查阅主 README、部署说明与更新日志。
   - name: 仓库主页 / Repository
-    url: https://github.com/yangjunyu/G-Master-API
-    about: 如果是使用、配置或部署问题，请先确认仓库中的现有文档。
+    url: https://github.com/HereditaryDog/G-Master-API
+    about: 如果是使用、配置或部署问题，请先确认仓库中的现有文档与已知版本说明。

@@ -1,120 +1,120 @@
-# Changelog
+# 更新日志
 
-All notable changes to `G-Master API` are documented in this file.
+本文档记录 `G-Master API` 对外版本的主要变化。
 
 ## v0.12.10-gmaster.1 - 2026-04-15
 
-### Changed
+### 变更
 
-- Synced the fork forward from upstream `new-api v0.12.9` to `v0.12.10` while preserving `G-Master API` branding, deployment links, and the existing business-group behavior.
-- Pulled in the upstream Claude relay controls for `cache_control` passthrough and optional `speed` passthrough, including the related admin-side channel settings and relay schema updates.
-- Regenerated the published Apifox import artifacts so the public developer documentation stays aligned with the new release version and the refreshed relay request schema.
+- 将分支从上游 `new-api v0.12.9` 同步至 `v0.12.10`，同时保留 `G-Master API` 品牌、现有部署链接与业务分组策略。
+- 合入上游针对 Claude 的 `cache_control` 透传与可选 `speed` 透传能力，并同步更新了管理端配置项与中继请求 schema。
+- 重新生成公开的 Apifox 导入文件，确保对外开发文档与当前版本请求结构保持一致。
 
-### Fixed
+### 修复
 
-- Fixed Stripe Checkout webhook handling for delayed payment methods so async success and async failure events now settle or fail pending recharge orders correctly instead of relying only on synchronous completion.
-- Fixed `/v1/responses` compatibility when upstream returns a non-string or `null` `instructions` field by aligning the response DTO with `json.RawMessage`.
-- Fixed admin quota adjustment logs so they now record the acting administrator username, and fixed the multi-key management modal to display key indexes starting from `#1`.
+- 补齐 Stripe Checkout 异步支付 webhook 处理逻辑，延迟支付成功或失败时都能正确结算或关闭待处理订单。
+- 修复 `/v1/responses` 在上游返回非字符串或 `null` 类型 `instructions` 字段时的兼容性问题，改为使用 `json.RawMessage` 处理。
+- 修复管理员手动调整额度时缺少操作者用户名的问题，并修复多密钥管理弹窗的索引显示从 `#0` 开始的不直观表现。
 
 ## v0.12.9-gmaster.1 - 2026-04-14
 
-### Changed
+### 变更
 
-- Synced the fork forward from upstream `new-api v0.12.6` to `v0.12.9` while preserving `G-Master API` branding, the custom homepage and docs portal, and the existing business-group behavior.
-- Pulled in the upstream dashboard and settings refinements, including better chart dimension handling, ranking logic, amount-first quota adjustment flow, subscription-card next-reset display, and the GroupTable input behavior fixes.
-- Regenerated the published Apifox import artifacts so the public developer documentation stays aligned with the new release version and current production base URLs.
+- 将分支从上游 `new-api v0.12.6` 同步至 `v0.12.9`，同时保留 `G-Master API` 品牌、自定义首页、文档门户与现有业务分组逻辑。
+- 合入上游仪表盘和设置页的增强，包括更好的图表维度处理、排行逻辑、金额优先的额度调整流程、订阅卡片下次重置时间展示，以及 GroupTable 输入体验修复。
+- 重新生成公开 Apifox 导入产物，确保开发文档与新版本以及当前生产地址保持一致。
 
-### Fixed
+### 修复
 
-- Fixed the public-site dark-mode regression where the branded homepage still rendered in a light theme because the active `gm-zen-*` style set had no dark-mode coverage.
-- Fixed the shared public header in dark mode so homepage, docs, auth, pricing, and about pages no longer keep a light top bar after the theme switches to dark.
-- Pulled in the upstream fixes for Azure `/v1/responses/compact` routing, Claude `TopP` request handling, token-auth error hardening, and `isStream` error-log status reporting.
+- 修复品牌首页在暗色主题下仍以浅色样式渲染的问题，补齐 `gm-zen-*` 风格集的暗色覆盖。
+- 修复公共头部在暗色模式下依然保持亮色栏位的问题，覆盖首页、文档、认证、定价与关于页。
+- 合入上游对 Azure `/v1/responses/compact` 路由、Claude `TopP` 处理、Token 鉴权错误信息收敛，以及 `isStream` 错误日志状态记录的修复。
 
 ## v0.12.6-gmaster.3 - 2026-04-14
 
-### Changed
+### 变更
 
-- Unified online wallet top-up completion so `epay/alipay/wxpay`, Waffo, Stripe, Creem, and admin manual completion now share the same post-payment path for quota settlement and user-group promotion.
-- Split root-user default group policy from normal registration so first-run super-admin initialization now stays in `VIP用户组`, while regular sign-ups still enter `标准用户组`.
-- Updated the default group-ratio and top-up-ratio fallback maps to include both legacy `default/vip/svip` keys and the current `标准用户组 / VIP用户组` business groups.
+- 统一在线钱包充值完成后的结算路径，使 `epay/alipay/wxpay`、Waffo、Stripe、Creem 与管理员手动完成流程都走同一套额度结算和用户组升级逻辑。
+- 将 root 用户初始化分组策略与普通注册逻辑拆开，保证首次超级管理员初始化仍进入 `VIP用户组`，而普通注册用户进入 `标准用户组`。
+- 更新默认 group ratio 与 top-up ratio 的兜底映射，同时兼容旧的 `default/vip/svip` 键与当前的 `标准用户组 / VIP用户组` 业务分组。
 
-### Fixed
+### 修复
 
-- Fixed the production bug where successful online `epay` recharges added quota but did not promote the user into `VIP用户组`.
-- Fixed the stale session-group problem that could leave already-upgraded users, including super-admin accounts, seeing permissions and group-dependent data as if they were still in the old group.
-- Fixed group-aware pricing/model/group endpoints to read the current persisted user group instead of relying on cached login-time state.
+- 修复线上 `epay` 充值成功后只增加额度、不升级到 `VIP用户组` 的问题。
+- 修复会话中的用户组缓存滞后问题，避免已升级用户或超级管理员仍以旧分组权限访问。
+- 修复分组相关的定价、模型与分组接口读取了登录时缓存而不是当前持久化分组的问题。
 
 ## v0.12.6-gmaster.2 - 2026-04-13
 
-### Changed
+### 变更
 
-- Standardized new-user onboarding so password registration, admin-created accounts, OAuth first-login accounts, and first-run root initialization all enter the `标准用户组` user group by default.
-- Standardized successful top-up handling so wallet recharge completion now upgrades the user to `VIP用户组` immediately, regardless of recharge amount.
+- 统一新用户入组逻辑，密码注册、管理员创建账号、OAuth 首次登录以及 root 初始化都默认进入 `标准用户组`。
+- 统一充值成功后的升级逻辑，使钱包充值一旦完成，就立即升级到 `VIP用户组`，不再区分充值金额。
 
-### Fixed
+### 修复
 
-- Fixed the previous behavior where newly created users silently fell back to the legacy database default group instead of the configured business group layout.
-- Fixed the gap between recharge success and user-group promotion by applying the group upgrade inside the same top-up completion transaction and refreshing the cached user group afterwards.
+- 修复新创建用户仍可能落回旧数据库默认分组，而不是当前业务分组配置的问题。
+- 修复充值成功与用户组升级之间存在时间差的问题，将升级动作放入同一事务，并在完成后刷新缓存分组。
 
 ## v0.12.6-gmaster.1 - 2026-04-09
 
-### Changed
+### 变更
 
-- Synced the fork forward from upstream `new-api v0.12.1` to `v0.12.6` while preserving the `G-Master API` homepage, docs portal, branding, and public-facing copy.
-- Brought in the upstream settings and pricing-management refresh, including the newer grouped ratio management flow and related admin-side UI updates.
-- Brought in the upstream dashboard enhancements, including stronger analytics views, chart sorting/axis fixes, and copy actions in the API info panel.
-- Regenerated the published Apifox import artifacts so the public developer docs align with the new release version.
+- 将分支从上游 `new-api v0.12.1` 同步至 `v0.12.6`，同时保留 `G-Master API` 首页、文档门户、品牌名称与对外文案。
+- 合入上游新的设置页与价格管理改版，包括新的分组倍率管理流程及相关管理端界面更新。
+- 合入上游仪表盘增强，包括更强的数据分析视图、图表排序与坐标轴修复，以及 API 信息面板中的复制动作。
+- 重新生成公开 Apifox 导入产物，使公共开发文档与当前发布版本对齐。
 
-### Added
+### 新增
 
-- Added upstream support for `MiniMax` image generation relay.
-- Added upstream support for forced `AUTH LOGIN` in SMTP configuration for stricter email provider compatibility.
-- Added upstream support for channel affinity rules that include explicit model-name matching.
+- 新增上游对 `MiniMax` 图像生成中继的支持。
+- 新增上游对 SMTP 强制 `AUTH LOGIN` 的支持，以兼容更严格的邮件服务商。
+- 新增上游对显式模型名匹配的渠道亲和规则支持。
 
-### Fixed
+### 修复
 
-- Fixed the dashboard stat cards so their inner content aligns consistently instead of drifting between cards.
-- Fixed the upstream sync artifacts that referenced `new-api` module paths or example domains where the branded fork should keep `G-Master API` and `gmapi.fun`.
+- 修复仪表盘统计卡片内部内容对齐不稳定的问题。
+- 修复上游同步过程中遗留的 `new-api` 模块路径和示例域名，使品牌分支统一回到 `G-Master API` 与 `gmapi.fun`。
 
 ## v0.12.1-gmaster.4 - 2026-04-09
 
-### Changed
+### 变更
 
-- Refreshed the public homepage model capability copy so it describes stable capability categories instead of short-lived upstream model names.
-- Updated the homepage SDK example and the public docs snippets to use neutral `your-chat-model` placeholders and current OpenAI SDK patterns.
-- Cleaned the public `/docs` page and Apifox source pages to remove internal rollout wording and make the published documentation read like a production-facing developer portal.
+- 更新公开首页的模型能力文案，使其描述稳定能力类别，而不是短期变化的上游模型名称。
+- 更新首页 SDK 示例与公开文档代码片段，统一改用更中性的 `your-chat-model` 占位符和当前 OpenAI SDK 写法。
+- 清理公开 `/docs` 页面与 Apifox 源页面中的内部发布措辞，使其更像生产环境下的开发者文档门户。
 
 ## v0.12.1-gmaster.3 - 2026-04-09
 
-### Changed
+### 变更
 
-- Promoted the current `G-Master API` stack to the Tencent Cloud production deployment at `https://gmapi.fun` while keeping the local Docker workflow for review-first changes.
-- Refreshed repository release metadata and generated docs assets so the published version stays aligned across the UI, README, and Apifox import files.
+- 将当前 `G-Master API` 栈发布到腾讯云生产环境 `https://gmapi.fun`，同时保留本地 Docker 作为评审优先的修改方式。
+- 更新仓库发布元信息与生成文档资产，确保公开版本号在 UI、README 和 Apifox 导入文件中保持一致。
 
-### Fixed
+### 修复
 
-- Fixed the playground desktop layout so the model configuration panel no longer collides with the global console sidebar.
-- Fixed the multi-key polling warning to reflect the real runtime cache state instead of showing unconditionally when polling mode is selected.
-- Exposed `redis_enabled` and `memory_cache_enabled` in `/api/status` so the frontend can make correct cache-dependent UI decisions.
+- 修复 Playground 桌面布局中模型配置面板与全局侧边栏冲突的问题。
+- 修复多密钥轮询警告总是显示的问题，使其真实反映运行时缓存状态。
+- 在 `/api/status` 中公开 `redis_enabled` 与 `memory_cache_enabled`，便于前端正确判断缓存能力。
 
 ## v0.12.1-gmaster.2 - 2026-04-08
 
-### Changed
+### 变更
 
-- Rebuilt the public homepage into a `Zen-AI`-style landing page while keeping the `G-Master API` brand, links, and deployment flow.
-- Unified the console and model pricing pages around the same blue-purple visual system with refreshed gradients, glass cards, rounded controls, and consistent spacing.
-- Refreshed the shared header, sidebar, logo treatment, page background, and action areas so the main product surfaces feel like one release instead of mixed upstream screens.
-- Added local homepage illustration assets for the new landing page sections and updated the default logo cache-busting path for smoother rollout.
+- 将公开首页重建为 `Zen-AI` 风格的落地页，同时保留 `G-Master API` 品牌、链接和部署流程。
+- 统一控制台与模型定价页的视觉系统，更新渐变、玻璃卡片、圆角控件与整体间距。
+- 刷新共享头部、侧边栏、Logo 表现、页面背景和操作区域，让主要产品面更统一。
+- 新增首页插图资源，并更新默认 Logo 的缓存破坏参数以便发布切换。
 
-### Fixed
+### 修复
 
-- Restored the missing dashboard stat icons after the theme refresh by reintroducing visible foreground colors for the avatar icons.
-- Fixed the hero subtitle typing animation so it no longer pushes the `G-Master API` title during playback.
-- Fixed the hero subtitle width reservation so the full Chinese copy displays correctly instead of being clipped at the end.
+- 修复主题刷新后仪表盘统计图标丢失的问题，重新补足头像图标的前景色。
+- 修复首页副标题打字动画会挤压 `G-Master API` 标题的位置问题。
+- 修复首页副标题宽度预留不足导致中文文案尾部被裁切的问题。
 
 ## v0.12.1-gmaster.1 - 2026-04-06
 
-### Changed
+### 变更
 
-- Synced the fork to upstream `new-api v0.12.1`.
-- Refreshed the `gmapi.fun` deployment assets and added footer version display support.
+- 将分支同步到上游 `new-api v0.12.1`。
+- 刷新 `gmapi.fun` 的部署资产，并新增页脚版本号展示支持。
