@@ -70,7 +70,8 @@ docker compose up -d --build
 
 | 分类 | 链接 | 说明 |
 | --- | --- | --- |
-| 对外文档 | [gmapi.fun/docs](https://gmapi.fun/docs) | 公开站点文档入口 |
+| AI 客户端配置文档 | [gmapi.fun/docs/ai-client](https://gmapi.fun/docs/ai-client) | Apifox 公开文档入口 |
+| OpenClaw 英文页 | [gmapi.fun/docs/openclaw-en](https://gmapi.fun/docs/openclaw-en) | Apifox OpenClaw 英文配置页 |
 | 部署说明 | [docs/installation/BT.md](./docs/installation/BT.md) | 宝塔 / VPS 场景说明 |
 | 接口整理 | [docs/apifox/README.md](./docs/apifox/README.md) | Apifox 导入与接口整理 |
 | 贡献指南 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 提交 PR、Issue 与协作约定 |

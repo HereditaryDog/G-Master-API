@@ -2,6 +2,13 @@
 
 这套文件用于把 `G-Master API` 快速整理成类似 Apifox 在线文档站的结构。
 
+当前线上公开文档入口：
+
+- AI 客户端配置文档：<https://gmapi.fun/docs/ai-client>
+- OpenClaw 英文页：<https://gmapi.fun/docs/openclaw-en>
+
+以上两个站内地址会通过 `302` 跳转到 Apifox 公开分享页，不在站内反代 Apifox 内容。
+
 ## 目录说明
 
 - `dist/gmaster-public.openapi.json`

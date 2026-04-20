@@ -17,7 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { lazy, Suspense, useContext, useMemo } from 'react';
+import React, { lazy, Suspense, useContext, useEffect, useMemo } from 'react';
 import { Route, Routes, useLocation, useParams } from 'react-router-dom';
 import Loading from './components/common/ui/Loading';
 import User from './pages/User';
@@ -57,9 +57,22 @@ const Docs = lazy(() => import('./pages/Docs'));
 const UserAgreement = lazy(() => import('./pages/UserAgreement'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
+const AI_CLIENT_DOCS_URL =
+  'https://s.apifox.cn/4c8343d0-458d-4898-9813-62a1253fba2d';
+const OPENCLAW_EN_DOCS_URL =
+  'https://s.apifox.cn/4c8343d0-458d-4898-9813-62a1253fba2d/8547263m0';
+
 function DynamicOAuth2Callback() {
   const { provider } = useParams();
   return <OAuth2Callback type={provider} />;
+}
+
+function ExternalDocsRedirect({ to }) {
+  useEffect(() => {
+    window.location.replace(to);
+  }, [to]);
+
+  return <Loading></Loading>;
 }
 
 function App() {
@@ -345,6 +358,18 @@ function App() {
         />
         <Route
           path='/docs'
+          element={<ExternalDocsRedirect to={AI_CLIENT_DOCS_URL} />}
+        />
+        <Route
+          path='/docs/ai-client'
+          element={<ExternalDocsRedirect to={AI_CLIENT_DOCS_URL} />}
+        />
+        <Route
+          path='/docs/openclaw-en'
+          element={<ExternalDocsRedirect to={OPENCLAW_EN_DOCS_URL} />}
+        />
+        <Route
+          path='/docs/local'
           element={
             <Suspense fallback={<Loading></Loading>} key={location.pathname}>
               <Docs />

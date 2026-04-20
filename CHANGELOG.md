@@ -2,6 +2,13 @@
 
 本文档记录 `G-Master API` 对外版本的主要变化。
 
+## Unreleased
+
+### 变更
+
+- 将站点文档入口接入 Apifox 公开文档，`/docs` 与 `/docs/ai-client` 会 302 跳转到 AI 客户端配置文档，`/docs/openclaw-en` 会跳转到 OpenClaw 英文页。
+- 更新 README 与 Apifox 文档包说明，明确站内文档入口只做跳转，不反代 Apifox 内容。
+
 ## v0.12.14-gmaster.1 - 2026-04-20
 
 ### 变更
