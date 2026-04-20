@@ -3478,6 +3478,14 @@
     "如果你对接的是上游 One API 或者 G-Master API 等转发项目，请使用 OpenAI 类型，不要使用此类型，除非你知道你在做什么。": "Si vous vous connectez à des projets de redirection en amont tels que One API ou G-Master API, veuillez utiliser le type OpenAI. N'utilisez pas ce type sauf si vous savez exactement ce que vous faites.",
     "对于官方渠道，G-Master API 已经内置地址，除非是第三方代理站点或者 Azure 的特殊接入地址，否则不需要填写": "Pour les canaux officiels, G-Master API intègre déjà les adresses nécessaires. Vous n'avez besoin de remplir ce champ que pour un proxy tiers ou une adresse Azure spéciale.",
     "或其兼容 G-Master API Worker 格式的其他版本": "ou d'autres versions compatibles avec le format G-Master API Worker",
-    "用于验证回调 G-Master API 的 webhook 请求的密钥，敏感信息不显示": "Clé utilisée pour vérifier les requêtes webhook callback de G-Master API. Les informations sensibles ne sont pas affichées."
+    "用于验证回调 G-Master API 的 webhook 请求的密钥，敏感信息不显示": "Clé utilisée pour vérifier les requêtes webhook callback de G-Master API. Les informations sensibles ne sont pas affichées.",
+    "订单支付方式": "Méthode de paiement de la commande",
+    "回调支付方式": "Méthode de paiement du rappel",
+    "回调调用者IP": "IP de l'appelant du rappel",
+    "服务器IP": "IP du serveur",
+    "系统版本": "Version du système",
+    "操作管理员": "Administrateur opérateur",
+    "审计信息": "Informations d'audit",
+    "该记录由旧版本实例写入，缺少审计信息，建议将实例升级至最新版本以便记录服务器IP、回调IP、支付方式与系统版本等审计字段。": "Cet enregistrement a été écrit par une ancienne version de l'instance et ne contient pas d'informations d'audit. Veuillez mettre à jour l'instance vers la dernière version afin d'enregistrer les champs d'audit tels que l'IP du serveur, l'IP de rappel, le mode de paiement et la version du système."
   }
 }

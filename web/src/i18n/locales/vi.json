@@ -4027,6 +4027,14 @@
     "如果你对接的是上游 One API 或者 G-Master API 等转发项目，请使用 OpenAI 类型，不要使用此类型，除非你知道你在做什么。": "Nếu bạn đang kết nối với các dự án chuyển tiếp thượng nguồn như One API hoặc G-Master API, vui lòng sử dụng loại OpenAI. Đừng sử dụng loại này trừ khi bạn thực sự biết mình đang làm gì.",
     "对于官方渠道，G-Master API 已经内置地址，除非是第三方代理站点或者 Azure 的特殊接入地址，否则不需要填写": "Đối với các kênh chính thức, G-Master API đã tích hợp sẵn địa chỉ. Trừ khi đó là trang proxy của bên thứ ba hoặc địa chỉ truy cập Azure đặc biệt, bạn không cần điền vào.",
     "或其兼容 G-Master API Worker 格式的其他版本": "hoặc các phiên bản khác tương thích với định dạng G-Master API Worker",
-    "用于验证回调 G-Master API 的 webhook 请求的密钥，敏感信息不显示": "Khóa dùng để xác minh các yêu cầu webhook callback của G-Master API, thông tin nhạy cảm sẽ không được hiển thị."
+    "用于验证回调 G-Master API 的 webhook 请求的密钥，敏感信息不显示": "Khóa dùng để xác minh các yêu cầu webhook callback của G-Master API, thông tin nhạy cảm sẽ không được hiển thị.",
+    "订单支付方式": "Phương thức thanh toán đơn hàng",
+    "回调支付方式": "Phương thức thanh toán callback",
+    "回调调用者IP": "IP người gọi callback",
+    "服务器IP": "IP máy chủ",
+    "系统版本": "Phiên bản hệ thống",
+    "操作管理员": "Quản trị viên thao tác",
+    "审计信息": "Thông tin kiểm toán",
+    "该记录由旧版本实例写入，缺少审计信息，建议将实例升级至最新版本以便记录服务器IP、回调IP、支付方式与系统版本等审计字段。": "Bản ghi này được ghi bởi phiên bản cũ của instance và thiếu thông tin kiểm toán. Khuyến nghị nâng cấp instance lên phiên bản mới nhất để ghi lại các trường kiểm toán như IP máy chủ, IP callback, phương thức thanh toán và phiên bản hệ thống."
   }
 }

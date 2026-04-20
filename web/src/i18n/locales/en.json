@@ -3522,6 +3522,14 @@
     "如果你对接的是上游 One API 或者 G-Master API 等转发项目，请使用 OpenAI 类型，不要使用此类型，除非你知道你在做什么。": "If you are connecting to upstream forwarding projects such as One API or G-Master API, please use the OpenAI type. Do not use this type unless you know what you are doing.",
     "对于官方渠道，G-Master API 已经内置地址，除非是第三方代理站点或者 Azure 的特殊接入地址，否则不需要填写": "For official channels, G-Master API already has built-in base addresses. Unless you are using a third-party proxy site or a special Azure endpoint, you do not need to fill this in.",
     "或其兼容 G-Master API Worker 格式的其他版本": "or other versions compatible with the G-Master API Worker format",
-    "用于验证回调 G-Master API 的 webhook 请求的密钥，敏感信息不显示": "The key used to validate G-Master API webhook callback requests. Sensitive information is not displayed."
+    "用于验证回调 G-Master API 的 webhook 请求的密钥，敏感信息不显示": "The key used to validate G-Master API webhook callback requests. Sensitive information is not displayed.",
+    "订单支付方式": "Order Payment Method",
+    "回调支付方式": "Callback Payment Method",
+    "回调调用者IP": "Callback Caller IP",
+    "服务器IP": "Server IP",
+    "系统版本": "System Version",
+    "操作管理员": "Operator Admin",
+    "审计信息": "Audit Info",
+    "该记录由旧版本实例写入，缺少审计信息，建议将实例升级至最新版本以便记录服务器IP、回调IP、支付方式与系统版本等审计字段。": "This record was written by an older instance and lacks audit info. Please upgrade the instance to the latest version so that server IP, callback IP, payment method, and system version audit fields are recorded."
   }
 }

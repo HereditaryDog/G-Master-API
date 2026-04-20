@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/bytedance/gopkg/util/gopool"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
-	"github.com/bytedance/gopkg/util/gopool"
 	"gorm.io/gorm"
 )
 
@@ -479,4 +479,30 @@ func GetTokenKeysByIds(ids []int, userId int) ([]Token, error) {
 		Where("user_id = ? AND id IN (?)", userId, ids).
 		Find(&tokens).Error
 	return tokens, err
+}
+
+func InvalidateUserTokensCache(userId int) error {
+	if !common.RedisEnabled {
+		return nil
+	}
+	if userId <= 0 {
+		return errors.New("userId 无效")
+	}
+	var tokens []Token
+	if err := DB.Unscoped().
+		Select("id", commonKeyCol).
+		Where("user_id = ?", userId).
+		Find(&tokens).Error; err != nil {
+		return err
+	}
+	var firstErr error
+	for _, token := range tokens {
+		if token.Key == "" {
+			continue
+		}
+		if err := cacheDeleteToken(token.Key); err != nil && firstErr == nil {
+			firstErr = err
+		}
+	}
+	return firstErr
 }

@@ -8,18 +8,18 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/yangjunyu/G-Master-API/common"
-	"github.com/yangjunyu/G-Master-API/model"
-	"github.com/yangjunyu/G-Master-API/service"
-	"github.com/yangjunyu/G-Master-API/setting"
-	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
-	"github.com/yangjunyu/G-Master-API/setting/system_setting"
 	"github.com/gin-gonic/gin"
 	"github.com/thanhpk/randstr"
 	waffo "github.com/waffo-com/waffo-go"
 	"github.com/waffo-com/waffo-go/config"
 	"github.com/waffo-com/waffo-go/core"
 	"github.com/waffo-com/waffo-go/types/order"
+	"github.com/yangjunyu/G-Master-API/common"
+	"github.com/yangjunyu/G-Master-API/model"
+	"github.com/yangjunyu/G-Master-API/service"
+	"github.com/yangjunyu/G-Master-API/setting"
+	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
+	"github.com/yangjunyu/G-Master-API/setting/system_setting"
 )
 
 func getWaffoSDK() (*waffo.Waffo, error) {
@@ -357,7 +357,7 @@ func handleWaffoPayment(c *gin.Context, wh *core.WebhookHandler, result *core.Pa
 	LockOrder(merchantOrderId)
 	defer UnlockOrder(merchantOrderId)
 
-	if err := model.RechargeWaffo(merchantOrderId); err != nil {
+	if err := model.RechargeWaffo(merchantOrderId, c.ClientIP()); err != nil {
 		log.Printf("Waffo 充值处理失败: %v, 订单: %s", err, merchantOrderId)
 		sendWaffoWebhookResponse(c, wh, false, err.Error())
 		return

@@ -353,7 +353,7 @@ func handleCheckoutCompleted(c *gin.Context, event *CreemWebhookEvent) {
 		log.Printf("警告：Creem回调中客户姓名为空 - 订单号: %s", referenceId)
 	}
 
-	err := model.RechargeCreem(referenceId, customerEmail, customerName)
+	err := model.RechargeCreem(referenceId, customerEmail, customerName, c.ClientIP())
 	if err != nil {
 		log.Printf("Creem充值处理失败: %s, 订单号: %s", err.Error(), referenceId)
 		c.AbortWithStatus(http.StatusInternalServerError)
