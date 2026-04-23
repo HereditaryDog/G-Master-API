@@ -2,6 +2,19 @@
 
 本文档记录 `G-Master API` 对外版本的主要变化。
 
+## v0.12.15-gmaster.1 - 2026-04-23
+
+### 变更
+
+- 将分支从上游 `new-api v0.12.14` 同步至 `v0.12.15`，补齐最新支付、Passkey、Gemini ToolConfig 与 Codex 渠道相关改动，同时保留 `G-Master API` 品牌与现有业务分组/充值升级逻辑。
+- 叠加新的控制台数据看板与模型广场局部 UI 改版，保留当前深色微发光视觉方向，同时优化首页摘要、KPI 卡片与供应商头图区块的信息表达。
+- 更新源码构建、Docker 构建和 Apifox 导出使用的版本号，统一为 `v0.12.15-gmaster.1`。
+
+### 修复
+
+- 修复 Claude 渠道在处理 OpenAI 风格 inline file 内容时，无法正确区分 `PDF`、纯文本和不支持文件类型的问题；现在 `PDF` 会转为 `document`，文本文件会转为 `text`，未知类型会安全跳过。
+- 修复 `StreamScannerHandler` 在已有 `StreamStatus` 预初始化场景下会覆盖原状态的问题，避免已有错误计数和结束状态被意外清空。
+
 ## v0.12.14-gmaster.1 - 2026-04-20
 
 ### 变更
