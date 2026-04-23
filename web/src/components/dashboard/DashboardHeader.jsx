@@ -19,7 +19,7 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React from 'react';
 import { Button } from '@douyinfe/semi-ui';
-import { RefreshCw, Search } from 'lucide-react';
+import { CalendarDays, RefreshCw, Search } from 'lucide-react';
 
 const DashboardHeader = ({
   getGreeting,
@@ -27,12 +27,12 @@ const DashboardHeader = ({
   showSearchModal,
   refresh,
   loading,
+  dashboardSummary,
   t,
 }) => {
   return (
     <div className='gm-console-header'>
       <div className='gm-console-header-copy'>
-        <div className='gm-console-header-eyebrow'>{t('控制台总览')}</div>
         <h2
           className='gm-console-header-title transition-opacity duration-1000 ease-in-out'
           style={{ opacity: greetingVisible ? 1 : 0 }}
@@ -40,10 +40,20 @@ const DashboardHeader = ({
           {getGreeting}
         </h2>
         <p className='gm-console-header-description'>
-          {t('统一查看账户余额、趋势分析、系统公告与服务健康状态。')}
+          {dashboardSummary?.description ||
+            t('统一查看账户余额、趋势分析、系统公告与服务健康状态。')}
         </p>
       </div>
       <div className='gm-console-header-actions'>
+        <button
+          type='button'
+          className='gm-console-header-date-chip'
+          onClick={showSearchModal}
+          title={t('打开筛选')}
+        >
+          <CalendarDays size={15} />
+          <span>{dashboardSummary?.periodScope || t('当前周期')}</span>
+        </button>
         <Button
           type='primary'
           icon={<Search size={16} />}

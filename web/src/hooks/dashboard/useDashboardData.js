@@ -20,11 +20,53 @@ For commercial licensing, please contact support@quantumnous.com
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { API, isAdmin, showError, timestamp2string } from '../../helpers';
+import {
+  API,
+  isAdmin,
+  renderNumber,
+  renderQuota,
+  showError,
+  timestamp2string,
+} from '../../helpers';
 import { getDefaultTime, getInitialTimestamp } from '../../helpers/dashboard';
 import { TIME_OPTIONS } from '../../constants/dashboard.constants';
 import { useIsMobile } from '../common/useIsMobile';
 import { useMinimumLoadingTime } from '../common/useMinimumLoadingTime';
+
+const getPeriodScopeLabel = (startTimestamp, endTimestamp, t) => {
+  const start = Date.parse(startTimestamp);
+  const end = Date.parse(endTimestamp);
+  if (!start || !end || Number.isNaN(start) || Number.isNaN(end)) {
+    return t('当前周期');
+  }
+
+  const diffHours = Math.abs(end - start) / 3600000;
+  if (diffHours >= 23.5 && diffHours <= 25.5) {
+    return t('近 24 小时');
+  }
+
+  return t('当前筛选周期');
+};
+
+const getUptimeSummary = (uptimeData, t) => {
+  const monitors = (uptimeData || []).flatMap((group) => group?.monitors || []);
+  if (monitors.length === 0) {
+    return {
+      label: t('未配置监控'),
+      tone: 'muted',
+    };
+  }
+
+  const abnormalCount = monitors.filter(
+    (monitor) => Number(monitor?.status) !== 1,
+  ).length;
+
+  return {
+    label:
+      abnormalCount > 0 ? `${abnormalCount} ${t('项异常')}` : t('全部正常'),
+    tone: abnormalCount > 0 ? 'warning' : 'success',
+  };
+};
 
 export const useDashboardData = (userState, userDispatch, statusState) => {
   const { t } = useTranslation();
@@ -60,6 +102,8 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
   const [pieData, setPieData] = useState([{ type: 'null', value: '0' }]);
   const [lineData, setLineData] = useState([]);
   const [modelColors, setModelColors] = useState({});
+  const [recentLogs, setRecentLogs] = useState([]);
+  const [recentLogsLoading, setRecentLogsLoading] = useState(false);
 
   // ========== 图表状态 ==========
   const [activeChartTab, setActiveChartTab] = useState('1');
@@ -136,6 +180,58 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
     const username = userState?.user?.username || '';
     return `👋${greeting}，${username}`;
   }, [t, userState?.user?.username]);
+
+  const dashboardSummary = useMemo(() => {
+    const uptimeSummary = getUptimeSummary(uptimeData, t);
+    const periodScope = getPeriodScopeLabel(
+      inputs.start_timestamp,
+      inputs.end_timestamp,
+      t,
+    );
+
+    return {
+      periodScope,
+      description: t('当前筛选周期的请求、消耗、Tokens 与服务状态摘要。'),
+      metrics: [
+        {
+          key: 'requests',
+          label: t('请求量'),
+          value: renderNumber(times || 0),
+          helper: t('当前筛选周期'),
+          tone: 'blue',
+        },
+        {
+          key: 'quota',
+          label: t('消耗'),
+          value: renderQuota(consumeQuota || 0, 2),
+          helper: t('按用量聚合'),
+          tone: 'purple',
+        },
+        {
+          key: 'tokens',
+          label: 'Tokens',
+          value: renderNumber(consumeTokens || 0),
+          helper: t('当前筛选周期'),
+          tone: 'cyan',
+        },
+        {
+          key: 'uptime',
+          label: t('服务状态'),
+          value: uptimeSummary.label,
+          helper: t('来自可用性监控'),
+          tone: uptimeSummary.tone,
+        },
+      ],
+    };
+  }, [
+    consumeQuota,
+    consumeTokens,
+    inputs.end_timestamp,
+    inputs.start_timestamp,
+    times,
+    t,
+    uptimeData,
+  ]);
 
   // ========== 回调函数 ==========
   const handleInputChange = useCallback((value, name) => {
@@ -234,6 +330,49 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
     }
   }, [inputs, isAdminUser]);
 
+  const loadRecentLogs = useCallback(async () => {
+    setRecentLogsLoading(true);
+    try {
+      const {
+        start_timestamp,
+        end_timestamp,
+        username,
+        token_name,
+        model_name,
+        channel,
+      } = inputs;
+      const localStartTimestamp = Date.parse(start_timestamp) / 1000;
+      const localEndTimestamp = Date.parse(end_timestamp) / 1000;
+      const query = new URLSearchParams({
+        p: '1',
+        page_size: '50',
+        type: '0',
+        token_name: token_name || '',
+        model_name: model_name || '',
+        start_timestamp: String(localStartTimestamp || 0),
+        end_timestamp: String(localEndTimestamp || 0),
+        group: '',
+        request_id: '',
+      });
+
+      let url = `/api/log/self/?${query.toString()}`;
+      if (isAdminUser) {
+        query.set('username', username || '');
+        query.set('channel', channel || '');
+        url = `/api/log/?${query.toString()}`;
+      }
+
+      const res = await API.get(url);
+      const { success, data } = res.data;
+      setRecentLogs(success ? data?.items || [] : []);
+    } catch (err) {
+      console.error(err);
+      setRecentLogs([]);
+    } finally {
+      setRecentLogsLoading(false);
+    }
+  }, [inputs, isAdminUser]);
+
   const getUserData = useCallback(async () => {
     let res = await API.get(`/api/user/self`);
     const { success, message, data } = res.data;
@@ -247,8 +386,9 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
   const refresh = useCallback(async () => {
     const data = await loadQuotaData();
     await loadUptimeData();
+    await loadRecentLogs();
     return data;
-  }, [loadQuotaData, loadUptimeData]);
+  }, [loadQuotaData, loadUptimeData, loadRecentLogs]);
 
   const handleSearchConfirm = useCallback(
     async (updateChartDataCallback) => {
@@ -300,6 +440,9 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
     setLineData,
     modelColors,
     setModelColors,
+    recentLogs,
+    recentLogsLoading,
+    dashboardSummary,
 
     // 图表状态
     activeChartTab,
@@ -333,6 +476,7 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
     handleCloseModal,
     loadQuotaData,
     loadUserQuotaData,
+    loadRecentLogs,
     loadUptimeData,
     getUserData,
     refresh,

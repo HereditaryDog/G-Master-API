@@ -19,97 +19,142 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React from 'react';
 import { Card, Avatar, Skeleton, Tag } from '@douyinfe/semi-ui';
-import { VChart } from '@visactor/react-vchart';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const StatsCards = ({
-  groupedStatsData,
-  loading,
-  getTrendSpec,
-  CARD_PROPS,
-  CHART_CONFIG,
-}) => {
+const KPI_ORDER = [
+  'balance',
+  'used_quota',
+  'request_count',
+  'period_requests',
+  'period_quota',
+  'period_tokens',
+];
+
+const getTrendValue = (trend) => {
+  const match = String(trend?.label || '').match(/[+-]?\d+(?:\.\d+)?%/);
+  return match?.[0] || '--';
+};
+
+const TrendSignal = ({ trend, t }) => (
+  <div
+    className='gm-console-kpi-signal'
+    data-direction={trend?.direction || 'neutral'}
+  >
+    <span>{t('环比')}</span>
+    <strong>{getTrendValue(trend)}</strong>
+  </div>
+);
+
+const PeriodBreakdown = ({ breakdown, t }) => {
+  if (!breakdown?.hasComparison) {
+    return (
+      <div className='gm-console-kpi-period-row gm-console-kpi-breakdown'>
+        <span>{breakdown?.label || t('暂无对比')}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className='gm-console-kpi-period-row gm-console-kpi-breakdown'>
+      <span className='gm-console-kpi-breakdown-item'>
+        <em>{breakdown.previousLabel}</em>
+        <strong>{breakdown.previousValue}</strong>
+      </span>
+      <span className='gm-console-kpi-breakdown-divider' />
+      <span className='gm-console-kpi-breakdown-item'>
+        <em>{breakdown.currentLabel}</em>
+        <strong>{breakdown.currentValue}</strong>
+      </span>
+    </div>
+  );
+};
+
+const StatsCards = ({ groupedStatsData, loading, CARD_PROPS }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const groupedItems = groupedStatsData.flatMap((group) =>
+    group.items.map((item) => ({
+      ...item,
+      groupTitle: group.title,
+      groupColor: group.color,
+    })),
+  );
+  const kpiCards = KPI_ORDER.map((key) =>
+    groupedItems.find((item) => item.key === key),
+  ).filter(Boolean);
+
   return (
-    <div className='mb-6'>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
-        {groupedStatsData.map((group, idx) => (
+    <div className='gm-console-kpi-strip'>
+      <div className='gm-console-kpi-grid'>
+        {kpiCards.map((item, idx) => (
           <Card
-            key={idx}
+            key={item.key || idx}
             {...CARD_PROPS}
-            className={`gm-console-stat-card ${group.color} border-0 !rounded-[28px] w-full`}
-            title={group.title}
+            className={`gm-console-kpi-card ${item.groupColor || ''} border-0 w-full`}
+            bodyStyle={{ padding: 0 }}
+            onClick={item.onClick}
           >
-            <div className='space-y-4'>
-              {group.items.map((item, itemIdx) => (
-                <div
-                  key={itemIdx}
-                  className='gm-console-stat-item flex items-center justify-between cursor-pointer'
-                  onClick={item.onClick}
+            <div className='gm-console-kpi-card-inner'>
+              <div className='gm-console-kpi-copy'>
+                <div className='gm-console-kpi-label'>{item.title}</div>
+                <Skeleton
+                  loading={loading}
+                  active
+                  placeholder={
+                    <Skeleton.Paragraph
+                      active
+                      rows={1}
+                      style={{
+                        width: '82px',
+                        height: '30px',
+                        margin: '8px 0 7px',
+                      }}
+                    />
+                  }
                 >
-                  <div className='gm-console-stat-main flex items-center'>
-                    <Avatar
-                      className={`mr-3 gm-console-stat-avatar gm-console-stat-avatar-${item.avatarColor}`}
-                      size='small'
-                      color={item.avatarColor}
-                    >
-                      {item.icon}
-                    </Avatar>
-                    <div className='gm-console-stat-copy'>
-                      <div className='gm-console-stat-label text-xs text-gray-500'>
-                        {item.title}
-                      </div>
-                      <div className='gm-console-stat-value text-lg font-semibold'>
-                        <Skeleton
-                          loading={loading}
-                          active
-                          placeholder={
-                            <Skeleton.Paragraph
-                              active
-                              rows={1}
-                              style={{
-                                width: '65px',
-                                height: '24px',
-                                marginTop: '4px',
-                              }}
-                            />
-                          }
-                        >
-                          {item.value}
-                        </Skeleton>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='gm-console-stat-aside'>
-                    {item.title === t('当前余额') ? (
-                      <Tag
-                        color='white'
-                        shape='circle'
-                        size='large'
-                        className='gm-console-topup-tag'
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate('/console/topup');
-                        }}
-                      >
-                        {t('充值')}
-                      </Tag>
-                    ) : (
-                      (loading ||
-                        (item.trendData && item.trendData.length > 0)) && (
-                        <div className='gm-console-mini-chart w-24 h-10'>
-                          <VChart
-                            spec={getTrendSpec(item.trendData, item.trendColor)}
-                            option={CHART_CONFIG}
-                          />
-                        </div>
-                      )
+                  <div className='gm-console-kpi-value'>
+                    <span>{item.value}</span>
+                    {item.unit && (
+                      <span className='gm-console-kpi-unit'>{item.unit}</span>
                     )}
                   </div>
-                </div>
-              ))}
+                </Skeleton>
+                {item.isPeriodKpi ? (
+                  <PeriodBreakdown breakdown={item.periodBreakdown} t={t} />
+                ) : (
+                  <div className='gm-console-stat-helper'>
+                    {item.helper || item.groupTitle}
+                  </div>
+                )}
+              </div>
+
+              <div className='gm-console-kpi-visual'>
+                {item.kind === 'balance' || item.title === t('当前余额') ? (
+                  <Tag
+                    color='white'
+                    shape='circle'
+                    size='large'
+                    className='gm-console-topup-tag'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate('/console/topup');
+                    }}
+                  >
+                    {t('充值')}
+                  </Tag>
+                ) : item.isPeriodKpi ? (
+                  <TrendSignal trend={item.trend} t={t} />
+                ) : (
+                  <Avatar
+                    className={`gm-console-stat-avatar gm-console-stat-avatar-${item.avatarColor}`}
+                    size='small'
+                    color={item.avatarColor}
+                  >
+                    {item.icon}
+                  </Avatar>
+                )}
+              </div>
             </div>
           </Card>
         ))}
