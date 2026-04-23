@@ -740,6 +740,12 @@ export const useLogsData = () => {
               value: adminInfo.server_ip,
             });
           }
+          if (adminInfo.node_name) {
+            expandDataLocal.push({
+              key: t('节点名称'),
+              value: adminInfo.node_name,
+            });
+          }
           if (adminInfo.version) {
             expandDataLocal.push({
               key: t('系统版本'),

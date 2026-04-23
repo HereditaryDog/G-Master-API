@@ -30,6 +30,7 @@ services:
       CRYPTO_SECRET: ${CRYPTO_SECRET}
       ERROR_LOG_ENABLED: 'true'
       BATCH_UPDATE_ENABLED: 'true'
+      NODE_NAME: ${NODE_NAME:-g-master-api-node-1}
     volumes:
       - ./data:/data
       - ./logs:/app/logs
