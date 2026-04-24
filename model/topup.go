@@ -14,15 +14,16 @@ import (
 )
 
 type TopUp struct {
-	Id            int     `json:"id"`
-	UserId        int     `json:"user_id" gorm:"index"`
-	Amount        int64   `json:"amount"`
-	Money         float64 `json:"money"`
-	TradeNo       string  `json:"trade_no" gorm:"unique;type:varchar(255);index"`
-	PaymentMethod string  `json:"payment_method" gorm:"type:varchar(50)"`
-	CreateTime    int64   `json:"create_time"`
-	CompleteTime  int64   `json:"complete_time"`
-	Status        string  `json:"status"`
+	Id              int     `json:"id"`
+	UserId          int     `json:"user_id" gorm:"index"`
+	Amount          int64   `json:"amount"`
+	Money           float64 `json:"money"`
+	TradeNo         string  `json:"trade_no" gorm:"unique;type:varchar(255);index"`
+	PaymentMethod   string  `json:"payment_method" gorm:"type:varchar(50)"`
+	PaymentProvider string  `json:"payment_provider" gorm:"type:varchar(50);default:''"`
+	CreateTime      int64   `json:"create_time"`
+	CompleteTime    int64   `json:"complete_time"`
+	Status          string  `json:"status"`
 }
 
 type TopUpCompletionResult struct {
@@ -55,9 +56,18 @@ func upgradeUserGroupAfterTopUpTx(tx *gorm.DB, userId int) (string, error) {
 	return upgradeGroup, nil
 }
 
-func CompleteTopUpByTradeNo(tradeNo string, expectedMethods ...string) (*TopUpCompletionResult, error) {
+func CompleteTopUpByTradeNo(tradeNo string, expectedPaymentProviders ...string) (*TopUpCompletionResult, error) {
 	if strings.TrimSpace(tradeNo) == "" {
 		return nil, errors.New("未提供订单号")
+	}
+
+	expectedProvider := ""
+	if len(expectedPaymentProviders) > 0 {
+		expectedProvider = strings.TrimSpace(expectedPaymentProviders[0])
+	}
+	actualPaymentMethod := ""
+	if len(expectedPaymentProviders) > 1 {
+		actualPaymentMethod = strings.TrimSpace(expectedPaymentProviders[1])
 	}
 
 	refCol := "`trade_no`"
@@ -73,23 +83,14 @@ func CompleteTopUpByTradeNo(tradeNo string, expectedMethods ...string) (*TopUpCo
 		}
 
 		result.UserId = topUp.UserId
-		result.PaymentMethod = topUp.PaymentMethod
 		result.PaymentMoney = topUp.Money
 
-		if len(expectedMethods) > 0 {
-			matched := false
-			for _, expectedMethod := range expectedMethods {
-				if strings.TrimSpace(expectedMethod) == topUp.PaymentMethod {
-					matched = true
-					break
-				}
-			}
-			if !matched {
-				return ErrPaymentMethodMismatch
-			}
+		if expectedProvider != "" && topUp.PaymentProvider != expectedProvider {
+			return ErrPaymentMethodMismatch
 		}
 
 		if topUp.Status == common.TopUpStatusSuccess {
+			result.PaymentMethod = topUp.PaymentMethod
 			result.AlreadySuccess = true
 			return nil
 		}
@@ -98,8 +99,13 @@ func CompleteTopUpByTradeNo(tradeNo string, expectedMethods ...string) (*TopUpCo
 			return errors.New("充值订单状态错误")
 		}
 
+		if actualPaymentMethod != "" && topUp.PaymentMethod != actualPaymentMethod {
+			topUp.PaymentMethod = actualPaymentMethod
+		}
+		result.PaymentMethod = topUp.PaymentMethod
+
 		dQuotaPerUnit := decimal.NewFromFloat(common.QuotaPerUnit)
-		if topUp.PaymentMethod == PaymentMethodStripe {
+		if topUp.PaymentProvider == PaymentProviderStripe {
 			result.QuotaToAdd = int(decimal.NewFromFloat(topUp.Money).Mul(dQuotaPerUnit).IntPart())
 		} else {
 			result.QuotaToAdd = int(decimal.NewFromInt(topUp.Amount).Mul(dQuotaPerUnit).IntPart())
@@ -145,6 +151,14 @@ const (
 	PaymentMethodWaffoPancake = "waffo_pancake"
 )
 
+const (
+	PaymentProviderEpay         = "epay"
+	PaymentProviderStripe       = "stripe"
+	PaymentProviderCreem        = "creem"
+	PaymentProviderWaffo        = "waffo"
+	PaymentProviderWaffoPancake = "waffo_pancake"
+)
+
 var (
 	ErrPaymentMethodMismatch = errors.New("payment method mismatch")
 	ErrTopUpNotFound         = errors.New("topup not found")
@@ -183,7 +197,7 @@ func GetTopUpByTradeNo(tradeNo string) *TopUp {
 	return topUp
 }
 
-func UpdatePendingTopUpStatus(tradeNo string, expectedPaymentMethod string, targetStatus string) error {
+func UpdatePendingTopUpStatus(tradeNo string, expectedPaymentProvider string, targetStatus string) error {
 	if tradeNo == "" {
 		return errors.New("未提供支付单号")
 	}
@@ -198,7 +212,7 @@ func UpdatePendingTopUpStatus(tradeNo string, expectedPaymentMethod string, targ
 		if err := tx.Set("gorm:query_option", "FOR UPDATE").Where(refCol+" = ?", tradeNo).First(topUp).Error; err != nil {
 			return ErrTopUpNotFound
 		}
-		if expectedPaymentMethod != "" && topUp.PaymentMethod != expectedPaymentMethod {
+		if expectedPaymentProvider != "" && topUp.PaymentProvider != expectedPaymentProvider {
 			return ErrPaymentMethodMismatch
 		}
 		if topUp.Status != common.TopUpStatusPending {
@@ -230,7 +244,7 @@ func Recharge(referenceId string, customerId string, callerIp string) (err error
 			return errors.New("充值订单不存在")
 		}
 
-		if topUp.PaymentMethod != PaymentMethodStripe {
+		if topUp.PaymentProvider != PaymentProviderStripe {
 			return ErrPaymentMethodMismatch
 		}
 
@@ -459,7 +473,7 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 			return errors.New("充值订单不存在")
 		}
 
-		if topUp.PaymentMethod != PaymentMethodCreem {
+		if topUp.PaymentProvider != PaymentProviderCreem {
 			return ErrPaymentMethodMismatch
 		}
 
@@ -524,7 +538,7 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 }
 
 func RechargeWaffo(tradeNo string, callerIp string) (err error) {
-	result, err := CompleteTopUpByTradeNo(tradeNo, PaymentMethodWaffo)
+	result, err := CompleteTopUpByTradeNo(tradeNo, PaymentProviderWaffo)
 	if err != nil {
 		common.SysError("waffo topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")
@@ -541,7 +555,7 @@ func RechargeWaffo(tradeNo string, callerIp string) (err error) {
 }
 
 func RechargeWaffoPancake(tradeNo string) (err error) {
-	result, err := CompleteTopUpByTradeNo(tradeNo, PaymentMethodWaffoPancake)
+	result, err := CompleteTopUpByTradeNo(tradeNo, PaymentProviderWaffoPancake)
 	if err != nil {
 		common.SysError("waffo pancake topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")

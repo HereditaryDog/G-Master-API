@@ -11,6 +11,7 @@ import (
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/dto"
+	"github.com/yangjunyu/G-Master-API/pkg/billingexpr"
 	relayconstant "github.com/yangjunyu/G-Master-API/relay/constant"
 	"github.com/yangjunyu/G-Master-API/setting/model_setting"
 	"github.com/yangjunyu/G-Master-API/types"
@@ -153,6 +154,11 @@ type RelayInfo struct {
 	ParamOverrideAudit                    []string
 
 	PriceData types.PriceData
+
+	// TieredBillingSnapshot is a frozen snapshot of tiered billing rules
+	// captured at pre-consume time. Non-nil only when billing mode is "tiered_expr".
+	TieredBillingSnapshot *billingexpr.BillingSnapshot
+	BillingRequestInput   *billingexpr.RequestInput
 
 	Request dto.Request
 

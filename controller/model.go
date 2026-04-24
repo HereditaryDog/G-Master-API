@@ -17,9 +17,9 @@ import (
 	"github.com/yangjunyu/G-Master-API/relay/channel/minimax"
 	"github.com/yangjunyu/G-Master-API/relay/channel/moonshot"
 	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
+	"github.com/yangjunyu/G-Master-API/relay/helper"
 	"github.com/yangjunyu/G-Master-API/service"
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
-	"github.com/yangjunyu/G-Master-API/setting/ratio_setting"
 	"github.com/yangjunyu/G-Master-API/types"
 )
 
@@ -134,8 +134,7 @@ func ListModels(c *gin.Context, modelType int) {
 		}
 		for allowModel, _ := range tokenModelLimit {
 			if !acceptUnsetRatioModel {
-				_, _, exist := ratio_setting.GetModelRatioOrPrice(allowModel)
-				if !exist {
+				if !helper.HasModelBillingConfig(allowModel) {
 					continue
 				}
 			}
@@ -182,8 +181,7 @@ func ListModels(c *gin.Context, modelType int) {
 		}
 		for _, modelName := range models {
 			if !acceptUnsetRatioModel {
-				_, _, exist := ratio_setting.GetModelRatioOrPrice(modelName)
-				if !exist {
+				if !helper.HasModelBillingConfig(modelName) {
 					continue
 				}
 			}
