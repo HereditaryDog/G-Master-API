@@ -1,9 +1,22 @@
-import React, {
-  useContext,
-  useDeferredValue,
-  useMemo,
-  useState,
-} from 'react';
+/*
+Copyright (C) 2025 QuantumNous
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+For commercial licensing, please contact support@quantumnous.com
+*/
+import React, { useContext, useDeferredValue, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { StatusContext } from '../../context/Status';
 
@@ -78,8 +91,7 @@ const DOC_GROUPS = [
     id: 'responses',
     eyebrow: '聊天(Responses)',
     title: 'Responses API 与推理场景',
-    description:
-      '适合统一推理、工具调用、联网搜索和更偏 Agent 的调用方式。',
+    description: '适合统一推理、工具调用、联网搜索和更偏 Agent 的调用方式。',
     items: [
       {
         title: '创建模型响应',
@@ -575,11 +587,12 @@ const Docs = () => {
               <div className='gm-docs-kicker'>Developer Docs</div>
               <h1 className='gm-docs-title'>G-Master API 接口文档</h1>
               <p className='gm-docs-description'>
-                统一整理接入基址、认证方式、常用接口、SDK 示例、系统 API 和帮助中心，
-                方便开发者直接完成联调、排错和工具接入。
+                统一整理接入基址、认证方式、常用接口、SDK 示例、系统 API
+                和帮助中心， 方便开发者直接完成联调、排错和工具接入。
               </p>
               <p className='gm-docs-description gm-docs-description-compact'>
-                具体可用模型以控制台展示和 <code>GET /v1/models</code> 返回结果为准。
+                具体可用模型以控制台展示和 <code>GET /v1/models</code>{' '}
+                返回结果为准。
               </p>
 
               <div className='gm-docs-hero-actions'>
@@ -601,7 +614,10 @@ const Docs = () => {
 
           <section className='gm-docs-summary-grid'>
             {summaryCards.map((card) => (
-              <article key={card.label} className='gm-docs-card gm-docs-summary-card'>
+              <article
+                key={card.label}
+                className='gm-docs-card gm-docs-summary-card'
+              >
                 <div className='gm-docs-summary-label'>{card.label}</div>
                 <div className='gm-docs-summary-value'>{card.value}</div>
               </article>
@@ -694,7 +710,11 @@ const Docs = () => {
           </section>
 
           {filteredGroups.map((group) => (
-            <section key={group.id} id={group.id} className='gm-docs-card gm-docs-group-section'>
+            <section
+              key={group.id}
+              id={group.id}
+              className='gm-docs-card gm-docs-group-section'
+            >
               <div className='gm-docs-section-head'>
                 <div>
                   <div className='gm-docs-block-kicker'>{group.eyebrow}</div>
@@ -703,12 +723,17 @@ const Docs = () => {
                     {group.description}
                   </div>
                 </div>
-                <div className='gm-docs-count-chip'>{group.items.length} 条目</div>
+                <div className='gm-docs-count-chip'>
+                  {group.items.length} 条目
+                </div>
               </div>
 
               <div className='gm-docs-catalog-grid'>
                 {group.items.map((item) => (
-                  <article key={`${group.id}-${item.title}`} className='gm-docs-catalog-card'>
+                  <article
+                    key={`${group.id}-${item.title}`}
+                    className='gm-docs-catalog-card'
+                  >
                     <div className='gm-docs-catalog-head'>
                       <span className='gm-docs-method-pill'>{item.type}</span>
                       <span className='gm-docs-endpoint'>{item.endpoint}</span>

@@ -200,7 +200,8 @@ const Home = () => {
         },
         {
           title: '多模态对话',
-          description: '支持文本、图像、结构化输出和工具调用，适合客服、助手、Agent 与内容生成场景。',
+          description:
+            '支持文本、图像、结构化输出和工具调用，适合客服、助手、Agent 与内容生成场景。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <circle cx='12' cy='12' r='10'></circle>
@@ -212,7 +213,8 @@ const Home = () => {
         },
         {
           title: '长上下文模型',
-          description: '适合长文档阅读、知识库问答、复杂指令跟随和企业级流程处理。',
+          description:
+            '适合长文档阅读、知识库问答、复杂指令跟随和企业级流程处理。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <rect x='2' y='3' width='20' height='14' rx='2' ry='2'></rect>
@@ -223,7 +225,8 @@ const Home = () => {
         },
         {
           title: '图像生成与编辑',
-          description: '覆盖文生图、参考图编辑、风格迁移与视觉内容生成，适合海报、封面和营销素材。',
+          description:
+            '覆盖文生图、参考图编辑、风格迁移与视觉内容生成，适合海报、封面和营销素材。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'></path>
@@ -233,7 +236,8 @@ const Home = () => {
         },
         {
           title: 'Embedding 与检索',
-          description: '支持文本向量化、相似度检索、语义召回与知识库场景，便于构建 RAG 能力。',
+          description:
+            '支持文本向量化、相似度检索、语义召回与知识库场景，便于构建 RAG 能力。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <polygon points='12 2 2 7 12 12 22 7 12 2'></polygon>
@@ -244,7 +248,8 @@ const Home = () => {
         },
         {
           title: '音频、视频与更多能力',
-          description: '持续接入音频转写、语音、视频生成和更多新能力，覆盖多类型 AI 工作流。',
+          description:
+            '持续接入音频转写、语音、视频生成和更多新能力，覆盖多类型 AI 工作流。',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'></path>
@@ -269,7 +274,8 @@ const Home = () => {
         },
         {
           title: 'Multimodal chat',
-          description: 'Supports text, vision, structured output, and tool calling for assistants, workflows, and content generation.',
+          description:
+            'Supports text, vision, structured output, and tool calling for assistants, workflows, and content generation.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <circle cx='12' cy='12' r='10'></circle>
@@ -281,7 +287,8 @@ const Home = () => {
         },
         {
           title: 'Long-context models',
-          description: 'Well suited for large documents, knowledge-grounded Q&A, instruction-heavy tasks, and enterprise workflows.',
+          description:
+            'Well suited for large documents, knowledge-grounded Q&A, instruction-heavy tasks, and enterprise workflows.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <rect x='2' y='3' width='20' height='14' rx='2' ry='2'></rect>
@@ -292,7 +299,8 @@ const Home = () => {
         },
         {
           title: 'Image generation',
-          description: 'Covers text-to-image, editing, reference-image workflows, and production-ready visual generation.',
+          description:
+            'Covers text-to-image, editing, reference-image workflows, and production-ready visual generation.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'></path>
@@ -302,7 +310,8 @@ const Home = () => {
         },
         {
           title: 'Embeddings and retrieval',
-          description: 'Use embeddings for vector search, semantic recall, ranking, and RAG-style applications.',
+          description:
+            'Use embeddings for vector search, semantic recall, ranking, and RAG-style applications.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <polygon points='12 2 2 7 12 12 22 7 12 2'></polygon>
@@ -313,7 +322,8 @@ const Home = () => {
         },
         {
           title: 'Audio, video, and more',
-          description: 'Continually expands into transcription, speech, video generation, and new AI workflow capabilities.',
+          description:
+            'Continually expands into transcription, speech, video generation, and new AI workflow capabilities.',
           icon: (
             <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
               <path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'></path>
@@ -481,9 +491,19 @@ const Home = () => {
                   </svg>
                   <strong>{isChinese ? '开始使用' : 'Get Started'}</strong>
                 </Link>
-                <Link to={pricingUrl} className='gm-zen-btn gm-zen-btn-secondary'>
+                <Link
+                  to={pricingUrl}
+                  className='gm-zen-btn gm-zen-btn-secondary'
+                >
                   <svg viewBox='0 0 24 24' fill='none' stroke='currentColor'>
-                    <rect x='2' y='3' width='20' height='14' rx='2' ry='2'></rect>
+                    <rect
+                      x='2'
+                      y='3'
+                      width='20'
+                      height='14'
+                      rx='2'
+                      ry='2'
+                    ></rect>
                     <line x1='8' y1='21' x2='16' y2='21'></line>
                     <line x1='12' y1='17' x2='12' y2='21'></line>
                   </svg>
@@ -508,7 +528,9 @@ const Home = () => {
 
           <div className='gm-zen-sections'>
             <section className='gm-zen-section gm-zen-visible-first'>
-              <h2>{isChinese ? `为什么选择 ${displayName}` : `Why ${displayName}`}</h2>
+              <h2>
+                {isChinese ? `为什么选择 ${displayName}` : `Why ${displayName}`}
+              </h2>
               <div className='gm-zen-features-grid'>
                 {featureCards.map((item) => (
                   <div key={item.title} className='gm-zen-feature-card'>
@@ -526,7 +548,11 @@ const Home = () => {
                 <div className='gm-zen-dashboard-mockup'>
                   <img
                     src='/homepage/zen-kanban.png'
-                    alt={isChinese ? `${displayName}数据分析仪表盘` : `${displayName} analytics dashboard`}
+                    alt={
+                      isChinese
+                        ? `${displayName}数据分析仪表盘`
+                        : `${displayName} analytics dashboard`
+                    }
                     className='gm-zen-dashboard-image'
                   />
                 </div>
@@ -541,10 +567,16 @@ const Home = () => {
             </section>
 
             <section className='gm-zen-section'>
-              <h2>{isChinese ? '灵活的密钥管理' : 'Flexible Key Management'}</h2>
+              <h2>
+                {isChinese ? '灵活的密钥管理' : 'Flexible Key Management'}
+              </h2>
               <div className='gm-zen-keys-management'>
                 <div className='gm-zen-keys-info'>
-                  <h3>{isChinese ? '多密钥智能管理' : 'Smart Multi-key Management'}</h3>
+                  <h3>
+                    {isChinese
+                      ? '多密钥智能管理'
+                      : 'Smart Multi-key Management'}
+                  </h3>
                   <p>
                     {isChinese
                       ? '为不同项目和团队创建独立密钥，实现更精细的权限控制与用量追踪，让 API 调用管理更加安全高效。'
@@ -559,7 +591,11 @@ const Home = () => {
                 <div className='gm-zen-keys-preview'>
                   <img
                     src='/homepage/zen-token.png'
-                    alt={isChinese ? `${displayName}密钥管理界面` : `${displayName} token management`}
+                    alt={
+                      isChinese
+                        ? `${displayName}密钥管理界面`
+                        : `${displayName} token management`
+                    }
                     className='gm-zen-keys-image'
                   />
                 </div>
@@ -567,10 +603,18 @@ const Home = () => {
             </section>
 
             <section className='gm-zen-section'>
-              <h2>{isChinese ? '完整的 OpenAI 协议兼容' : 'Complete OpenAI Compatibility'}</h2>
+              <h2>
+                {isChinese
+                  ? '完整的 OpenAI 协议兼容'
+                  : 'Complete OpenAI Compatibility'}
+              </h2>
               <div className='gm-zen-compatibility-content'>
                 <div className='gm-zen-supported-frameworks'>
-                  <h3>{isChinese ? '支持框架与工具' : 'Supported Frameworks & Tools'}</h3>
+                  <h3>
+                    {isChinese
+                      ? '支持框架与工具'
+                      : 'Supported Frameworks & Tools'}
+                  </h3>
                   <p>
                     {isChinese
                       ? '无缝集成各种主流框架和工具，零代码修改即可迁移现有项目，让开发体验更加流畅。'
@@ -621,7 +665,9 @@ const response = await client.chat.completions.create({
             </section>
 
             <section className='gm-zen-section'>
-              <h2>{isChinese ? '立即开始您的AI之旅' : 'Start Your AI Journey'}</h2>
+              <h2>
+                {isChinese ? '立即开始您的AI之旅' : 'Start Your AI Journey'}
+              </h2>
               <div className='gm-zen-steps-container'>
                 {steps.map((item, index) => (
                   <div key={item.title} className='gm-zen-step'>
@@ -647,7 +693,8 @@ const response = await client.chat.completions.create({
 
             <section className='gm-zen-section gm-zen-home-footer-card'>
               <p className='gm-zen-home-footer-title'>
-                © 2023-2026 {displayName}. {isChinese ? '保留所有权利' : 'All rights reserved'}
+                © 2023-2026 {displayName}.{' '}
+                {isChinese ? '保留所有权利' : 'All rights reserved'}
               </p>
               <p className='gm-zen-home-footer-links'>
                 <a href={repoUrl} target='_blank' rel='noopener noreferrer'>
@@ -664,7 +711,12 @@ const response = await client.chat.completions.create({
               </p>
               <div className='gm-zen-contact-info'>
                 <div className='gm-zen-contact-item'>
-                  <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                  >
                     <path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'></path>
                     <circle cx='9' cy='7' r='4'></circle>
                     <path d='M23 21v-2a4 4 0 0 0-3-3.87'></path>
@@ -678,7 +730,12 @@ const response = await client.chat.completions.create({
                   </span>
                 </div>
                 <div className='gm-zen-contact-item'>
-                  <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                  >
                     <path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'></path>
                     <polyline points='22,6 12,13 2,6'></polyline>
                   </svg>
@@ -698,7 +755,12 @@ const response = await client.chat.completions.create({
                   </span>
                 </div>
                 <div className='gm-zen-contact-item'>
-                  <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                  >
                     <path d='M12 2 2 7l10 5 10-5-10-5Z'></path>
                     <path d='M2 17l10 5 10-5'></path>
                     <path d='M2 12l10 5 10-5'></path>
@@ -715,7 +777,12 @@ const response = await client.chat.completions.create({
                   </span>
                 </div>
                 <div className='gm-zen-contact-item'>
-                  <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                  >
                     <path d='M12 20V10'></path>
                     <path d='m18 20-6-6-6 6'></path>
                     <path d='M6 4h12'></path>
