@@ -345,6 +345,13 @@ func NewBillingSession(c *gin.Context, relayInfo *relaycommon.RelayInfo, preCons
 	}
 
 	pref := common.NormalizeBillingPreference(relayInfo.UserSetting.BillingPreference)
+	groupPref, groupBound, groupPrefErr := resolveGroupBoundBillingPreference(relayInfo)
+	if groupPrefErr != nil {
+		return nil, types.NewError(groupPrefErr, types.ErrorCodeQueryDataError, types.ErrOptionWithSkipRetry())
+	}
+	if groupBound {
+		pref = groupPref
+	}
 
 	// 钱包路径需要先检查用户额度
 	tryWallet := func() (*BillingSession, *types.NewAPIError) {
@@ -431,4 +438,25 @@ func NewBillingSession(c *gin.Context, relayInfo *relaycommon.RelayInfo, preCons
 		}
 		return session, nil
 	}
+}
+
+func resolveGroupBoundBillingPreference(relayInfo *relaycommon.RelayInfo) (string, bool, error) {
+	if relayInfo == nil {
+		return "", false, nil
+	}
+	hasUpgradeSub, err := model.HasActiveUserSubscriptionUpgradeGroup(relayInfo.UserId)
+	if err != nil {
+		return "", false, err
+	}
+	if !hasUpgradeSub {
+		return "", false, nil
+	}
+	usesSubscriptionGroup, err := model.HasActiveUserSubscriptionForGroup(relayInfo.UserId, relayInfo.UsingGroup)
+	if err != nil {
+		return "", false, err
+	}
+	if usesSubscriptionGroup {
+		return "subscription_only", true, nil
+	}
+	return "wallet_only", true, nil
 }

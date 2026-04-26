@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yangjunyu/G-Master-API/common"
-	"github.com/yangjunyu/G-Master-API/model"
-	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
 	"github.com/glebarez/sqlite"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yangjunyu/G-Master-API/common"
+	"github.com/yangjunyu/G-Master-API/model"
+	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
 	"gorm.io/gorm"
 )
 
@@ -43,7 +43,9 @@ func TestMain(m *testing.M) {
 		&model.Log{},
 		&model.Channel{},
 		&model.TopUp{},
+		&model.SubscriptionPlan{},
 		&model.UserSubscription{},
+		&model.SubscriptionPreConsumeRecord{},
 	); err != nil {
 		panic("failed to migrate: " + err.Error())
 	}
@@ -64,6 +66,8 @@ func truncate(t *testing.T) {
 		model.DB.Exec("DELETE FROM logs")
 		model.DB.Exec("DELETE FROM channels")
 		model.DB.Exec("DELETE FROM top_ups")
+		model.DB.Exec("DELETE FROM subscription_pre_consume_records")
+		model.DB.Exec("DELETE FROM subscription_plans")
 		model.DB.Exec("DELETE FROM user_subscriptions")
 	})
 }

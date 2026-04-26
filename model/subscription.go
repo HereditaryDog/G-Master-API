@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/samber/hot"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/pkg/cachex"
-	"github.com/samber/hot"
 	"gorm.io/gorm"
 )
 
@@ -690,6 +690,38 @@ func HasActiveUserSubscription(userId int) (bool, error) {
 	var count int64
 	if err := DB.Model(&UserSubscription{}).
 		Where("user_id = ? AND status = ? AND end_time > ?", userId, "active", now).
+		Count(&count).Error; err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func HasActiveUserSubscriptionForGroup(userId int, group string) (bool, error) {
+	group = strings.TrimSpace(group)
+	if userId <= 0 {
+		return false, errors.New("invalid userId")
+	}
+	if group == "" {
+		return false, nil
+	}
+	now := common.GetTimestamp()
+	var count int64
+	if err := DB.Model(&UserSubscription{}).
+		Where("user_id = ? AND status = ? AND end_time > ? AND upgrade_group = ?", userId, "active", now, group).
+		Count(&count).Error; err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func HasActiveUserSubscriptionUpgradeGroup(userId int) (bool, error) {
+	if userId <= 0 {
+		return false, errors.New("invalid userId")
+	}
+	now := common.GetTimestamp()
+	var count int64
+	if err := DB.Model(&UserSubscription{}).
+		Where("user_id = ? AND status = ? AND end_time > ? AND upgrade_group <> ''", userId, "active", now).
 		Count(&count).Error; err != nil {
 		return false, err
 	}
