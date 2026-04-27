@@ -53,6 +53,7 @@ Rules:
 Behavior:
 
 - If the user is not logged in, the page asks the user to log in through the existing G-Master API web flow.
+- The login flow preserves the desktop authorization `redirect` parameter, including password login, passkey login, 2FA completion, and OAuth callback login.
 - If the user is logged in, the page shows an authorization confirmation page.
 - Approval redirects to:
 
@@ -279,7 +280,6 @@ Provider api_format: anthropic
 ## Known Limitations
 
 - The first MVP confirmation page is backend-rendered HTML, not a full React page.
-- If the existing frontend login page does not preserve the `redirect` query, users may need to return to GasterCode and start login again after signing in.
 - 2FA, registration, password reset, OAuth login, and subscription purchase remain in the existing web flow.
 - `can_use_builtin_provider` is a coarse availability flag based on account status, wallet quota, and active subscription quota. Actual model calls still go through normal gateway billing and channel selection.
 - Provider token model defaults are server-configurable through environment variables; GasterCode should not hard-code model names if the API response supplies them.

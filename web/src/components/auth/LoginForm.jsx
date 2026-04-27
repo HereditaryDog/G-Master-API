@@ -121,6 +121,26 @@ const LoginForm = () => {
     localStorage.setItem('aff', affCode);
   }
 
+  const getSafeLoginRedirectTarget = () => {
+    const target = searchParams.get('redirect');
+    if (!target || !target.startsWith('/') || target.startsWith('//')) {
+      return '';
+    }
+    return target;
+  };
+
+  const navigateAfterLogin = (fallback = '/console') => {
+    const target = getSafeLoginRedirectTarget();
+    navigate(target || fallback);
+  };
+
+  const rememberLoginRedirectForOAuth = () => {
+    const target = getSafeLoginRedirectTarget();
+    if (target) {
+      localStorage.setItem('login_redirect_after_oauth', target);
+    }
+  };
+
   const status = useMemo(() => {
     if (statusState?.status) return statusState.status;
     const savedStatus = localStorage.getItem('status');
@@ -198,7 +218,7 @@ const LoginForm = () => {
         localStorage.setItem('user', JSON.stringify(data));
         setUserData(data);
         updateAPI();
-        navigate('/');
+        navigateAfterLogin('/');
         showSuccess('登录成功！');
         setShowWeChatLoginModal(false);
       } else {
@@ -255,7 +275,7 @@ const LoginForm = () => {
               centered: true,
             });
           }
-          navigate('/console');
+          navigateAfterLogin('/console');
         } else {
           showError(message);
         }
@@ -300,7 +320,7 @@ const LoginForm = () => {
         showSuccess('登录成功！');
         setUserData(data);
         updateAPI();
-        navigate('/');
+        navigateAfterLogin('/');
       } else {
         showError(message);
       }
@@ -321,6 +341,7 @@ const LoginForm = () => {
     setGithubLoading(true);
     setGithubButtonDisabled(true);
     setGithubButtonState('redirecting');
+    rememberLoginRedirectForOAuth();
     if (githubTimeoutRef.current) {
       clearTimeout(githubTimeoutRef.current);
     }
@@ -344,6 +365,7 @@ const LoginForm = () => {
       return;
     }
     setDiscordLoading(true);
+    rememberLoginRedirectForOAuth();
     try {
       onDiscordOAuthClicked(status.discord_client_id, { shouldLogout: true });
     } finally {
@@ -359,6 +381,7 @@ const LoginForm = () => {
       return;
     }
     setOidcLoading(true);
+    rememberLoginRedirectForOAuth();
     try {
       onOIDCClicked(
         status.oidc_authorization_endpoint,
@@ -379,6 +402,7 @@ const LoginForm = () => {
       return;
     }
     setLinuxdoLoading(true);
+    rememberLoginRedirectForOAuth();
     try {
       onLinuxDOOAuthClicked(status.linuxdo_client_id, { shouldLogout: true });
     } finally {
@@ -394,6 +418,7 @@ const LoginForm = () => {
       return;
     }
     setCustomOAuthLoading((prev) => ({ ...prev, [provider.slug]: true }));
+    rememberLoginRedirectForOAuth();
     try {
       onCustomOAuthClicked(provider, { shouldLogout: true });
     } finally {
@@ -456,7 +481,7 @@ const LoginForm = () => {
         setUserData(finish.data);
         updateAPI();
         showSuccess('登录成功！');
-        navigate('/console');
+        navigateAfterLogin('/console');
       } else {
         showError(finish.message || 'Passkey 登录失败，请重试');
       }
@@ -491,7 +516,7 @@ const LoginForm = () => {
     setUserData(data);
     updateAPI();
     showSuccess('登录成功！');
-    navigate('/console');
+    navigateAfterLogin('/console');
   };
 
   // 返回登录页面

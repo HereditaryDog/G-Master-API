@@ -42,6 +42,15 @@ const OAuth2Callback = (props) => {
   // 最大重试次数
   const MAX_RETRIES = 3;
 
+  const consumeSafeLoginRedirect = () => {
+    const target = localStorage.getItem('login_redirect_after_oauth') || '';
+    localStorage.removeItem('login_redirect_after_oauth');
+    if (!target || !target.startsWith('/') || target.startsWith('//')) {
+      return '';
+    }
+    return target;
+  };
+
   const sendCode = async (code, state, retry = 0) => {
     try {
       const { data: resData } = await API.get(
@@ -65,7 +74,7 @@ const OAuth2Callback = (props) => {
         setUserData(data);
         updateAPI();
         showSuccess(t('登录成功！'));
-        navigate('/console/token');
+        navigate(consumeSafeLoginRedirect() || '/console/token');
       }
     } catch (error) {
       // 网络错误等可重试
