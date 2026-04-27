@@ -280,6 +280,8 @@ func migrateDB() error {
 		&SubscriptionOrder{},
 		&UserSubscription{},
 		&SubscriptionPreConsumeRecord{},
+		&GasterCodeAuthRequest{},
+		&GasterCodeSession{},
 		&CustomOAuthProvider{},
 		&UserOAuthBinding{},
 	)
@@ -328,6 +330,8 @@ func migrateDBFast() error {
 		{&SubscriptionOrder{}, "SubscriptionOrder"},
 		{&UserSubscription{}, "UserSubscription"},
 		{&SubscriptionPreConsumeRecord{}, "SubscriptionPreConsumeRecord"},
+		{&GasterCodeAuthRequest{}, "GasterCodeAuthRequest"},
+		{&GasterCodeSession{}, "GasterCodeSession"},
 		{&CustomOAuthProvider{}, "CustomOAuthProvider"},
 		{&UserOAuthBinding{}, "UserOAuthBinding"},
 	}

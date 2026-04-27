@@ -46,6 +46,18 @@ func SetApiRouter(router *gin.Engine) {
 		apiRouter.GET("/oauth/:provider", middleware.CriticalRateLimit(), controller.HandleOAuth)
 		apiRouter.GET("/ratio_config", middleware.CriticalRateLimit(), controller.GetRatioConfig)
 
+		gasterCodeRoute := apiRouter.Group("/gaster-code")
+		{
+			gasterCodeRoute.POST("/auth/start", middleware.CriticalRateLimit(), controller.GasterCodeAuthStart)
+			gasterCodeRoute.POST("/auth/approve", middleware.CriticalRateLimit(), controller.GasterCodeAuthApprove)
+			gasterCodeRoute.POST("/auth/deny", middleware.CriticalRateLimit(), controller.GasterCodeAuthDeny)
+			gasterCodeRoute.POST("/auth/token", middleware.CriticalRateLimit(), controller.GasterCodeAuthToken)
+			gasterCodeRoute.POST("/auth/refresh", middleware.CriticalRateLimit(), controller.GasterCodeAuthRefresh)
+			gasterCodeRoute.POST("/auth/revoke", controller.GasterCodeAuthRevoke)
+			gasterCodeRoute.GET("/me", controller.GasterCodeMe)
+			gasterCodeRoute.POST("/provider-token", controller.GasterCodeProviderToken)
+		}
+
 		apiRouter.POST("/stripe/webhook", controller.StripeWebhook)
 		apiRouter.POST("/creem/webhook", controller.CreemWebhook)
 		apiRouter.POST("/waffo/webhook", controller.WaffoWebhook)
