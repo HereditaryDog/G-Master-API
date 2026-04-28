@@ -9,4 +9,4 @@ Points d’entrée recommandés :
 - [Guide de déploiement](./docs/installation/BT.md)
 - [Attribution et licence](./ACKNOWLEDGMENTS.md)
 
-Version stable actuelle : [`v0.12.11-gmaster.1`](https://github.com/HereditaryDog/G-Master-API/releases/tag/v0.12.11-gmaster.1)
+Base stable actuelle du code source : [`v0.13.2-gmaster.1`](./VERSION)

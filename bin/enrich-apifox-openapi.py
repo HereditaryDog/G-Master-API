@@ -433,7 +433,7 @@ RESPONSE_EXAMPLES = {
         "data": {
             "system_name": "G-Master API",
             "server_address": "https://gmapi.fun",
-            "version": "v0.12.1-gmaster.3",
+            "version": "v0.13.2-gmaster.1",
             "top_up_link": "https://gmtoken.shop",
         },
     },
@@ -739,6 +739,9 @@ def main():
 
     path = Path(sys.argv[1])
     spec = json.loads(path.read_text())
+    spec_version = spec.get("info", {}).get("version")
+    if spec_version:
+        RESPONSE_EXAMPLES[("get", "/api/status")]["data"]["version"] = spec_version
 
     ordered_paths = OrderedDict()
     for route, methods in sorted(spec.get("paths", {}).items(), key=path_sort_key):
