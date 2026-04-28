@@ -66,6 +66,10 @@ import LinuxDoIcon from '../common/logo/LinuxDoIcon';
 import TwoFAVerification from './TwoFAVerification';
 import { useTranslation } from 'react-i18next';
 import { SiDiscord } from 'react-icons/si';
+import {
+  getSafeLoginRedirectTarget as getSafeLoginRedirectTargetFromSearch,
+  shouldUseDocumentNavigationForLoginRedirect,
+} from '../../helpers/authRedirect';
 
 const LoginForm = () => {
   let navigate = useNavigate();
@@ -122,15 +126,15 @@ const LoginForm = () => {
   }
 
   const getSafeLoginRedirectTarget = () => {
-    const target = searchParams.get('redirect');
-    if (!target || !target.startsWith('/') || target.startsWith('//')) {
-      return '';
-    }
-    return target;
+    return getSafeLoginRedirectTargetFromSearch(searchParams);
   };
 
   const navigateAfterLogin = (fallback = '/console') => {
     const target = getSafeLoginRedirectTarget();
+    if (target && shouldUseDocumentNavigationForLoginRedirect(target)) {
+      window.location.assign(target);
+      return;
+    }
     navigate(target || fallback);
   };
 

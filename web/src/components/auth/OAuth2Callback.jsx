@@ -27,6 +27,10 @@ import {
   updateAPI,
   setUserData,
 } from '../../helpers';
+import {
+  isSafeLoginRedirectTarget,
+  shouldUseDocumentNavigationForLoginRedirect,
+} from '../../helpers/authRedirect';
 import { UserContext } from '../../context/User';
 import Loading from '../common/ui/Loading';
 
@@ -45,10 +49,16 @@ const OAuth2Callback = (props) => {
   const consumeSafeLoginRedirect = () => {
     const target = localStorage.getItem('login_redirect_after_oauth') || '';
     localStorage.removeItem('login_redirect_after_oauth');
-    if (!target || !target.startsWith('/') || target.startsWith('//')) {
-      return '';
+    return isSafeLoginRedirectTarget(target) ? target : '';
+  };
+
+  const navigateAfterOAuthLogin = () => {
+    const target = consumeSafeLoginRedirect();
+    if (target && shouldUseDocumentNavigationForLoginRedirect(target)) {
+      window.location.assign(target);
+      return;
     }
-    return target;
+    navigate(target || '/console/token');
   };
 
   const sendCode = async (code, state, retry = 0) => {
@@ -74,7 +84,7 @@ const OAuth2Callback = (props) => {
         setUserData(data);
         updateAPI();
         showSuccess(t('登录成功！'));
-        navigate(consumeSafeLoginRedirect() || '/console/token');
+        navigateAfterOAuthLogin();
       }
     } catch (error) {
       // 网络错误等可重试
