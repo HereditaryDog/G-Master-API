@@ -2360,7 +2360,10 @@ export function renderTieredModelPriceSimple(opts) {
     }
 
     if (tier && isPriceDisplayMode(displayMode)) {
-      const priceSegments = BILLING_PRICING_VARS.map((v) => [v.field, v.shortLabel]);
+      const priceSegments = BILLING_PRICING_VARS.map((v) => [
+        v.field,
+        v.shortLabel,
+      ]);
       for (const [field, label] of priceSegments) {
         if (tier[field] > 0) {
           segments.push({

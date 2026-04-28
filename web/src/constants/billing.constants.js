@@ -112,9 +112,13 @@ export const BILLING_VARS = [
 
 export const BILLING_VAR_KEYS = BILLING_VARS.map((v) => v.key);
 
-export const BILLING_PRICING_VARS = BILLING_VARS.filter((v) => !v.isConditionOnly);
+export const BILLING_PRICING_VARS = BILLING_VARS.filter(
+  (v) => !v.isConditionOnly,
+);
 
-export const BILLING_EXTRA_VARS = BILLING_VARS.filter((v) => !v.isBase && !v.isConditionOnly);
+export const BILLING_EXTRA_VARS = BILLING_VARS.filter(
+  (v) => !v.isBase && !v.isConditionOnly,
+);
 
 export const BILLING_VAR_KEY_TO_FIELD = Object.fromEntries(
   BILLING_PRICING_VARS.map((v) => [v.key, v.field]),

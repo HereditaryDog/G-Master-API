@@ -1068,9 +1068,8 @@ function RawExprEditor({ exprString, onChange, t }) {
             <div>
               {t('变量')}: <code>p</code> ({t('输入 Token')}), <code>c</code> (
               {t('输出 Token')}), <code>len</code> ({t('输入长度')}),{' '}
-              <code>cr</code> ({t('缓存读取')}),{' '}
-              <code>cc</code> ({t('缓存创建')}), <code>cc1h</code> (
-              {t('缓存创建-1小时')})
+              <code>cr</code> ({t('缓存读取')}), <code>cc</code> (
+              {t('缓存创建')}), <code>cc1h</code> ({t('缓存创建-1小时')})
             </div>
             <div>
               {t('函数')}: <code>tier(name, value)</code>,{' '}
@@ -1647,9 +1646,18 @@ function LlmPromptHelper({ t, model }) {
           bodyStyle={{ padding: 12 }}
           style={{ marginTop: 8, background: 'var(--semi-color-fill-0)' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
             <Text size='small' type='secondary'>
-              {t('复制以下提示词发送给 LLM（如 ChatGPT / Claude），让它帮你设计计费表达式')}
+              {t(
+                '复制以下提示词发送给 LLM（如 ChatGPT / Claude），让它帮你设计计费表达式',
+              )}
             </Text>
             <Button
               icon={<IconCopy />}
