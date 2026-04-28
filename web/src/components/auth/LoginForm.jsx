@@ -66,6 +66,10 @@ import LinuxDoIcon from '../common/logo/LinuxDoIcon';
 import TwoFAVerification from './TwoFAVerification';
 import { useTranslation } from 'react-i18next';
 import { SiDiscord } from 'react-icons/si';
+import {
+  getSafeLoginRedirectTarget as getSafeLoginRedirectTargetFromSearch,
+  shouldUseDocumentNavigationForLoginRedirect,
+} from '../../helpers/authRedirect';
 
 const LoginForm = () => {
   let navigate = useNavigate();
@@ -121,6 +125,26 @@ const LoginForm = () => {
     localStorage.setItem('aff', affCode);
   }
 
+  const getSafeLoginRedirectTarget = () => {
+    return getSafeLoginRedirectTargetFromSearch(searchParams);
+  };
+
+  const navigateAfterLogin = (fallback = '/console') => {
+    const target = getSafeLoginRedirectTarget();
+    if (target && shouldUseDocumentNavigationForLoginRedirect(target)) {
+      window.location.assign(target);
+      return;
+    }
+    navigate(target || fallback);
+  };
+
+  const rememberLoginRedirectForOAuth = () => {
+    const target = getSafeLoginRedirectTarget();
+    if (target) {
+      localStorage.setItem('login_redirect_after_oauth', target);
+    }
+  };
+
   const status = useMemo(() => {
     if (statusState?.status) return statusState.status;
     const savedStatus = localStorage.getItem('status');
@@ -135,12 +159,12 @@ const LoginForm = () => {
     (status.custom_oauth_providers || []).length > 0;
   const hasOAuthLoginOptions = Boolean(
     status.github_oauth ||
-      status.discord_oauth ||
-      status.oidc_enabled ||
-      status.wechat_login ||
-      status.linuxdo_oauth ||
-      status.telegram_oauth ||
-      hasCustomOAuthProviders,
+    status.discord_oauth ||
+    status.oidc_enabled ||
+    status.wechat_login ||
+    status.linuxdo_oauth ||
+    status.telegram_oauth ||
+    hasCustomOAuthProviders,
   );
 
   useEffect(() => {
@@ -198,7 +222,7 @@ const LoginForm = () => {
         localStorage.setItem('user', JSON.stringify(data));
         setUserData(data);
         updateAPI();
-        navigate('/');
+        navigateAfterLogin('/');
         showSuccess('登录成功！');
         setShowWeChatLoginModal(false);
       } else {
@@ -255,7 +279,7 @@ const LoginForm = () => {
               centered: true,
             });
           }
-          navigate('/console');
+          navigateAfterLogin('/console');
         } else {
           showError(message);
         }
@@ -300,7 +324,7 @@ const LoginForm = () => {
         showSuccess('登录成功！');
         setUserData(data);
         updateAPI();
-        navigate('/');
+        navigateAfterLogin('/');
       } else {
         showError(message);
       }
@@ -321,6 +345,7 @@ const LoginForm = () => {
     setGithubLoading(true);
     setGithubButtonDisabled(true);
     setGithubButtonState('redirecting');
+    rememberLoginRedirectForOAuth();
     if (githubTimeoutRef.current) {
       clearTimeout(githubTimeoutRef.current);
     }
@@ -344,6 +369,7 @@ const LoginForm = () => {
       return;
     }
     setDiscordLoading(true);
+    rememberLoginRedirectForOAuth();
     try {
       onDiscordOAuthClicked(status.discord_client_id, { shouldLogout: true });
     } finally {
@@ -359,6 +385,7 @@ const LoginForm = () => {
       return;
     }
     setOidcLoading(true);
+    rememberLoginRedirectForOAuth();
     try {
       onOIDCClicked(
         status.oidc_authorization_endpoint,
@@ -379,6 +406,7 @@ const LoginForm = () => {
       return;
     }
     setLinuxdoLoading(true);
+    rememberLoginRedirectForOAuth();
     try {
       onLinuxDOOAuthClicked(status.linuxdo_client_id, { shouldLogout: true });
     } finally {
@@ -394,6 +422,7 @@ const LoginForm = () => {
       return;
     }
     setCustomOAuthLoading((prev) => ({ ...prev, [provider.slug]: true }));
+    rememberLoginRedirectForOAuth();
     try {
       onCustomOAuthClicked(provider, { shouldLogout: true });
     } finally {
@@ -456,7 +485,7 @@ const LoginForm = () => {
         setUserData(finish.data);
         updateAPI();
         showSuccess('登录成功！');
-        navigate('/console');
+        navigateAfterLogin('/console');
       } else {
         showError(finish.message || 'Passkey 登录失败，请重试');
       }
@@ -491,7 +520,7 @@ const LoginForm = () => {
     setUserData(data);
     updateAPI();
     showSuccess('登录成功！');
-    navigate('/console');
+    navigateAfterLogin('/console');
   };
 
   // 返回登录页面
@@ -958,8 +987,7 @@ const LoginForm = () => {
         style={{ top: '50%', left: '-120px' }}
       />
       <div className='w-full max-w-sm mt-[60px]'>
-        {showEmailLogin ||
-        !hasOAuthLoginOptions
+        {showEmailLogin || !hasOAuthLoginOptions
           ? renderEmailLoginForm()
           : renderOAuthOptions()}
         {renderWeChatLoginModal()}

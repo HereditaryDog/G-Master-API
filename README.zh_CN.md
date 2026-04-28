@@ -11,4 +11,4 @@
 - 更新日志：[CHANGELOG.md](./CHANGELOG.md)
 - 上游致谢与授权说明：[ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md)
 
-当前稳定版本：[`v0.12.11-gmaster.1`](https://github.com/HereditaryDog/G-Master-API/releases/tag/v0.12.11-gmaster.1)
+当前源码稳定基线：[`v0.13.2-gmaster.1`](./VERSION)

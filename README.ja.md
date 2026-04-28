@@ -9,4 +9,4 @@
 - [デプロイガイド](./docs/installation/BT.md)
 - [謝辞とライセンス](./ACKNOWLEDGMENTS.md)
 
-現在の安定版: [`v0.12.11-gmaster.1`](https://github.com/HereditaryDog/G-Master-API/releases/tag/v0.12.11-gmaster.1)
+現在のソース安定ベースライン: [`v0.13.2-gmaster.1`](./VERSION)

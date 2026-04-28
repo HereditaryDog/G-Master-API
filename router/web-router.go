@@ -28,6 +28,7 @@ func SetWebRouter(router *gin.Engine, buildFS embed.FS, indexPage []byte) {
 	router.HEAD("/docs/ai-client", redirectToApifoxDocs(aiClientDocsURL))
 	router.GET("/docs/openclaw-en", redirectToApifoxDocs(openClawEnglishDocs))
 	router.HEAD("/docs/openclaw-en", redirectToApifoxDocs(openClawEnglishDocs))
+	router.GET("/gaster-code/desktop-login", controller.GasterCodeDesktopLogin)
 	router.Use(static.Serve("/", common.EmbedFolder(buildFS, "web/dist")))
 	router.NoRoute(func(c *gin.Context) {
 		c.Set(middleware.RouteTagKey, "web")

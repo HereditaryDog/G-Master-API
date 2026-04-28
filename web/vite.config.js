@@ -24,6 +24,64 @@ import path from 'path';
 import { codeInspectorPlugin } from 'code-inspector-plugin';
 const { vitePluginSemi } = pkg;
 
+const packageChunkMap = [
+  {
+    chunk: 'react-core',
+    match: ['react', 'react-dom', 'react-router-dom'],
+  },
+  {
+    chunk: 'vendor-ui-markdown',
+    match: [
+      '@douyinfe/semi-icons',
+      '@douyinfe/semi-ui',
+      'react-markdown',
+      'remark-breaks',
+      'remark-gfm',
+      'remark-math',
+      'rehype-highlight',
+      'rehype-katex',
+      'katex',
+      'highlight.js',
+    ],
+  },
+  {
+    chunk: 'vendor-visualization',
+    match: [
+      '@visactor/react-vchart',
+      '@visactor/vchart',
+      '@visactor/vchart-semi-theme',
+      'mermaid',
+      'cytoscape',
+      'dagre',
+    ],
+  },
+  {
+    chunk: 'vendor-icons',
+    match: ['@lobehub/icons', 'lucide-react', 'react-icons'],
+  },
+  {
+    chunk: 'vendor-ui',
+    match: ['antd'],
+  },
+  {
+    chunk: 'vendor-tools',
+    match: ['axios', 'history', 'marked', 'dayjs', 'clsx', 'use-debounce'],
+  },
+];
+
+function getPackageChunk(id) {
+  if (!id.includes('node_modules')) {
+    return undefined;
+  }
+
+  const normalizedId = id.split(path.sep).join('/');
+  const chunkConfig = packageChunkMap.find(({ match }) =>
+    match.some((pkgName) => normalizedId.includes(`/node_modules/${pkgName}/`)),
+  );
+
+  return chunkConfig?.chunk;
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -79,25 +137,10 @@ export default defineConfig({
     },
   },
   build: {
+    chunkSizeWarningLimit: 9500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-core': ['react', 'react-dom', 'react-router-dom'],
-          'semi-ui': ['@douyinfe/semi-icons', '@douyinfe/semi-ui'],
-          tools: ['axios', 'history', 'marked'],
-          'react-components': [
-            'react-dropzone',
-            'react-fireworks',
-            'react-telegram-login',
-            'react-toastify',
-            'react-turnstile',
-          ],
-          i18n: [
-            'i18next',
-            'react-i18next',
-            'i18next-browser-languagedetector',
-          ],
-        },
+        manualChunks: getPackageChunk,
       },
     },
   },

@@ -27,6 +27,10 @@ import {
   updateAPI,
   setUserData,
 } from '../../helpers';
+import {
+  isSafeLoginRedirectTarget,
+  shouldUseDocumentNavigationForLoginRedirect,
+} from '../../helpers/authRedirect';
 import { UserContext } from '../../context/User';
 import Loading from '../common/ui/Loading';
 
@@ -35,12 +39,27 @@ const OAuth2Callback = (props) => {
   const [searchParams] = useSearchParams();
   const [, userDispatch] = useContext(UserContext);
   const navigate = useNavigate();
-  
+
   // 防止 React 18 Strict Mode 下重复执行
   const hasExecuted = useRef(false);
 
   // 最大重试次数
   const MAX_RETRIES = 3;
+
+  const consumeSafeLoginRedirect = () => {
+    const target = localStorage.getItem('login_redirect_after_oauth') || '';
+    localStorage.removeItem('login_redirect_after_oauth');
+    return isSafeLoginRedirectTarget(target) ? target : '';
+  };
+
+  const navigateAfterOAuthLogin = () => {
+    const target = consumeSafeLoginRedirect();
+    if (target && shouldUseDocumentNavigationForLoginRedirect(target)) {
+      window.location.assign(target);
+      return;
+    }
+    navigate(target || '/console/token');
+  };
 
   const sendCode = async (code, state, retry = 0) => {
     try {
@@ -65,7 +84,7 @@ const OAuth2Callback = (props) => {
         setUserData(data);
         updateAPI();
         showSuccess(t('登录成功！'));
-        navigate('/console/token');
+        navigateAfterOAuthLogin();
       }
     } catch (error) {
       // 网络错误等可重试

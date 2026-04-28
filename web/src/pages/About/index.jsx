@@ -107,8 +107,9 @@ const About = () => {
           className='!text-semi-color-primary'
         >
           ACKNOWLEDGMENTS.md
-        </a>
-        {' '}records upstream attribution, local modifications, and release notes for this fork.
+        </a>{' '}
+        records upstream attribution, local modifications, and release notes for
+        this fork.
       </p>
     </div>
   );

@@ -1,4 +1,6 @@
-![G-Master API](./web/public/logo.png)
+<p align="center">
+  <img src="./web/public/logo.svg" width="96" height="96" alt="G-Master API logo" />
+</p>
 
 # G-Master API
 
@@ -21,7 +23,10 @@
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前稳定版本：[`v0.12.14-gmaster.1`](https://github.com/HereditaryDog/G-Master-API/releases/tag/v0.12.14-gmaster.1)
+当前源码稳定基线：[`v0.13.2-gmaster.1`](./VERSION)
+
+> [!NOTE]
+> `v0.13.2-gmaster.1` 已同步至上游 `new-api v0.13.2`。本分支暂不追随上游 `v1.0.0-alpha.1` / `main` 的新前端重写，避免影响当前生产 UI、G-Master 品牌页面和桌面端网页登录授权链路。
 
 ## 与上游的主要差异
 
@@ -29,6 +34,7 @@
 - 默认部署方式调整为 **直接构建当前仓库源码**，而不是仅依赖上游镜像。
 - 默认服务名、容器名、systemd 服务名统一为 `g-master-api`。
 - 面向当前业务保留 `标准用户组 / VIP用户组` 等分组策略，以及相关充值升级逻辑。
+- 新增 Gaster Code 桌面端网页登录授权接口，桌面端可通过浏览器登录、PKCE 授权码、本地回调与专用 Provider Token 完成接入。
 - 维护独立的 GitHub Release、GHCR 镜像、Apifox 导入产物与中文优先文档。
 
 ## 快速开始
@@ -92,6 +98,7 @@ docker compose up -d --build
 - 用户、令牌、渠道、模型、订阅、兑换码、分组、系统设置统一在同一套管理面板完成。
 - 提供数据看板、日志查询、额度与成本展示、模型价格展示等运营能力。
 - 支持 OAuth 登录、2FA、Passkey、访问限制、风控与多种支付/充值流程。
+- 支持桌面端外部应用授权登录，不要求桌面端直接保存网页 Cookie 或长期保存用户密码。
 
 ### 存储与部署兼容
 

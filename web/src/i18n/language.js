@@ -17,15 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-export const supportedLanguages = [
-  'zh-CN',
-  'zh-TW',
-  'en',
-  'fr',
-  'ru',
-  'ja',
-  'vi',
-];
+export const supportedLanguages = ['zh-CN', 'en'];
 
 export const normalizeLanguage = (language) => {
   if (!language) {
@@ -44,13 +36,8 @@ export const normalizeLanguage = (language) => {
     return 'zh-CN';
   }
 
-  if (
-    lower === 'zh-tw' ||
-    lower === 'zh-hk' ||
-    lower === 'zh-mo' ||
-    lower.startsWith('zh-hant')
-  ) {
-    return 'zh-TW';
+  if (lower.startsWith('zh-')) {
+    return 'zh-CN';
   }
 
   const matchedLanguage = supportedLanguages.find(

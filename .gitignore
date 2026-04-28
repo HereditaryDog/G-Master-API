@@ -35,4 +35,6 @@ data/
 .cloudflared-domain.env
 .cloudflared-domain.pid
 .cloudflared-domain.url
+.test
 token_estimator_test.go
+skills-lock.json

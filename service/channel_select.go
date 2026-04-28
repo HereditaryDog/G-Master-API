@@ -3,12 +3,12 @@ package service
 import (
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/logger"
 	"github.com/yangjunyu/G-Master-API/model"
 	"github.com/yangjunyu/G-Master-API/setting"
-	"github.com/gin-gonic/gin"
 )
 
 type RetryParam struct {
@@ -90,7 +90,7 @@ func CacheGetRandomSatisfiedChannel(param *RetryParam) (*model.Channel, string, 
 		if len(setting.GetAutoGroups()) == 0 {
 			return nil, selectGroup, errors.New("auto groups is not enabled")
 		}
-		autoGroups := GetUserAutoGroup(userGroup)
+		autoGroups := GetUserAutoGroupForUser(common.GetContextKeyInt(param.Ctx, constant.ContextKeyUserId), userGroup)
 
 		// startGroupIndex: the group index to start searching from
 		// startGroupIndex: 开始搜索的分组索引

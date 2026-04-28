@@ -20,6 +20,7 @@ For commercial licensing, please contact support@quantumnous.com
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { history } from './history';
+import { shouldShowAuthPageForRedirectLogin } from './authRedirect';
 
 export function authHeader() {
   // return authorization header with jwt token
@@ -34,8 +35,23 @@ export function authHeader() {
 
 export const AuthRedirect = ({ children }) => {
   const user = localStorage.getItem('user');
+  const pathname =
+    typeof window === 'undefined'
+      ? history.location.pathname
+      : window.location.pathname;
+  const search =
+    typeof window === 'undefined'
+      ? history.location.search
+      : window.location.search;
 
-  if (user) {
+  if (
+    user &&
+    !shouldShowAuthPageForRedirectLogin({
+      hasUser: true,
+      pathname,
+      search,
+    })
+  ) {
     return <Navigate to='/console' replace />;
   }
 

@@ -161,6 +161,16 @@ const TopupHistoryModal = ({ visible, onCancel, t }) => {
 
   const columns = useMemo(() => {
     const baseColumns = [
+      ...(userIsAdmin
+        ? [
+            {
+              title: t('用户ID'),
+              dataIndex: 'user_id',
+              key: 'user_id',
+              render: (userId) => <Text>{userId ?? '-'}</Text>,
+            },
+          ]
+        : []),
       {
         title: t('订单号'),
         dataIndex: 'trade_no',
@@ -217,14 +227,14 @@ const TopupHistoryModal = ({ visible, onCancel, t }) => {
           if (record.status === 'pending') {
             actions.push(
               <Button
-                key="complete"
+                key='complete'
                 size='small'
                 type='primary'
                 theme='outline'
                 onClick={() => confirmAdminComplete(record.trade_no)}
               >
                 {t('补单')}
-              </Button>
+              </Button>,
             );
           }
           return actions.length > 0 ? <>{actions}</> : null;

@@ -21,6 +21,7 @@ import (
 	"github.com/yangjunyu/G-Master-API/relay/channel/lingyiwanwu"
 
 	//"github.com/yangjunyu/G-Master-API/relay/channel/minimax"
+	"github.com/samber/lo"
 	"github.com/yangjunyu/G-Master-API/relay/channel/openrouter"
 	"github.com/yangjunyu/G-Master-API/relay/channel/xinference"
 	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
@@ -28,8 +29,8 @@ import (
 	relayconstant "github.com/yangjunyu/G-Master-API/relay/constant"
 	"github.com/yangjunyu/G-Master-API/service"
 	"github.com/yangjunyu/G-Master-API/setting/model_setting"
+	"github.com/yangjunyu/G-Master-API/setting/reasoning"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/samber/lo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,21 +38,6 @@ import (
 type Adaptor struct {
 	ChannelType    int
 	ResponseFormat string
-}
-
-// parseReasoningEffortFromModelSuffix 从模型名称中解析推理级别
-// support OAI models: o1-mini/o3-mini/o4-mini/o1/o3 etc...
-// minimal effort only available in gpt-5
-func parseReasoningEffortFromModelSuffix(model string) (string, string) {
-	effortSuffixes := []string{"-high", "-minimal", "-low", "-medium", "-none", "-xhigh"}
-	for _, suffix := range effortSuffixes {
-		if strings.HasSuffix(model, suffix) {
-			effort := strings.TrimPrefix(suffix, "-")
-			originModel := strings.TrimSuffix(model, suffix)
-			return effort, originModel
-		}
-	}
-	return "", model
 }
 
 func (a *Adaptor) ConvertGeminiRequest(c *gin.Context, info *relaycommon.RelayInfo, request *dto.GeminiChatRequest) (any, error) {
@@ -342,7 +328,7 @@ func (a *Adaptor) ConvertOpenAIRequest(c *gin.Context, info *relaycommon.RelayIn
 		}
 
 		// 转换模型推理力度后缀
-		effort, originModel := parseReasoningEffortFromModelSuffix(info.UpstreamModelName)
+		effort, originModel := reasoning.ParseOpenAIReasoningEffortFromModelSuffix(info.UpstreamModelName)
 		if effort != "" {
 			request.ReasoningEffort = effort
 			info.UpstreamModelName = originModel
@@ -587,7 +573,7 @@ func detectImageMimeType(filename string) string {
 
 func (a *Adaptor) ConvertOpenAIResponsesRequest(c *gin.Context, info *relaycommon.RelayInfo, request dto.OpenAIResponsesRequest) (any, error) {
 	//  转换模型推理力度后缀
-	effort, originModel := parseReasoningEffortFromModelSuffix(request.Model)
+	effort, originModel := reasoning.ParseOpenAIReasoningEffortFromModelSuffix(request.Model)
 	if effort != "" {
 		if request.Reasoning == nil {
 			request.Reasoning = &dto.Reasoning{

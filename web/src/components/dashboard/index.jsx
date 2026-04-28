@@ -24,8 +24,7 @@ import { StatusContext } from '../../context/Status';
 
 import DashboardHeader from './DashboardHeader';
 import StatsCards from './StatsCards';
-import ChartsPanel from './ChartsPanel';
-import ApiInfoPanel from './ApiInfoPanel';
+import DashboardOverviewGrid from './DashboardOverviewGrid';
 import AnnouncementsPanel from './AnnouncementsPanel';
 import FaqPanel from './FaqPanel';
 import UptimePanel from './UptimePanel';
@@ -36,7 +35,6 @@ import { useDashboardStats } from '../../hooks/dashboard/useDashboardStats';
 import { useDashboardCharts } from '../../hooks/dashboard/useDashboardCharts';
 
 import {
-  CHART_CONFIG,
   CARD_PROPS,
   FLEX_CENTER_GAP2,
   ILLUSTRATION_SIZE,
@@ -44,9 +42,6 @@ import {
   UPTIME_STATUS_MAP,
 } from '../../constants/dashboard.constants';
 import {
-  getTrendSpec,
-  handleCopyUrl,
-  handleSpeedTest,
   getUptimeStatusColor,
   getUptimeStatusText,
   renderMonitorList,
@@ -103,6 +98,7 @@ const Dashboard = () => {
     });
     await loadUserData();
     await dashboardData.loadUptimeData();
+    await dashboardData.loadRecentLogs();
   };
 
   const handleRefresh = async () => {
@@ -119,7 +115,6 @@ const Dashboard = () => {
   };
 
   // ========== 数据准备 ==========
-  const apiInfoData = statusState?.status?.api_info || [];
   const announcementData = (statusState?.status?.announcements || []).map(
     (item) => {
       const pubDate = item?.publishDate ? new Date(item.publishDate) : null;
@@ -158,6 +153,7 @@ const Dashboard = () => {
         showSearchModal={dashboardData.showSearchModal}
         refresh={handleRefresh}
         loading={dashboardData.loading}
+        dashboardSummary={dashboardData.dashboardSummary}
         t={dashboardData.t}
       />
 
@@ -177,50 +173,22 @@ const Dashboard = () => {
       <StatsCards
         groupedStatsData={groupedStatsData}
         loading={dashboardData.loading}
-        getTrendSpec={getTrendSpec}
         CARD_PROPS={CARD_PROPS}
-        CHART_CONFIG={CHART_CONFIG}
       />
 
-      {/* API信息和图表面板 */}
-      <div className='mb-4'>
-        <div
-          className={`grid grid-cols-1 gap-4 ${dashboardData.hasApiInfoPanel ? 'lg:grid-cols-4' : ''}`}
-        >
-          <ChartsPanel
-            activeChartTab={dashboardData.activeChartTab}
-            setActiveChartTab={dashboardData.setActiveChartTab}
-            spec_line={dashboardCharts.spec_line}
-            spec_model_line={dashboardCharts.spec_model_line}
-            spec_pie={dashboardCharts.spec_pie}
-            spec_rank_bar={dashboardCharts.spec_rank_bar}
-            spec_user_rank={dashboardCharts.spec_user_rank}
-            spec_user_trend={dashboardCharts.spec_user_trend}
-            isAdminUser={dashboardData.isAdminUser}
-            CARD_PROPS={CARD_PROPS}
-            CHART_CONFIG={CHART_CONFIG}
-            FLEX_CENTER_GAP2={FLEX_CENTER_GAP2}
-            hasApiInfoPanel={dashboardData.hasApiInfoPanel}
-            t={dashboardData.t}
-          />
-
-          {dashboardData.hasApiInfoPanel && (
-            <ApiInfoPanel
-              apiInfoData={apiInfoData}
-              handleCopyUrl={(url) => handleCopyUrl(url, dashboardData.t)}
-              handleSpeedTest={handleSpeedTest}
-              CARD_PROPS={CARD_PROPS}
-              FLEX_CENTER_GAP2={FLEX_CENTER_GAP2}
-              ILLUSTRATION_SIZE={ILLUSTRATION_SIZE}
-              t={dashboardData.t}
-            />
-          )}
-        </div>
-      </div>
+      <DashboardOverviewGrid
+        quotaData={dashboardData.quotaData}
+        recentLogs={dashboardData.recentLogs}
+        recentLogsLoading={dashboardData.recentLogsLoading}
+        uptimeData={dashboardData.uptimeData}
+        uptimeEnabled={dashboardData.uptimeEnabled}
+        statusReady={Boolean(statusState?.status)}
+        t={dashboardData.t}
+      />
 
       {/* 系统公告和常见问答卡片 */}
       {dashboardData.hasInfoPanels && (
-        <div className='mb-4'>
+        <div className='mb-4 gm-console-extra-panels'>
           <div className='grid grid-cols-1 lg:grid-cols-4 gap-4'>
             {/* 公告卡片 */}
             {dashboardData.announcementsEnabled && (
