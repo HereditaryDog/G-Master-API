@@ -17,6 +17,18 @@ export function shouldShowAuthPageForRedirectLogin({
   pathname,
   search,
 }) {
+  return shouldVerifyExistingSessionForRedirectLogin({
+    hasUser,
+    pathname,
+    search,
+  });
+}
+
+export function shouldVerifyExistingSessionForRedirectLogin({
+  hasUser,
+  pathname,
+  search,
+}) {
   const target = getSafeLoginRedirectTarget(search);
   return (
     Boolean(hasUser) &&

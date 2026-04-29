@@ -68,8 +68,10 @@ import { useTranslation } from 'react-i18next';
 import { SiDiscord } from 'react-icons/si';
 import {
   getSafeLoginRedirectTarget as getSafeLoginRedirectTargetFromSearch,
+  shouldVerifyExistingSessionForRedirectLogin,
   shouldUseDocumentNavigationForLoginRedirect,
 } from '../../helpers/authRedirect';
+import Loading from '../common/ui/Loading';
 
 const LoginForm = () => {
   let navigate = useNavigate();
@@ -125,9 +127,20 @@ const LoginForm = () => {
     localStorage.setItem('aff', affCode);
   }
 
-  const getSafeLoginRedirectTarget = () => {
-    return getSafeLoginRedirectTargetFromSearch(searchParams);
-  };
+  const loginRedirectTarget =
+    getSafeLoginRedirectTargetFromSearch(searchParams);
+  const shouldVerifyExistingDesktopSession =
+    shouldVerifyExistingSessionForRedirectLogin({
+      hasUser: Boolean(localStorage.getItem('user')),
+      pathname: window.location.pathname,
+      search: searchParams,
+    });
+  const [checkedExistingDesktopSession, setCheckedExistingDesktopSession] =
+    useState(false);
+  const [checkingExistingDesktopSession, setCheckingExistingDesktopSession] =
+    useState(shouldVerifyExistingDesktopSession);
+
+  const getSafeLoginRedirectTarget = () => loginRedirectTarget;
 
   const navigateAfterLogin = (fallback = '/console') => {
     const target = getSafeLoginRedirectTarget();
@@ -195,6 +208,58 @@ const LoginForm = () => {
       showError(t('未登录或登录已过期，请重新登录'));
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      !shouldVerifyExistingDesktopSession ||
+      checkedExistingDesktopSession ||
+      !loginRedirectTarget
+    ) {
+      return;
+    }
+
+    let cancelled = false;
+    setCheckingExistingDesktopSession(true);
+
+    API.get('/api/user/self', {
+      disableDuplicate: true,
+      skipErrorHandler: true,
+    })
+      .then((res) => {
+        if (cancelled) return;
+        const { success, data } = res.data || {};
+        if (success && data) {
+          userDispatch({ type: 'login', payload: data });
+          setUserData(data);
+          updateAPI();
+          window.location.assign(loginRedirectTarget);
+          return;
+        }
+        localStorage.removeItem('user');
+        updateAPI();
+        userDispatch({ type: 'logout' });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        localStorage.removeItem('user');
+        updateAPI();
+        userDispatch({ type: 'logout' });
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setCheckedExistingDesktopSession(true);
+        setCheckingExistingDesktopSession(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    checkedExistingDesktopSession,
+    loginRedirectTarget,
+    shouldVerifyExistingDesktopSession,
+    userDispatch,
+  ]);
 
   const onWeChatLoginClicked = () => {
     if ((hasUserAgreement || hasPrivacyPolicy) && !agreedToTerms) {
@@ -974,6 +1039,14 @@ const LoginForm = () => {
       </Modal>
     );
   };
+
+  if (
+    shouldVerifyExistingDesktopSession &&
+    checkingExistingDesktopSession &&
+    !checkedExistingDesktopSession
+  ) {
+    return <Loading />;
+  }
 
   return (
     <div className='relative overflow-hidden bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>

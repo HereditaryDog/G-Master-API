@@ -4,10 +4,11 @@ import {
   getSafeLoginRedirectTarget,
   shouldUseDocumentNavigationForLoginRedirect,
   shouldShowAuthPageForRedirectLogin,
+  shouldVerifyExistingSessionForRedirectLogin,
 } from './authRedirect.js';
 
 describe('auth redirect helpers', () => {
-  test('keeps login page visible for safe desktop authorization redirects', () => {
+  test('keeps login route mounted for safe desktop authorization redirects', () => {
     expect(
       shouldShowAuthPageForRedirectLogin({
         hasUser: true,
@@ -16,6 +17,32 @@ describe('auth redirect helpers', () => {
           '?redirect=%2Fgaster-code%2Fdesktop-login%3Frequest_id%3Dgcr_test',
       }),
     ).toBe(true);
+  });
+
+  test('detects existing-session verification for desktop authorization redirects', () => {
+    expect(
+      shouldVerifyExistingSessionForRedirectLogin({
+        hasUser: true,
+        pathname: '/login',
+        search:
+          '?redirect=%2Fgaster-code%2Fdesktop-login%3Frequest_id%3Dgcr_test',
+      }),
+    ).toBe(true);
+    expect(
+      shouldVerifyExistingSessionForRedirectLogin({
+        hasUser: false,
+        pathname: '/login',
+        search:
+          '?redirect=%2Fgaster-code%2Fdesktop-login%3Frequest_id%3Dgcr_test',
+      }),
+    ).toBe(false);
+    expect(
+      shouldVerifyExistingSessionForRedirectLogin({
+        hasUser: true,
+        pathname: '/login',
+        search: '?redirect=https%3A%2F%2Fevil.test',
+      }),
+    ).toBe(false);
   });
 
   test('does not keep login page visible for ordinary safe redirects', () => {
