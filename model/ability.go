@@ -185,7 +185,11 @@ func (channel *Channel) AddAbilities(tx *gorm.DB) error {
 }
 
 func (channel *Channel) DeleteAbilities() error {
-	return DB.Where("channel_id = ?", channel.Id).Delete(&Ability{}).Error
+	err := DB.Where("channel_id = ?", channel.Id).Delete(&Ability{}).Error
+	if err == nil {
+		InvalidatePricingCache()
+	}
+	return err
 }
 
 // UpdateAbilities updates abilities of this channel.
@@ -254,18 +258,30 @@ func (channel *Channel) UpdateAbilities(tx *gorm.DB) error {
 
 	// 如果是新创建的事务，需要提交
 	if isNewTx {
-		return tx.Commit().Error
+		if err := tx.Commit().Error; err != nil {
+			return err
+		}
+		InvalidatePricingCache()
+		return nil
 	}
 
 	return nil
 }
 
 func UpdateAbilityStatus(channelId int, status bool) error {
-	return DB.Model(&Ability{}).Where("channel_id = ?", channelId).Select("enabled").Update("enabled", status).Error
+	err := DB.Model(&Ability{}).Where("channel_id = ?", channelId).Select("enabled").Update("enabled", status).Error
+	if err == nil {
+		InvalidatePricingCache()
+	}
+	return err
 }
 
 func UpdateAbilityStatusByTag(tag string, status bool) error {
-	return DB.Model(&Ability{}).Where("tag = ?", tag).Select("enabled").Update("enabled", status).Error
+	err := DB.Model(&Ability{}).Where("tag = ?", tag).Select("enabled").Update("enabled", status).Error
+	if err == nil {
+		InvalidatePricingCache()
+	}
+	return err
 }
 
 func UpdateAbilityByTag(tag string, newTag *string, priority *int64, weight *uint) error {
@@ -279,7 +295,11 @@ func UpdateAbilityByTag(tag string, newTag *string, priority *int64, weight *uin
 	if weight != nil {
 		ability.Weight = *weight
 	}
-	return DB.Model(&Ability{}).Where("tag = ?", tag).Updates(ability).Error
+	err := DB.Model(&Ability{}).Where("tag = ?", tag).Updates(ability).Error
+	if err == nil {
+		InvalidatePricingCache()
+	}
+	return err
 }
 
 var fixLock = sync.Mutex{}
@@ -312,6 +332,7 @@ func FixAbility() (int, int, error) {
 		return 0, 0, err
 	}
 	if len(channels) == 0 {
+		InvalidatePricingCache()
 		return 0, 0, nil
 	}
 	successCount := 0
@@ -337,5 +358,6 @@ func FixAbility() (int, int, error) {
 		}
 	}
 	InitChannelCache()
+	InvalidatePricingCache()
 	return successCount, failCount, nil
 }

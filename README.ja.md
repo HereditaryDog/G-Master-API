@@ -9,4 +9,4 @@
 - [デプロイガイド](./docs/installation/BT.md)
 - [謝辞とライセンス](./ACKNOWLEDGMENTS.md)
 
-現在のソース安定ベースライン: [`v0.13.2-gmaster.3`](./VERSION)
+現在のソース安定ベースライン: [`v0.13.2-gmaster.4`](./VERSION)

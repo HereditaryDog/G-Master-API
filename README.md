@@ -23,10 +23,10 @@
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前源码稳定基线：[`v0.13.2-gmaster.3`](./VERSION)
+当前源码稳定基线：[`v0.13.2-gmaster.4`](./VERSION)
 
 > [!NOTE]
-> `v0.13.2-gmaster.3` 已同步至上游 `new-api v0.13.2`。本分支暂不追随上游 `v1.0.0-alpha.1` / `main` 的新前端重写，避免影响当前生产 UI、G-Master 品牌页面和桌面端网页登录授权链路。
+> `v0.13.2-gmaster.4` 已同步至上游 `new-api v0.13.2`。本分支暂不追随上游 `v1.0.0-alpha.1` / `main` 的新前端重写，避免影响当前生产 UI、G-Master 品牌页面和桌面端网页登录授权链路。
 
 ## 与上游的主要差异
 

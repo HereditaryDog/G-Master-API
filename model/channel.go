@@ -381,7 +381,11 @@ func BatchInsertChannels(channels []Channel) error {
 			}
 		}
 	}
-	return tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+	InvalidatePricingCache()
+	return nil
 }
 
 func BatchDeleteChannels(ids []int) error {
@@ -403,7 +407,11 @@ func BatchDeleteChannels(ids []int) error {
 			return err
 		}
 	}
-	return tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+	InvalidatePricingCache()
+	return nil
 }
 
 func (channel *Channel) GetPriority() int64 {
@@ -452,6 +460,9 @@ func (channel *Channel) Insert() error {
 		return err
 	}
 	err = channel.AddAbilities(nil)
+	if err == nil {
+		InvalidatePricingCache()
+	}
 	return err
 }
 

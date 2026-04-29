@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/glebarez/sqlite"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yangjunyu/G-Master-API/common"
 	"gorm.io/gorm"
 )
 
@@ -39,6 +39,9 @@ func TestMain(m *testing.M) {
 		&Token{},
 		&Log{},
 		&Channel{},
+		&Ability{},
+		&Model{},
+		&Vendor{},
 		&TopUp{},
 		&SubscriptionPlan{},
 		&SubscriptionOrder{},

@@ -9,4 +9,4 @@ Points d’entrée recommandés :
 - [Guide de déploiement](./docs/installation/BT.md)
 - [Attribution et licence](./ACKNOWLEDGMENTS.md)
 
-Base stable actuelle du code source : [`v0.13.2-gmaster.3`](./VERSION)
+Base stable actuelle du code source : [`v0.13.2-gmaster.4`](./VERSION)

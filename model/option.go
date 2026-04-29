@@ -226,6 +226,11 @@ func updateOptionMap(key string, value string) (err error) {
 	common.OptionMapRWMutex.Lock()
 	defer common.OptionMapRWMutex.Unlock()
 	common.OptionMap[key] = value
+	defer func() {
+		if err == nil && optionAffectsPricingCache(key) {
+			InvalidatePricingCache()
+		}
+	}()
 
 	// 检查是否是模型配置 - 使用更规范的方式处理
 	if handleConfigUpdate(key, value) {
@@ -549,6 +554,22 @@ func updateOptionMap(key string, value string) (err error) {
 		// No additional in-memory variable to update.
 	}
 	return err
+}
+
+func optionAffectsPricingCache(key string) bool {
+	switch key {
+	case "ModelRatio",
+		"ModelPrice",
+		"CompletionRatio",
+		"CacheRatio",
+		"CreateCacheRatio",
+		"ImageRatio",
+		"AudioRatio",
+		"AudioCompletionRatio":
+		return true
+	default:
+		return strings.HasPrefix(key, "billing_setting.")
+	}
 }
 
 // handleConfigUpdate 处理分层配置更新，返回是否已处理
