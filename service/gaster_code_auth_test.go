@@ -185,3 +185,236 @@ func TestGasterCodeProviderTokenSyncsReusableTokenToCurrentUserGroup(t *testing.
 	require.NoError(t, model.DB.First(&updated, token.Id).Error)
 	assert.Equal(t, userGroup, updated.Group)
 }
+
+func TestListGasterCodeOAuthLoginsReturnsSessionScopedUsage(t *testing.T) {
+	truncate(t)
+	now := common.GetTimestamp()
+	userA := &model.User{
+		Id:          201,
+		Username:    "vip_user",
+		DisplayName: "VIP User",
+		Email:       "vip@example.com",
+		Quota:       10000,
+		Status:      common.UserStatusEnabled,
+		Group:       "VIP用户组",
+		AffCode:     "aff-vip-oauth",
+	}
+	userB := &model.User{
+		Id:          202,
+		Username:    "normal_user",
+		DisplayName: "Normal User",
+		Email:       "normal@example.com",
+		Quota:       10000,
+		Status:      common.UserStatusEnabled,
+		Group:       "用户分组",
+		AffCode:     "aff-normal-oauth",
+	}
+	require.NoError(t, model.DB.Create(userA).Error)
+	require.NoError(t, model.DB.Create(userB).Error)
+	tokenA := &model.Token{
+		UserId:         userA.Id,
+		Key:            "sk-gaster-a",
+		Name:           "Gaster Code Desktop",
+		Status:         common.TokenStatusEnabled,
+		ExpiredTime:    -1,
+		UnlimitedQuota: true,
+		Group:          userA.Group,
+		UsedQuota:      900,
+	}
+	tokenB := &model.Token{
+		UserId:         userB.Id,
+		Key:            "sk-gaster-b",
+		Name:           "Gaster Code Desktop",
+		Status:         common.TokenStatusEnabled,
+		ExpiredTime:    -1,
+		UnlimitedQuota: true,
+		Group:          userB.Group,
+		UsedQuota:      300,
+	}
+	require.NoError(t, model.DB.Create(tokenA).Error)
+	require.NoError(t, model.DB.Create(tokenB).Error)
+	sessionA := &model.GasterCodeSession{
+		UserID:           userA.Id,
+		AccessTokenHash:  "oauth_usage_access_a",
+		RefreshTokenHash: "oauth_usage_refresh_a",
+		ClientName:       "Gaster Code",
+		ClientVersion:    "1.2.0",
+		ProviderTokenID:  tokenA.Id,
+		ExpiresAt:        now + 3600,
+		RefreshExpiresAt: now + 7200,
+		LastUsedAt:       now - 10,
+	}
+	sessionB := &model.GasterCodeSession{
+		UserID:           userB.Id,
+		AccessTokenHash:  "oauth_usage_access_b",
+		RefreshTokenHash: "oauth_usage_refresh_b",
+		ClientName:       "Gaster Code",
+		ClientVersion:    "1.1.0",
+		ProviderTokenID:  tokenB.Id,
+		ExpiresAt:        now + 3600,
+		RefreshExpiresAt: now + 7200,
+		LastUsedAt:       now - 20,
+	}
+	require.NoError(t, model.DB.Create(sessionA).Error)
+	require.NoError(t, model.DB.Create(sessionB).Error)
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		UserId:           userA.Id,
+		Username:         userA.Username,
+		CreatedAt:        now - 9,
+		Type:             model.LogTypeConsume,
+		TokenId:          tokenA.Id,
+		TokenName:        tokenA.Name,
+		Quota:            600,
+		PromptTokens:     20,
+		CompletionTokens: 30,
+	}).Error)
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		UserId:           userA.Id,
+		Username:         userA.Username,
+		CreatedAt:        now - 8,
+		Type:             model.LogTypeConsume,
+		TokenId:          tokenA.Id,
+		TokenName:        tokenA.Name,
+		Quota:            300,
+		PromptTokens:     10,
+		CompletionTokens: 15,
+	}).Error)
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		UserId:           userB.Id,
+		Username:         userB.Username,
+		CreatedAt:        now - 7,
+		Type:             model.LogTypeConsume,
+		TokenId:          tokenB.Id,
+		TokenName:        tokenB.Name,
+		Quota:            300,
+		PromptTokens:     5,
+		CompletionTokens: 6,
+	}).Error)
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		UserId:    userA.Id,
+		Username:  userA.Username,
+		CreatedAt: now - 6,
+		Type:      model.LogTypeError,
+		TokenId:   tokenA.Id,
+		TokenName: tokenA.Name,
+		Quota:     999,
+	}).Error)
+
+	rows, total, err := model.ListGasterCodeOAuthLogins(model.GasterCodeOAuthLoginQuery{
+		StartIdx: 0,
+		Limit:    20,
+		Now:      now,
+	})
+
+	require.NoError(t, err)
+	require.Equal(t, int64(2), total)
+	require.Len(t, rows, 2)
+	assert.Equal(t, sessionB.Id, rows[0].SessionID)
+	assert.Equal(t, "normal_user", rows[0].Username)
+	assert.Equal(t, 1, rows[0].RequestCount)
+	assert.Equal(t, 300, rows[0].UsedQuota)
+	assert.Equal(t, 5, rows[0].PromptTokens)
+	assert.Equal(t, 6, rows[0].CompletionTokens)
+	assert.Equal(t, model.GasterCodeOAuthLoginStatusActive, rows[0].SessionStatus)
+	assert.Equal(t, sessionA.Id, rows[1].SessionID)
+	assert.Equal(t, 2, rows[1].RequestCount)
+	assert.Equal(t, 900, rows[1].UsedQuota)
+	assert.Equal(t, 30, rows[1].PromptTokens)
+	assert.Equal(t, 45, rows[1].CompletionTokens)
+}
+
+func TestListGasterCodeOAuthLoginsFiltersStatusAndKeyword(t *testing.T) {
+	truncate(t)
+	now := common.GetTimestamp()
+	user := &model.User{
+		Id:          203,
+		Username:    "desktop_admin",
+		DisplayName: "Desktop Admin",
+		Email:       "desktop@example.com",
+		Quota:       10000,
+		Status:      common.UserStatusEnabled,
+		Group:       "VIP用户组",
+		AffCode:     "aff-desktop-oauth",
+	}
+	require.NoError(t, model.DB.Create(user).Error)
+	activeToken := &model.Token{
+		UserId:         user.Id,
+		Key:            "sk-active-token",
+		Name:           "Gaster Code Desktop",
+		Status:         common.TokenStatusEnabled,
+		ExpiredTime:    -1,
+		UnlimitedQuota: true,
+		Group:          user.Group,
+	}
+	expiredToken := &model.Token{
+		UserId:         user.Id,
+		Key:            "sk-expired-token",
+		Name:           "Gaster Code Desktop",
+		Status:         common.TokenStatusEnabled,
+		ExpiredTime:    -1,
+		UnlimitedQuota: true,
+		Group:          user.Group,
+	}
+	revokedToken := &model.Token{
+		UserId:         user.Id,
+		Key:            "sk-revoked-token",
+		Name:           "Gaster Code Desktop",
+		Status:         common.TokenStatusEnabled,
+		ExpiredTime:    -1,
+		UnlimitedQuota: true,
+		Group:          user.Group,
+	}
+	require.NoError(t, model.DB.Create(activeToken).Error)
+	require.NoError(t, model.DB.Create(expiredToken).Error)
+	require.NoError(t, model.DB.Create(revokedToken).Error)
+	require.NoError(t, model.DB.Create(&model.GasterCodeSession{
+		UserID:           user.Id,
+		AccessTokenHash:  "oauth_active_access",
+		RefreshTokenHash: "oauth_active_refresh",
+		ClientName:       "Gaster Code Canary",
+		ProviderTokenID:  activeToken.Id,
+		ExpiresAt:        now + 3600,
+		RefreshExpiresAt: now + 7200,
+	}).Error)
+	require.NoError(t, model.DB.Create(&model.GasterCodeSession{
+		UserID:           user.Id,
+		AccessTokenHash:  "oauth_expired_access",
+		RefreshTokenHash: "oauth_expired_refresh",
+		ClientName:       "Gaster Code Stable",
+		ProviderTokenID:  expiredToken.Id,
+		ExpiresAt:        now - 1,
+		RefreshExpiresAt: now + 7200,
+	}).Error)
+	require.NoError(t, model.DB.Create(&model.GasterCodeSession{
+		UserID:           user.Id,
+		AccessTokenHash:  "oauth_revoked_access",
+		RefreshTokenHash: "oauth_revoked_refresh",
+		ClientName:       "Gaster Code Revoked",
+		ProviderTokenID:  revokedToken.Id,
+		ExpiresAt:        now + 3600,
+		RefreshExpiresAt: now + 7200,
+		RevokedAt:        now - 30,
+	}).Error)
+
+	activeRows, activeTotal, err := model.ListGasterCodeOAuthLogins(model.GasterCodeOAuthLoginQuery{
+		Status:   model.GasterCodeOAuthLoginStatusActive,
+		StartIdx: 0,
+		Limit:    20,
+		Now:      now,
+	})
+	require.NoError(t, err)
+	require.Equal(t, int64(1), activeTotal)
+	require.Len(t, activeRows, 1)
+	assert.Equal(t, "Gaster Code Canary", activeRows[0].ClientName)
+
+	keywordRows, keywordTotal, err := model.ListGasterCodeOAuthLogins(model.GasterCodeOAuthLoginQuery{
+		Keyword:  "stable",
+		StartIdx: 0,
+		Limit:    20,
+		Now:      now,
+	})
+	require.NoError(t, err)
+	require.Equal(t, int64(1), keywordTotal)
+	require.Len(t, keywordRows, 1)
+	assert.Equal(t, model.GasterCodeOAuthLoginStatusExpired, keywordRows[0].SessionStatus)
+}

@@ -57,6 +57,11 @@ func SetApiRouter(router *gin.Engine) {
 			gasterCodeRoute.GET("/me", controller.GasterCodeMe)
 			gasterCodeRoute.POST("/provider-token", controller.GasterCodeProviderToken)
 		}
+		gasterCodeAdminRoute := apiRouter.Group("/gaster-code/admin")
+		gasterCodeAdminRoute.Use(middleware.AdminAuth())
+		{
+			gasterCodeAdminRoute.GET("/oauth-logins", controller.AdminListGasterCodeOAuthLogins)
+		}
 
 		apiRouter.POST("/stripe/webhook", controller.StripeWebhook)
 		apiRouter.POST("/creem/webhook", controller.CreemWebhook)

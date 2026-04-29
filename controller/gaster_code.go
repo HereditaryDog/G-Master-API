@@ -210,6 +210,24 @@ func GasterCodeAuthRevoke(c *gin.Context) {
 	common.ApiSuccess(c, nil)
 }
 
+func AdminListGasterCodeOAuthLogins(c *gin.Context) {
+	pageInfo := common.GetPageQuery(c)
+	rows, total, err := model.ListGasterCodeOAuthLogins(model.GasterCodeOAuthLoginQuery{
+		Keyword:  c.Query("keyword"),
+		Status:   c.Query("status"),
+		StartIdx: pageInfo.GetStartIdx(),
+		Limit:    pageInfo.GetPageSize(),
+		Now:      common.GetTimestamp(),
+	})
+	if err != nil {
+		common.ApiError(c, err)
+		return
+	}
+	pageInfo.SetTotal(int(total))
+	pageInfo.SetItems(rows)
+	common.ApiSuccess(c, pageInfo)
+}
+
 func getGasterCodeSessionFromRequest(c *gin.Context) (*model.GasterCodeSession, error) {
 	token, err := getBearerToken(c)
 	if err != nil {
