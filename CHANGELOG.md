@@ -2,6 +2,13 @@
 
 本文档记录 `G-Master API` 对外版本的主要变化。
 
+## v0.13.2-gmaster.3 - 2026-04-29
+
+### 修复
+
+- 修复 Gaster Code 桌面端通过 G-Master API 登录后自动创建的 `Gaster Code Desktop` API Key 没有继承用户当前分组的问题。VIP 用户现在会自动获得 `VIP用户组` 的桌面端专用 Key，普通用户仍跟随自己的普通分组。
+- 修复已有桌面端专用 Key 被复用时仍停留在旧空分组的问题。后续桌面端请求 provider token 时，会同步为账号当前分组。
+
 ## v0.13.2-gmaster.1 - 2026-04-28
 
 ### 变更

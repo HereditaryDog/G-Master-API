@@ -393,6 +393,11 @@ func GetOrCreateGasterCodeProviderToken(session *model.GasterCodeSession, public
 	if session == nil || session.UserID <= 0 {
 		return nil, errors.New("desktop session is invalid")
 	}
+	user, err := model.GetUserById(session.UserID, false)
+	if err != nil {
+		return nil, err
+	}
+	providerTokenGroup := user.Group
 	token, err := getReusableGasterCodeProviderToken(session)
 	if err != nil {
 		key, keyErr := common.GenerateKey()
@@ -410,7 +415,7 @@ func GetOrCreateGasterCodeProviderToken(session *model.GasterCodeSession, public
 			RemainQuota:        0,
 			UnlimitedQuota:     true,
 			ModelLimitsEnabled: false,
-			Group:              "",
+			Group:              providerTokenGroup,
 			CrossGroupRetry:    false,
 		}
 		if err := token.Insert(); err != nil {
@@ -421,6 +426,11 @@ func GetOrCreateGasterCodeProviderToken(session *model.GasterCodeSession, public
 			"provider_token_id": token.Id,
 			"updated_at":        common.GetTimestamp(),
 		}).Error; err != nil {
+			return nil, err
+		}
+	} else if token.Group != providerTokenGroup {
+		token.Group = providerTokenGroup
+		if err := token.Update(); err != nil {
 			return nil, err
 		}
 	}

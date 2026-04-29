@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/model"
 )
 
@@ -113,4 +114,74 @@ func TestGasterCodePKCEExchangeRejectsWrongVerifier(t *testing.T) {
 	var authReq model.GasterCodeAuthRequest
 	require.NoError(t, model.DB.Where("request_id = ?", started.RequestID).First(&authReq).Error)
 	assert.Equal(t, model.GasterCodeAuthStatusApproved, authReq.Status)
+}
+
+func TestGasterCodeProviderTokenUsesCurrentUserGroupWhenCreated(t *testing.T) {
+	truncate(t)
+	const userID = 103
+	const userGroup = "VIP用户组"
+	user := &model.User{
+		Id:       userID,
+		Username: "vip_user",
+		Quota:    20000,
+		Status:   common.UserStatusEnabled,
+		Group:    userGroup,
+	}
+	require.NoError(t, model.DB.Create(user).Error)
+	session := &model.GasterCodeSession{
+		UserID:           userID,
+		AccessTokenHash:  "access_hash_created",
+		RefreshTokenHash: "refresh_hash_created",
+		ExpiresAt:        4102444800,
+		RefreshExpiresAt: 4102444800,
+	}
+	require.NoError(t, model.DB.Create(session).Error)
+
+	_, err := GetOrCreateGasterCodeProviderToken(session, "https://gmapi.fun")
+	require.NoError(t, err)
+	require.NotZero(t, session.ProviderTokenID)
+
+	var token model.Token
+	require.NoError(t, model.DB.First(&token, session.ProviderTokenID).Error)
+	assert.Equal(t, userGroup, token.Group)
+}
+
+func TestGasterCodeProviderTokenSyncsReusableTokenToCurrentUserGroup(t *testing.T) {
+	truncate(t)
+	const userID = 104
+	const userGroup = "VIP用户组"
+	user := &model.User{
+		Id:       userID,
+		Username: "vip_user_reuse",
+		Quota:    20000,
+		Status:   common.UserStatusEnabled,
+		Group:    userGroup,
+	}
+	require.NoError(t, model.DB.Create(user).Error)
+	token := &model.Token{
+		UserId:         userID,
+		Key:            "sk-reusable-gaster-code-token",
+		Name:           "Gaster Code Desktop",
+		Status:         common.TokenStatusEnabled,
+		ExpiredTime:    -1,
+		UnlimitedQuota: true,
+		Group:          "",
+	}
+	require.NoError(t, model.DB.Create(token).Error)
+	session := &model.GasterCodeSession{
+		UserID:           userID,
+		AccessTokenHash:  "access_hash_reused",
+		RefreshTokenHash: "refresh_hash_reused",
+		ProviderTokenID:  token.Id,
+		ExpiresAt:        4102444800,
+		RefreshExpiresAt: 4102444800,
+	}
+	require.NoError(t, model.DB.Create(session).Error)
+
+	_, err := GetOrCreateGasterCodeProviderToken(session, "https://gmapi.fun")
+	require.NoError(t, err)
+
+	var updated model.Token
+	require.NoError(t, model.DB.First(&updated, token.Id).Error)
+	assert.Equal(t, userGroup, updated.Group)
 }

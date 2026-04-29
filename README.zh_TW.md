@@ -7,4 +7,4 @@
 - [部署說明](./docs/installation/BT.md)
 - [上游致謝與授權說明](./ACKNOWLEDGMENTS.md)
 
-目前原始碼穩定基線：[`v0.13.2-gmaster.1`](./VERSION)
+目前原始碼穩定基線：[`v0.13.2-gmaster.3`](./VERSION)
