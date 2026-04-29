@@ -31,6 +31,7 @@ const Docs = lazy(() => import('./pages/Docs'));
 const UserAgreement = lazy(() => import('./pages/UserAgreement'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const User = lazy(() => import('./pages/User'));
+const OAuthLogin = lazy(() => import('./pages/OAuthLogin'));
 const RegisterForm = lazy(() => import('./components/auth/RegisterForm'));
 const LoginForm = lazy(() => import('./components/auth/LoginForm'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -188,6 +189,14 @@ function App() {
             element={
               <AdminRoute>
                 <User />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path='/console/oauth-login'
+            element={
+              <AdminRoute>
+                <OAuthLogin />
               </AdminRoute>
             }
           />
