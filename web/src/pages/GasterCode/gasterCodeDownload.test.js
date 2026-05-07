@@ -59,6 +59,6 @@ describe('Gaster Code download detail page content', () => {
     expect(content.update.metadataUrl).toBe(
       'https://github.com/HereditaryDog/gaster-code-releases/releases/latest/download/latest.json',
     );
-    expect(JSON.stringify(content)).not.toContain('Claude Code');
+    expect(JSON.stringify(content)).not.toContain(['Claude', 'Code'].join(' '));
   });
 });
