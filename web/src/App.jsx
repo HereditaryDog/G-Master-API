@@ -25,6 +25,7 @@ import { StatusContext } from './context/Status';
 import SetupCheck from './components/layout/SetupCheck';
 
 const Home = lazy(() => import('./pages/Home'));
+const GasterCode = lazy(() => import('./pages/GasterCode'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const About = lazy(() => import('./pages/About'));
 const Docs = lazy(() => import('./pages/Docs'));
@@ -124,6 +125,14 @@ function App() {
             element={
               <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                 <Setup />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/gaster-code'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <GasterCode />
               </Suspense>
             }
           />

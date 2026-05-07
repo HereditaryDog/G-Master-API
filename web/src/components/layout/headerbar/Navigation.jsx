@@ -65,6 +65,8 @@ const Navigation = ({
         (link.itemKey === 'home' && location.pathname === '/') ||
         (link.itemKey === 'console' &&
           location.pathname.startsWith('/console')) ||
+        (link.itemKey === 'gaster_code' &&
+          location.pathname.startsWith('/gaster-code')) ||
         (link.itemKey === 'pricing' &&
           location.pathname.startsWith('/pricing')) ||
         (link.itemKey === 'docs' && location.pathname.startsWith('/docs'));

@@ -30,6 +30,7 @@ import {
 import { API, showError, showSuccess } from '../../../helpers';
 import { useTranslation } from 'react-i18next';
 import { StatusContext } from '../../../context/Status';
+import { normalizeHeaderNavModules } from '../../../hooks/common/useNavigation';
 
 const { Text } = Typography;
 
@@ -39,16 +40,9 @@ export default function SettingsHeaderNavModules(props) {
   const [statusState, statusDispatch] = useContext(StatusContext);
 
   // 顶栏模块管理状态
-  const [headerNavModules, setHeaderNavModules] = useState({
-    home: true,
-    console: true,
-    pricing: {
-      enabled: true,
-      requireAuth: false, // 默认不需要登录鉴权
-    },
-    docs: true,
-    about: true,
-  });
+  const [headerNavModules, setHeaderNavModules] = useState(() =>
+    normalizeHeaderNavModules(),
+  );
 
   // 处理顶栏模块配置变更
   function handleHeaderNavModuleChange(moduleKey) {
@@ -79,17 +73,7 @@ export default function SettingsHeaderNavModules(props) {
 
   // 重置顶栏模块为默认配置
   function resetHeaderNavModules() {
-    const defaultModules = {
-      home: true,
-      console: true,
-      pricing: {
-        enabled: true,
-        requireAuth: false,
-      },
-      docs: true,
-      about: true,
-    };
-    setHeaderNavModules(defaultModules);
+    setHeaderNavModules(normalizeHeaderNavModules());
     showSuccess(t('已重置为默认配置'));
   }
 
@@ -142,20 +126,9 @@ export default function SettingsHeaderNavModules(props) {
           };
         }
 
-        setHeaderNavModules(modules);
+        setHeaderNavModules(normalizeHeaderNavModules(modules));
       } catch (error) {
-        // 使用默认配置
-        const defaultModules = {
-          home: true,
-          console: true,
-          pricing: {
-            enabled: true,
-            requireAuth: false,
-          },
-          docs: true,
-          about: true,
-        };
-        setHeaderNavModules(defaultModules);
+        setHeaderNavModules(normalizeHeaderNavModules());
       }
     }
   }, [props.options]);
@@ -166,6 +139,11 @@ export default function SettingsHeaderNavModules(props) {
       key: 'home',
       title: t('首页'),
       description: t('用户主页，展示系统信息'),
+    },
+    {
+      key: 'gaster_code',
+      title: 'Gaster Code',
+      description: t('桌面端编程助手详情页'),
     },
     {
       key: 'console',

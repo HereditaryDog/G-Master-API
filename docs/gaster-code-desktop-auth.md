@@ -1,6 +1,22 @@
 # Gaster Code Desktop Auth API
 
-GasterCode 桌面端使用网页登录 + 本地 loopback 回调完成授权。桌面端不收集用户密码，不复用网页 cookie，也不会通过 URL 接收长期 token。
+Gaster Code 桌面端使用网页登录 + 本地 loopback 回调完成授权。桌面端不收集用户密码，不复用网页 cookie，也不会通过 URL 接收长期 token。
+
+G-Master API 前台提供公开详情页 `/gaster-code`，顶栏位于“首页”之后。该页面用于向所有用户介绍 Gaster Code 的本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、绘图、多模态入口和 IM 远程入口等能力，并引导用户从公开 release-only 仓库下载桌面端。
+
+Public download URL:
+
+```text
+https://github.com/HereditaryDog/gaster-code-releases/releases/latest
+```
+
+Updater metadata URL:
+
+```text
+https://github.com/HereditaryDog/gaster-code-releases/releases/latest/download/latest.json
+```
+
+The release-only repository distributes installers, signatures, and updater metadata. It must be used for public downloads instead of linking to the private Gaster Code source repository.
 
 Base URL:
 
@@ -253,7 +269,7 @@ GASTER_CODE_MODEL_SONNET=gpt-5.4
 GASTER_CODE_MODEL_OPUS=gpt-5.4
 ```
 
-GasterCode client must know:
+Gaster Code client must know:
 
 ```text
 G-Master API Base URL: https://gmapi.fun
@@ -282,4 +298,4 @@ Provider api_format: anthropic
 - The first MVP confirmation page is backend-rendered HTML, not a full React page.
 - 2FA, registration, password reset, OAuth login, and subscription purchase remain in the existing web flow.
 - `can_use_builtin_provider` is a coarse availability flag based on account status, wallet quota, and active subscription quota. Actual model calls still go through normal gateway billing and channel selection.
-- Provider token model defaults are server-configurable through environment variables; GasterCode should not hard-code model names if the API response supplies them.
+- Provider token model defaults are server-configurable through environment variables; Gaster Code should not hard-code model names if the API response supplies them.
