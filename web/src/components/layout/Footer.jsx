@@ -22,6 +22,10 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from '@douyinfe/semi-ui';
 import { getFooterHTML, getLogo, getSystemName } from '../../helpers';
 import { StatusContext } from '../../context/Status';
+import {
+  DEFAULT_FOOTER_DEMO_CONTAINER_CLASS,
+  DEFAULT_FOOTER_MAIN_CONTAINER_CLASS,
+} from './footerLayout.js';
 
 const PROJECT_REPO_URL = 'https://github.com/HereditaryDog/G-Master-API';
 const PROJECT_LICENSE_URL = `${PROJECT_REPO_URL}/blob/main/LICENSE`;
@@ -69,7 +73,7 @@ const FooterBar = () => {
         ></div>
 
         {isDemoSiteMode && (
-          <div className='mb-8 flex w-full max-w-[1110px] flex-col justify-between gap-8 md:flex-row'>
+          <div className={DEFAULT_FOOTER_DEMO_CONTAINER_CLASS}>
             <div className='flex-shrink-0'>
               <img
                 src={logo}
@@ -210,7 +214,7 @@ const FooterBar = () => {
           </div>
         )}
 
-        <div className='flex w-full max-w-[1110px] flex-col items-center justify-between gap-3 md:flex-row md:gap-6'>
+        <div className={DEFAULT_FOOTER_MAIN_CONTAINER_CLASS}>
           <div className='flex flex-wrap items-center gap-2'>
             <Typography.Text className='text-sm !text-semi-color-text-1'>
               © {currentYear} {systemName}. {t('版权所有')}
