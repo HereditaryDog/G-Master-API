@@ -32,7 +32,7 @@ export function shouldVerifyExistingSessionForRedirectLogin({
   const target = getSafeLoginRedirectTarget(search);
   return (
     Boolean(hasUser) &&
-    pathname === '/login' &&
+    (pathname === '/login' || pathname === '/register') &&
     shouldUseDocumentNavigationForLoginRedirect(target)
   );
 }

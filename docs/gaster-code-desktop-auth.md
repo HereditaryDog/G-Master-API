@@ -37,7 +37,8 @@ Request:
   "state": "opaque-client-state",
   "redirect_uri": "http://127.0.0.1:18790/api/gmaster-auth/callback",
   "client_name": "Gaster Code",
-  "client_version": "0.1.0"
+  "client_version": "0.2.1-gastercode.x",
+  "intent": "login"
 }
 ```
 
@@ -58,6 +59,12 @@ Response:
 Rules:
 
 - `code_challenge_method` only supports `S256`.
+- `intent` is optional and defaults to `login`.
+- `intent=login` returns the normal desktop authorization page:
+  `https://gmapi.fun/gaster-code/desktop-login?request_id=<request_id>`.
+- `intent=register` returns a registration-first web entry:
+  `https://gmapi.fun/register?redirect=<desktop_authorization_url>`.
+- `intent` values other than `login` or `register` return HTTP `400`.
 - `redirect_uri` only supports loopback URLs:
   - `http://127.0.0.1:<port>/api/gmaster-auth/callback`
   - `http://localhost:<port>/api/gmaster-auth/callback`
@@ -70,6 +77,8 @@ Behavior:
 
 - If the user is not logged in, the page asks the user to log in through the existing G-Master API web flow.
 - The login flow preserves the desktop authorization `redirect` parameter, including password login, passkey login, 2FA completion, and OAuth callback login.
+- For `intent=register`, the registration page also preserves the same `redirect` parameter. After account creation, the user is sent to the login page with that redirect still attached; OAuth-style register/login entries can return directly to the desktop authorization page.
+- If a user is already logged in when opening the registration-first URL, the page directly continues to the same desktop authorization page for the current account. The login/register pages also keep links for switching between existing-account login and new-account creation while preserving the desktop redirect.
 - If the user is logged in, the page shows an authorization confirmation page.
 - Approval redirects to:
 
@@ -83,7 +92,7 @@ http://127.0.0.1:<port>/api/gmaster-auth/callback?code=<one_time_code>&state=<st
 http://127.0.0.1:<port>/api/gmaster-auth/callback?error=access_denied&state=<state>
 ```
 
-The authorization code is single-use and expires after 5 minutes.
+The authorization code is single-use and expires after 5 minutes. The callback always returns the original `state` value unchanged.
 
 ## 3. Exchange Token
 
@@ -119,6 +128,8 @@ Response:
   }
 }
 ```
+
+The token response shape is unchanged for both `login` and `register` start intents. The `intent` value only changes the first browser entry URL; PKCE code exchange and token semantics remain the same.
 
 ## 4. Refresh Token
 
@@ -282,7 +293,7 @@ Provider api_format: anthropic
 
 1. Start a local callback server at `http://127.0.0.1:<port>/api/gmaster-auth/callback`.
 2. Generate `code_verifier`, `code_challenge = BASE64URL(SHA256(code_verifier))`, and `state`.
-3. Call `POST /api/gaster-code/auth/start`.
+3. Call `POST /api/gaster-code/auth/start`. Use `intent=login` for existing-account login or omit `intent`; use `intent=register` for a registration-first entry.
 4. Open `data.authorize_url` in the browser.
 5. Log in or register through the existing web flow if needed.
 6. Approve authorization.

@@ -17,6 +17,14 @@ describe('auth redirect helpers', () => {
           '?redirect=%2Fgaster-code%2Fdesktop-login%3Frequest_id%3Dgcr_test',
       }),
     ).toBe(true);
+    expect(
+      shouldShowAuthPageForRedirectLogin({
+        hasUser: true,
+        pathname: '/register',
+        search:
+          '?redirect=%2Fgaster-code%2Fdesktop-login%3Frequest_id%3Dgcr_test',
+      }),
+    ).toBe(true);
   });
 
   test('detects existing-session verification for desktop authorization redirects', () => {

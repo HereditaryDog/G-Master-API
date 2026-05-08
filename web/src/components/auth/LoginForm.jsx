@@ -129,6 +129,9 @@ const LoginForm = () => {
 
   const loginRedirectTarget =
     getSafeLoginRedirectTargetFromSearch(searchParams);
+  const registerLinkTarget = loginRedirectTarget
+    ? `/register?redirect=${encodeURIComponent(loginRedirectTarget)}`
+    : '/register';
   const shouldVerifyExistingDesktopSession =
     shouldVerifyExistingSessionForRedirectLogin({
       hasUser: Boolean(localStorage.getItem('user')),
@@ -795,7 +798,7 @@ const LoginForm = () => {
                   <Text>
                     {t('没有账户？')}{' '}
                     <Link
-                      to='/register'
+                      to={registerLinkTarget}
                       className='text-blue-600 hover:text-blue-800 font-medium'
                     >
                       {t('注册')}
@@ -948,7 +951,7 @@ const LoginForm = () => {
                   <Text>
                     {t('没有账户？')}{' '}
                     <Link
-                      to='/register'
+                      to={registerLinkTarget}
                       className='text-blue-600 hover:text-blue-800 font-medium'
                     >
                       {t('注册')}

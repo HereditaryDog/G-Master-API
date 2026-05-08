@@ -18,7 +18,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   API,
   getLogo,
@@ -64,9 +64,14 @@ import { UserContext } from '../../context/User';
 import { StatusContext } from '../../context/Status';
 import { useTranslation } from 'react-i18next';
 import { SiDiscord } from 'react-icons/si';
+import {
+  getSafeLoginRedirectTarget as getSafeLoginRedirectTargetFromSearch,
+  shouldUseDocumentNavigationForLoginRedirect,
+} from '../../helpers/authRedirect';
 
 const RegisterForm = () => {
   let navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const githubButtonTextKeyByState = {
     idle: '使用 GitHub 继续',
@@ -118,6 +123,32 @@ const RegisterForm = () => {
   if (affCode) {
     localStorage.setItem('aff', affCode);
   }
+
+  const registerRedirectTarget =
+    getSafeLoginRedirectTargetFromSearch(searchParams);
+  const loginLinkTarget = registerRedirectTarget
+    ? `/login?redirect=${encodeURIComponent(registerRedirectTarget)}`
+    : '/login';
+
+  const navigateAfterRegisterLogin = (fallback = '/') => {
+    if (
+      registerRedirectTarget &&
+      shouldUseDocumentNavigationForLoginRedirect(registerRedirectTarget)
+    ) {
+      window.location.assign(registerRedirectTarget);
+      return;
+    }
+    navigate(registerRedirectTarget || fallback);
+  };
+
+  const rememberRegisterRedirectForOAuth = () => {
+    if (registerRedirectTarget) {
+      localStorage.setItem(
+        'login_redirect_after_oauth',
+        registerRedirectTarget,
+      );
+    }
+  };
 
   const status = useMemo(() => {
     if (statusState?.status) return statusState.status;
@@ -176,6 +207,16 @@ const RegisterForm = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (
+      localStorage.getItem('user') &&
+      registerRedirectTarget &&
+      shouldUseDocumentNavigationForLoginRedirect(registerRedirectTarget)
+    ) {
+      window.location.assign(registerRedirectTarget);
+    }
+  }, [registerRedirectTarget]);
+
   const onWeChatLoginClicked = () => {
     setWechatLoading(true);
     setShowWeChatLoginModal(true);
@@ -198,7 +239,7 @@ const RegisterForm = () => {
         localStorage.setItem('user', JSON.stringify(data));
         setUserData(data);
         updateAPI();
-        navigate('/');
+        navigateAfterRegisterLogin('/');
         showSuccess('登录成功！');
         setShowWeChatLoginModal(false);
       } else {
@@ -241,7 +282,7 @@ const RegisterForm = () => {
         );
         const { success, message } = res.data;
         if (success) {
-          navigate('/login');
+          navigate(loginLinkTarget);
           showSuccess('注册成功！');
         } else {
           showError(message);
@@ -295,6 +336,7 @@ const RegisterForm = () => {
       setGithubButtonDisabled(true);
     }, 20000);
     try {
+      rememberRegisterRedirectForOAuth();
       onGitHubOAuthClicked(status.github_client_id, { shouldLogout: true });
     } finally {
       setTimeout(() => setGithubLoading(false), 3000);
@@ -304,6 +346,7 @@ const RegisterForm = () => {
   const handleDiscordClick = () => {
     setDiscordLoading(true);
     try {
+      rememberRegisterRedirectForOAuth();
       onDiscordOAuthClicked(status.discord_client_id, { shouldLogout: true });
     } finally {
       setTimeout(() => setDiscordLoading(false), 3000);
@@ -313,6 +356,7 @@ const RegisterForm = () => {
   const handleOIDCClick = () => {
     setOidcLoading(true);
     try {
+      rememberRegisterRedirectForOAuth();
       onOIDCClicked(
         status.oidc_authorization_endpoint,
         status.oidc_client_id,
@@ -327,6 +371,7 @@ const RegisterForm = () => {
   const handleLinuxDOClick = () => {
     setLinuxdoLoading(true);
     try {
+      rememberRegisterRedirectForOAuth();
       onLinuxDOOAuthClicked(status.linuxdo_client_id, { shouldLogout: true });
     } finally {
       setTimeout(() => setLinuxdoLoading(false), 3000);
@@ -336,6 +381,7 @@ const RegisterForm = () => {
   const handleCustomOAuthClick = (provider) => {
     setCustomOAuthLoading((prev) => ({ ...prev, [provider.slug]: true }));
     try {
+      rememberRegisterRedirectForOAuth();
       onCustomOAuthClicked(provider, { shouldLogout: true });
     } finally {
       setTimeout(() => {
@@ -382,7 +428,7 @@ const RegisterForm = () => {
         showSuccess('登录成功！');
         setUserData(data);
         updateAPI();
-        navigate('/');
+        navigateAfterRegisterLogin('/');
       } else {
         showError(message);
       }
@@ -540,7 +586,7 @@ const RegisterForm = () => {
                 <Text>
                   {t('已有账户？')}{' '}
                   <Link
-                    to='/login'
+                    to={loginLinkTarget}
                     className='text-blue-600 hover:text-blue-800 font-medium'
                   >
                     {t('登录')}
@@ -716,7 +762,7 @@ const RegisterForm = () => {
                 <Text>
                   {t('已有账户？')}{' '}
                   <Link
-                    to='/login'
+                    to={loginLinkTarget}
                     className='text-blue-600 hover:text-blue-800 font-medium'
                   >
                     {t('登录')}

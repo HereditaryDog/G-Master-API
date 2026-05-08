@@ -23,6 +23,7 @@ type gasterCodeAuthStartRequest struct {
 	RedirectURI         string `json:"redirect_uri" binding:"required"`
 	ClientName          string `json:"client_name"`
 	ClientVersion       string `json:"client_version"`
+	Intent              string `json:"intent"`
 }
 
 type gasterCodeTokenRequest struct {
@@ -52,8 +53,13 @@ func GasterCodeAuthStart(c *gin.Context) {
 		RedirectURI:         req.RedirectURI,
 		ClientName:          req.ClientName,
 		ClientVersion:       req.ClientVersion,
+		Intent:              req.Intent,
 	}, getGasterCodePublicBaseURL(c))
 	if err != nil {
+		if errors.Is(err, service.ErrInvalidGasterCodeAuthIntent) {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": err.Error()})
+			return
+		}
 		common.ApiError(c, err)
 		return
 	}

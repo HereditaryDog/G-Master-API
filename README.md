@@ -34,7 +34,7 @@
 - 默认部署方式调整为 **直接构建当前仓库源码**，而不是仅依赖上游镜像。
 - 默认服务名、容器名、systemd 服务名统一为 `g-master-api`。
 - 面向当前业务保留 `标准用户组 / VIP用户组` 等分组策略，以及相关充值升级逻辑。
-- 新增 Gaster Code 桌面端网页登录授权接口，桌面端可通过浏览器登录、PKCE 授权码、本地回调与专用 Provider Token 完成接入。
+- 新增 Gaster Code 桌面端网页登录授权接口，桌面端可通过浏览器登录或注册、PKCE 授权码、本地回调与专用 Provider Token 完成接入。
 - 首页顶栏提供 `Gaster Code` 详情入口，面向所有用户展示桌面端能力、安装包选择、自动更新说明，并统一跳转到公开 release-only 下载仓库。
 - 维护独立的 GitHub Release、GHCR 镜像、Apifox 导入产物与中文优先文档。
 
@@ -106,6 +106,7 @@ docker compose up -d --build
 
 - 公开页面：`/gaster-code`，顶栏位于“首页”之后，可在后台“顶栏管理”中控制显示状态。
 - 下载入口：<https://github.com/HereditaryDog/gaster-code-releases/releases/latest>。
+- 统一账号入口：`POST /api/gaster-code/auth/start` 支持 `intent=login` 与 `intent=register`；缺省按登录授权处理，注册完成后继续同一 PKCE 授权回调。
 - 当前公开稳定安装包覆盖 macOS Apple Silicon、macOS Intel、Linux x64。
 - 页面说明本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、桌面端会话、绘图与 IM 远程入口等能力。
 - 公开下载仓库只分发安装包、签名文件和 updater 元数据，不暴露 Gaster Code 私有主仓库。

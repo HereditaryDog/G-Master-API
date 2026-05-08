@@ -116,6 +116,120 @@ func TestGasterCodePKCEExchangeRejectsWrongVerifier(t *testing.T) {
 	assert.Equal(t, model.GasterCodeAuthStatusApproved, authReq.Status)
 }
 
+func TestStartGasterCodeAuthBuildsAuthorizeURLByIntent(t *testing.T) {
+	truncate(t)
+	redirectURI := "http://127.0.0.1:18790/api/gmaster-auth/callback"
+	challenge := pkceChallengeForTest("desktop-test-verifier-with-enough-entropy")
+
+	tests := []struct {
+		name         string
+		intent       string
+		wantPath     string
+		wantRedirect bool
+	}{
+		{
+			name:     "explicit login intent uses login authorization page",
+			intent:   "login",
+			wantPath: "/gaster-code/desktop-login",
+		},
+		{
+			name:     "missing intent defaults to login authorization page",
+			intent:   "",
+			wantPath: "/gaster-code/desktop-login",
+		},
+		{
+			name:         "register intent uses registration-first page",
+			intent:       "register",
+			wantPath:     "/register",
+			wantRedirect: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			started, err := StartGasterCodeAuth(GasterCodeAuthStartInput{
+				CodeChallenge:       challenge,
+				CodeChallengeMethod: "S256",
+				State:               "state-" + tt.name,
+				RedirectURI:         redirectURI,
+				ClientName:          "Gaster Code",
+				ClientVersion:       "0.2.1-gastercode.test",
+				Intent:              tt.intent,
+			}, "https://gmapi.fun")
+			require.NoError(t, err)
+
+			parsedURL, err := url.Parse(started.AuthorizeURL)
+			require.NoError(t, err)
+			assert.Equal(t, tt.wantPath, parsedURL.Path)
+
+			if tt.wantRedirect {
+				target := parsedURL.Query().Get("redirect")
+				require.NotEmpty(t, target)
+				parsedTarget, err := url.Parse(target)
+				require.NoError(t, err)
+				assert.Equal(t, "/gaster-code/desktop-login", parsedTarget.Path)
+				assert.Equal(t, started.RequestID, parsedTarget.Query().Get("request_id"))
+			} else {
+				assert.Equal(t, started.RequestID, parsedURL.Query().Get("request_id"))
+			}
+		})
+	}
+}
+
+func TestStartGasterCodeAuthRejectsInvalidIntent(t *testing.T) {
+	truncate(t)
+	_, err := StartGasterCodeAuth(GasterCodeAuthStartInput{
+		CodeChallenge:       pkceChallengeForTest("desktop-test-verifier-with-enough-entropy"),
+		CodeChallengeMethod: "S256",
+		State:               "state-invalid-intent",
+		RedirectURI:         "http://127.0.0.1:18790/api/gmaster-auth/callback",
+		ClientName:          "Gaster Code",
+		ClientVersion:       "0.2.1-gastercode.test",
+		Intent:              "signup",
+	}, "https://gmapi.fun")
+
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "intent")
+}
+
+func TestGasterCodeRegisterIntentCompletesCallbackAndCodeExchange(t *testing.T) {
+	truncate(t)
+	const userID = 105
+	seedUser(t, userID, 20000)
+
+	verifier := "desktop-register-verifier-with-enough-entropy"
+	redirectURI := "http://localhost:18790/api/gmaster-auth/callback"
+	started, err := StartGasterCodeAuth(GasterCodeAuthStartInput{
+		CodeChallenge:       pkceChallengeForTest(verifier),
+		CodeChallengeMethod: "S256",
+		State:               "register-state-original-value",
+		RedirectURI:         redirectURI,
+		ClientName:          "Gaster Code",
+		ClientVersion:       "0.2.1-gastercode.test",
+		Intent:              "register",
+	}, "https://gmapi.fun")
+	require.NoError(t, err)
+	require.Contains(t, started.AuthorizeURL, "/register?")
+
+	redirected, err := ApproveGasterCodeAuthRequest(started.RequestID, userID)
+	require.NoError(t, err)
+	parsedRedirect, err := url.Parse(redirected)
+	require.NoError(t, err)
+	code := parsedRedirect.Query().Get("code")
+	require.NotEmpty(t, code)
+	assert.Equal(t, "register-state-original-value", parsedRedirect.Query().Get("state"))
+
+	exchanged, err := ExchangeGasterCodeAuthCode(GasterCodeTokenExchangeInput{
+		Code:         code,
+		CodeVerifier: verifier,
+		RedirectURI:  redirectURI,
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, exchanged.AccessToken)
+	require.NotEmpty(t, exchanged.RefreshToken)
+	require.Equal(t, userID, exchanged.User.Id)
+}
+
 func TestGasterCodeProviderTokenUsesCurrentUserGroupWhenCreated(t *testing.T) {
 	truncate(t)
 	const userID = 103

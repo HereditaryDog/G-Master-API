@@ -23,6 +23,13 @@ const (
 	gasterCodePendingTTL     = 10 * 60
 )
 
+const (
+	GasterCodeAuthIntentLogin    = "login"
+	GasterCodeAuthIntentRegister = "register"
+)
+
+var ErrInvalidGasterCodeAuthIntent = errors.New("intent must be login or register")
+
 type GasterCodeAuthStartInput struct {
 	CodeChallenge       string
 	CodeChallengeMethod string
@@ -30,6 +37,7 @@ type GasterCodeAuthStartInput struct {
 	RedirectURI         string
 	ClientName          string
 	ClientVersion       string
+	Intent              string
 }
 
 type GasterCodeAuthStartResult struct {
@@ -150,9 +158,16 @@ func StartGasterCodeAuth(input GasterCodeAuthStartInput, publicBaseURL string) (
 	input.RedirectURI = strings.TrimSpace(input.RedirectURI)
 	input.ClientName = strings.TrimSpace(input.ClientName)
 	input.ClientVersion = strings.TrimSpace(input.ClientVersion)
+	input.Intent = strings.TrimSpace(input.Intent)
+	if input.Intent == "" {
+		input.Intent = GasterCodeAuthIntentLogin
+	}
 
 	if input.CodeChallenge == "" || input.State == "" || input.RedirectURI == "" {
 		return nil, errors.New("code_challenge, state and redirect_uri are required")
+	}
+	if input.Intent != GasterCodeAuthIntentLogin && input.Intent != GasterCodeAuthIntentRegister {
+		return nil, ErrInvalidGasterCodeAuthIntent
 	}
 	if input.CodeChallengeMethod != gasterCodePKCEMethodS256 {
 		return nil, errors.New("only S256 code_challenge_method is supported")
@@ -186,9 +201,13 @@ func StartGasterCodeAuth(input GasterCodeAuthStartInput, publicBaseURL string) (
 	if err := model.CreateGasterCodeAuthRequest(req); err != nil {
 		return nil, err
 	}
+	authorizeURL := buildGasterCodeAuthorizeURL(publicBaseURL, requestID)
+	if input.Intent == GasterCodeAuthIntentRegister {
+		authorizeURL = buildGasterCodeRegisterAuthorizeURL(publicBaseURL, requestID)
+	}
 	return &GasterCodeAuthStartResult{
 		RequestID:    requestID,
-		AuthorizeURL: buildGasterCodeAuthorizeURL(publicBaseURL, requestID),
+		AuthorizeURL: authorizeURL,
 		ExpiresAt:    req.ExpiresAt,
 	}, nil
 }
@@ -481,6 +500,12 @@ func buildPKCES256Challenge(verifier string) string {
 func buildGasterCodeAuthorizeURL(publicBaseURL string, requestID string) string {
 	base := normalizeGasterCodeBaseURL(publicBaseURL)
 	return base + "/gaster-code/desktop-login?request_id=" + url.QueryEscape(requestID)
+}
+
+func buildGasterCodeRegisterAuthorizeURL(publicBaseURL string, requestID string) string {
+	base := normalizeGasterCodeBaseURL(publicBaseURL)
+	redirectTarget := "/gaster-code/desktop-login?request_id=" + url.QueryEscape(requestID)
+	return base + "/register?redirect=" + url.QueryEscape(redirectTarget)
 }
 
 func buildGasterCodeCallbackURL(redirectURI string, params map[string]string) (string, error) {
