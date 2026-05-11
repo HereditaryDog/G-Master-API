@@ -145,7 +145,54 @@ Request:
 
 Response shape is the same as `/api/gaster-code/auth/token`. Refresh rotates both access token and refresh token.
 
-## 5. Current User
+## 5. Authentication Error Response
+
+The desktop auth endpoints return a stable machine-readable error structure when the Gaster Code login state is missing or expired.
+
+Applies to:
+
+- `GET /api/gaster-code/me`
+- `POST /api/gaster-code/provider-token`
+- `POST /api/gaster-code/auth/refresh`
+- `POST /api/gaster-code/auth/revoke`
+
+Missing bearer token:
+
+```http
+HTTP/1.1 401 Unauthorized
+```
+
+```json
+{
+  "success": false,
+  "message": "missing Authorization bearer token",
+  "code": "authentication_failed",
+  "reason": "login_required",
+  "action": "relogin",
+  "userMessage": "G-Master API login is required. Please sign in again in Gaster Code."
+}
+```
+
+Expired, revoked, invalid, or rotated desktop token:
+
+```http
+HTTP/1.1 401 Unauthorized
+```
+
+```json
+{
+  "success": false,
+  "message": "refresh_token is invalid",
+  "code": "authentication_failed",
+  "reason": "session_expired",
+  "action": "relogin",
+  "userMessage": "G-Master API login has expired. Please sign in again in Gaster Code."
+}
+```
+
+Clients should treat `action=relogin` as a request to clear local desktop auth state and start the G-Master login flow again. These errors indicate the request did not enter model inference, so token usage is expected to be zero.
+
+## 6. Current User
 
 `GET /api/gaster-code/me`
 
@@ -198,7 +245,7 @@ Response:
 }
 ```
 
-## 6. Provider Token
+## 7. Provider Token
 
 `POST /api/gaster-code/provider-token`
 
@@ -239,7 +286,7 @@ Response:
 
 Use the returned `api_key` against Anthropic-compatible endpoints such as `/v1/messages`.
 
-## 7. Revoke Desktop Session
+## 8. Revoke Desktop Session
 
 `POST /api/gaster-code/auth/revoke`
 

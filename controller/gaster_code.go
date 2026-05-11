@@ -40,6 +40,15 @@ type gasterCodeRevokeRequest struct {
 	RevokeProviderToken bool `json:"revoke_provider_token"`
 }
 
+const (
+	gasterCodeAuthErrorCode         = "authentication_failed"
+	gasterCodeAuthActionRelogin     = "relogin"
+	gasterCodeAuthReasonLogin       = "login_required"
+	gasterCodeAuthReasonExpired     = "session_expired"
+	gasterCodeAuthLoginUserMessage  = "G-Master API login is required. Please sign in again in Gaster Code."
+	gasterCodeAuthExpireUserMessage = "G-Master API login has expired. Please sign in again in Gaster Code."
+)
+
 func GasterCodeAuthStart(c *gin.Context) {
 	var req gasterCodeAuthStartRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -162,7 +171,7 @@ func GasterCodeAuthRefresh(c *gin.Context) {
 	}
 	result, err := service.RefreshGasterCodeToken(req.RefreshToken)
 	if err != nil {
-		common.ApiError(c, err)
+		writeGasterCodeAuthError(c, gasterCodeAuthReasonExpired, err.Error())
 		return
 	}
 	common.ApiSuccess(c, result)
@@ -171,7 +180,7 @@ func GasterCodeAuthRefresh(c *gin.Context) {
 func GasterCodeMe(c *gin.Context) {
 	session, err := getGasterCodeSessionFromRequest(c)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": err.Error()})
+		writeGasterCodeAuthError(c, classifyGasterCodeAuthReason(err), err.Error())
 		return
 	}
 	result, err := service.BuildGasterCodeMeResult(session.UserID, getGasterCodePublicBaseURL(c))
@@ -185,7 +194,7 @@ func GasterCodeMe(c *gin.Context) {
 func GasterCodeProviderToken(c *gin.Context) {
 	session, err := getGasterCodeSessionFromRequest(c)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": err.Error()})
+		writeGasterCodeAuthError(c, classifyGasterCodeAuthReason(err), err.Error())
 		return
 	}
 	result, err := service.GetOrCreateGasterCodeProviderToken(session, getGasterCodePublicBaseURL(c))
@@ -199,7 +208,7 @@ func GasterCodeProviderToken(c *gin.Context) {
 func GasterCodeAuthRevoke(c *gin.Context) {
 	token, err := getBearerToken(c)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": err.Error()})
+		writeGasterCodeAuthError(c, gasterCodeAuthReasonLogin, err.Error())
 		return
 	}
 	var req gasterCodeRevokeRequest
@@ -210,7 +219,7 @@ func GasterCodeAuthRevoke(c *gin.Context) {
 		req.RevokeProviderToken = true
 	}
 	if err := service.RevokeGasterCodeSession(token, req.RevokeProviderToken); err != nil {
-		common.ApiError(c, err)
+		writeGasterCodeAuthError(c, gasterCodeAuthReasonExpired, err.Error())
 		return
 	}
 	common.ApiSuccess(c, nil)
@@ -254,6 +263,37 @@ func getBearerToken(c *gin.Context) (string, error) {
 		return "", errors.New("empty bearer token")
 	}
 	return auth, nil
+}
+
+func classifyGasterCodeAuthReason(err error) string {
+	if err == nil {
+		return gasterCodeAuthReasonExpired
+	}
+	msg := strings.ToLower(err.Error())
+	if strings.Contains(msg, "missing authorization") ||
+		strings.Contains(msg, "empty bearer") ||
+		strings.Contains(msg, "access_token is required") {
+		return gasterCodeAuthReasonLogin
+	}
+	return gasterCodeAuthReasonExpired
+}
+
+func userMessageForGasterCodeAuthReason(reason string) string {
+	if reason == gasterCodeAuthReasonLogin {
+		return gasterCodeAuthLoginUserMessage
+	}
+	return gasterCodeAuthExpireUserMessage
+}
+
+func writeGasterCodeAuthError(c *gin.Context, reason string, message string) {
+	c.JSON(http.StatusUnauthorized, gin.H{
+		"success":     false,
+		"message":     message,
+		"code":        gasterCodeAuthErrorCode,
+		"reason":      reason,
+		"action":      gasterCodeAuthActionRelogin,
+		"userMessage": userMessageForGasterCodeAuthReason(reason),
+	})
 }
 
 func getLoggedInUserIDFromSession(c *gin.Context) (int, bool) {

@@ -2,6 +2,13 @@
 
 本文档记录 `G-Master API` 对外版本的主要变化。
 
+## v0.13.2-gmaster.5 - 2026-05-11
+
+### 修复
+
+- 为 Gaster Code 桌面端登录态失效场景补充稳定的机器可读错误结构，`/api/gaster-code/me`、`/api/gaster-code/provider-token`、`/api/gaster-code/auth/refresh` 和 `/api/gaster-code/auth/revoke` 在登录缺失或会话过期时返回 `code=authentication_failed`、`reason=login_required/session_expired`、`action=relogin` 和 `userMessage`。
+- 将无效 refresh token 的响应从通用 `success=false` 调整为 HTTP `401` 的认证错误，便于桌面端区分登录态失效和模型、额度、计费问题。
+
 ## v0.13.2-gmaster.4 - 2026-04-29
 
 ### 修复
