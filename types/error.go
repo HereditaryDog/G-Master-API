@@ -17,7 +17,10 @@ type OpenAIError struct {
 	Code           any             `json:"code"`
 	UpstreamStatus int             `json:"upstream_status,omitempty"`
 	ChannelID      int             `json:"channel_id,omitempty"`
+	Provider       string          `json:"provider,omitempty"`
 	Model          string          `json:"model,omitempty"`
+	ElapsedMS      int64           `json:"elapsed_ms,omitempty"`
+	RequestID      string          `json:"request_id,omitempty"`
 	Metadata       json.RawMessage `json:"metadata,omitempty"`
 }
 
@@ -37,6 +40,7 @@ const (
 	ErrorTypeRerankError     ErrorType = "rerank_error"
 	ErrorTypeUpstreamError   ErrorType = "upstream_error"
 	ErrorTypeImageForbidden  ErrorType = "image_channel_forbidden"
+	ErrorTypeImageTimeout    ErrorType = "image_generation_timeout"
 )
 
 type ErrorCode string
@@ -82,6 +86,7 @@ const (
 	ErrorCodeModelNotFound          ErrorCode = "model_not_found"
 	ErrorCodePromptBlocked          ErrorCode = "prompt_blocked"
 	ErrorCodeUpstreamForbidden      ErrorCode = "upstream_forbidden"
+	ErrorCodeUpstreamTimeout        ErrorCode = "upstream_timeout"
 
 	// sql error
 	ErrorCodeQueryDataError  ErrorCode = "query_data_error"

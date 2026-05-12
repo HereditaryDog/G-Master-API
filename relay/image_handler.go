@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
@@ -19,6 +20,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+const httpStatusCloudflareTimeout = 524
 
 func ImageHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *types.NewAPIError) {
 	info.InitChannelMeta(c)
@@ -100,7 +103,10 @@ func ImageHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *type
 			} else {
 				newAPIError = service.RelayErrorHandler(c.Request.Context(), httpResp, false)
 				if httpResp.StatusCode == http.StatusForbidden {
-					newAPIError = newImageChannelForbiddenError(info, httpResp.StatusCode)
+					newAPIError = newImageChannelForbiddenError(c, info, httpResp.StatusCode)
+				}
+				if httpResp.StatusCode == httpStatusCloudflareTimeout {
+					newAPIError = newImageGenerationTimeoutError(c, info, httpResp.StatusCode)
 				}
 				// reset status code 重置状态码
 				service.ResetStatusCode(newAPIError, statusCodeMappingStr)
@@ -159,8 +165,9 @@ func ImageHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *type
 	return nil
 }
 
-func newImageChannelForbiddenError(info *relaycommon.RelayInfo, upstreamStatus int) *types.NewAPIError {
+func newImageChannelForbiddenError(c *gin.Context, info *relaycommon.RelayInfo, upstreamStatus int) *types.NewAPIError {
 	channelID := 0
+	provider := ""
 	modelName := ""
 	if info != nil {
 		modelName = info.UpstreamModelName
@@ -170,6 +177,9 @@ func newImageChannelForbiddenError(info *relaycommon.RelayInfo, upstreamStatus i
 		if info.ChannelMeta != nil {
 			channelID = info.ChannelId
 		}
+	}
+	if c != nil {
+		provider = c.GetString("channel_name")
 	}
 	message := fmt.Sprintf("image channel returned %d from upstream", upstreamStatus)
 	if modelName != "" {
@@ -181,6 +191,49 @@ func newImageChannelForbiddenError(info *relaycommon.RelayInfo, upstreamStatus i
 		Code:           types.ErrorCodeUpstreamForbidden,
 		UpstreamStatus: upstreamStatus,
 		ChannelID:      channelID,
+		Provider:       provider,
 		Model:          modelName,
+	}, upstreamStatus)
+}
+
+func newImageGenerationTimeoutError(c *gin.Context, info *relaycommon.RelayInfo, upstreamStatus int) *types.NewAPIError {
+	channelID := 0
+	provider := ""
+	modelName := ""
+	requestID := ""
+	var elapsedMS int64
+	if info != nil {
+		modelName = info.UpstreamModelName
+		if modelName == "" {
+			modelName = info.OriginModelName
+		}
+		requestID = info.RequestId
+		if !info.StartTime.IsZero() {
+			elapsedMS = time.Since(info.StartTime).Milliseconds()
+		}
+		if info.ChannelMeta != nil {
+			channelID = info.ChannelId
+		}
+	}
+	if c != nil {
+		provider = c.GetString("channel_name")
+		if requestID == "" {
+			requestID = c.GetString(common.RequestIdKey)
+		}
+	}
+	message := "Image generation timed out upstream"
+	if modelName != "" {
+		message = fmt.Sprintf("%s image generation timed out upstream", modelName)
+	}
+	return types.WithOpenAIError(types.OpenAIError{
+		Message:        message,
+		Type:           string(types.ErrorTypeImageTimeout),
+		Code:           types.ErrorCodeUpstreamTimeout,
+		UpstreamStatus: upstreamStatus,
+		ChannelID:      channelID,
+		Provider:       provider,
+		Model:          modelName,
+		ElapsedMS:      elapsedMS,
+		RequestID:      requestID,
 	}, upstreamStatus)
 }
