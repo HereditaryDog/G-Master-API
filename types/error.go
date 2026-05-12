@@ -11,11 +11,14 @@ import (
 )
 
 type OpenAIError struct {
-	Message  string          `json:"message"`
-	Type     string          `json:"type"`
-	Param    string          `json:"param"`
-	Code     any             `json:"code"`
-	Metadata json.RawMessage `json:"metadata,omitempty"`
+	Message        string          `json:"message"`
+	Type           string          `json:"type"`
+	Param          string          `json:"param"`
+	Code           any             `json:"code"`
+	UpstreamStatus int             `json:"upstream_status,omitempty"`
+	ChannelID      int             `json:"channel_id,omitempty"`
+	Model          string          `json:"model,omitempty"`
+	Metadata       json.RawMessage `json:"metadata,omitempty"`
 }
 
 type ClaudeError struct {
@@ -33,6 +36,7 @@ const (
 	ErrorTypeGeminiError     ErrorType = "gemini_error"
 	ErrorTypeRerankError     ErrorType = "rerank_error"
 	ErrorTypeUpstreamError   ErrorType = "upstream_error"
+	ErrorTypeImageForbidden  ErrorType = "image_channel_forbidden"
 )
 
 type ErrorCode string
@@ -77,6 +81,7 @@ const (
 	ErrorCodeAwsInvokeError         ErrorCode = "aws_invoke_error"
 	ErrorCodeModelNotFound          ErrorCode = "model_not_found"
 	ErrorCodePromptBlocked          ErrorCode = "prompt_blocked"
+	ErrorCodeUpstreamForbidden      ErrorCode = "upstream_forbidden"
 
 	// sql error
 	ErrorCodeQueryDataError  ErrorCode = "query_data_error"

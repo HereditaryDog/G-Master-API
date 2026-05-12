@@ -99,6 +99,9 @@ func ImageHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *type
 				httpResp.StatusCode = http.StatusOK
 			} else {
 				newAPIError = service.RelayErrorHandler(c.Request.Context(), httpResp, false)
+				if httpResp.StatusCode == http.StatusForbidden {
+					newAPIError = newImageChannelForbiddenError(info, httpResp.StatusCode)
+				}
 				// reset status code 重置状态码
 				service.ResetStatusCode(newAPIError, statusCodeMappingStr)
 				return newAPIError
@@ -154,4 +157,30 @@ func ImageHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *type
 
 	service.PostTextConsumeQuota(c, info, usage.(*dto.Usage), logContent)
 	return nil
+}
+
+func newImageChannelForbiddenError(info *relaycommon.RelayInfo, upstreamStatus int) *types.NewAPIError {
+	channelID := 0
+	modelName := ""
+	if info != nil {
+		modelName = info.UpstreamModelName
+		if modelName == "" {
+			modelName = info.OriginModelName
+		}
+		if info.ChannelMeta != nil {
+			channelID = info.ChannelId
+		}
+	}
+	message := fmt.Sprintf("image channel returned %d from upstream", upstreamStatus)
+	if modelName != "" {
+		message = fmt.Sprintf("%s image channel returned %d from upstream", modelName, upstreamStatus)
+	}
+	return types.WithOpenAIError(types.OpenAIError{
+		Message:        message,
+		Type:           string(types.ErrorTypeImageForbidden),
+		Code:           types.ErrorCodeUpstreamForbidden,
+		UpstreamStatus: upstreamStatus,
+		ChannelID:      channelID,
+		Model:          modelName,
+	}, upstreamStatus)
 }
