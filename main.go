@@ -19,6 +19,7 @@ import (
 	"github.com/yangjunyu/G-Master-API/middleware"
 	"github.com/yangjunyu/G-Master-API/model"
 	"github.com/yangjunyu/G-Master-API/oauth"
+	perfmetrics "github.com/yangjunyu/G-Master-API/pkg/perf_metrics"
 	"github.com/yangjunyu/G-Master-API/relay"
 	"github.com/yangjunyu/G-Master-API/router"
 	"github.com/yangjunyu/G-Master-API/service"
@@ -290,6 +291,8 @@ func InitResources() error {
 	if err != nil {
 		return err
 	}
+
+	perfmetrics.Init()
 
 	// 启动系统监控
 	common.StartSystemMonitor()

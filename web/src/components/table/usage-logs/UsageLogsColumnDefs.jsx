@@ -867,6 +867,45 @@ export const getLogsColumns = ({
       },
     },
     {
+      key: COLUMN_KEYS.REQUEST_IDS,
+      title: t('请求 ID'),
+      dataIndex: 'request_id',
+      render: (text, record) => {
+        const upstreamRequestId = record.upstream_request_id;
+        if (!text && !upstreamRequestId) {
+          return <></>;
+        }
+        return (
+          <Space wrap spacing={2}>
+            {text ? (
+              <Tooltip content={`${t('本地 Request ID')}：${text}`}>
+                <Tag
+                  color='blue'
+                  shape='circle'
+                  onClick={(event) => copyText(event, text)}
+                >
+                  {t('本地')} #{String(text).slice(-8)}
+                </Tag>
+              </Tooltip>
+            ) : null}
+            {upstreamRequestId ? (
+              <Tooltip
+                content={`${t('上游 Request ID')}：${upstreamRequestId}`}
+              >
+                <Tag
+                  color='purple'
+                  shape='circle'
+                  onClick={(event) => copyText(event, upstreamRequestId)}
+                >
+                  {t('上游')} #{String(upstreamRequestId).slice(-8)}
+                </Tag>
+              </Tooltip>
+            ) : null}
+          </Space>
+        );
+      },
+    },
+    {
       key: COLUMN_KEYS.RETRY,
       title: t('重试'),
       dataIndex: 'retry',

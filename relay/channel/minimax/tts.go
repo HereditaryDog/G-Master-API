@@ -9,10 +9,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/yangjunyu/G-Master-API/dto"
 	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
+	"github.com/yangjunyu/G-Master-API/service"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/gin-gonic/gin"
 )
 
 type MiniMaxTTSRequest struct {
@@ -184,6 +185,9 @@ func handleChatCompletionResponse(c *gin.Context, resp *http.Response, info *rel
 
 	// Set response headers
 	for key, values := range resp.Header {
+		if !service.ShouldCopyUpstreamHeader(c, key, values) {
+			continue
+		}
 		for _, value := range values {
 			c.Header(key, value)
 		}

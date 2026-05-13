@@ -7,6 +7,7 @@ import (
 	"math"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/dto"
@@ -15,7 +16,6 @@ import (
 	"github.com/yangjunyu/G-Master-API/relay/helper"
 	"github.com/yangjunyu/G-Master-API/service"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/gin-gonic/gin"
 )
 
 func OpenaiTTSHandler(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) *dto.Usage {
@@ -30,6 +30,9 @@ func OpenaiTTSHandler(c *gin.Context, resp *http.Response, info *relaycommon.Rel
 	usage.PromptTokens = info.GetEstimatePromptTokens()
 	usage.TotalTokens = info.GetEstimatePromptTokens()
 	for k, v := range resp.Header {
+		if !service.ShouldCopyUpstreamHeader(c, k, v) {
+			continue
+		}
 		c.Writer.Header().Set(k, v[0])
 	}
 	c.Writer.WriteHeader(resp.StatusCode)

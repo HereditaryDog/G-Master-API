@@ -78,6 +78,16 @@ function patchAPIInstance(instance) {
 
 patchAPIInstance(API);
 
+export const getPerfMetricsSummary = (hours = 24) =>
+  API.get('/api/perf-metrics/summary', {
+    params: { hours },
+  });
+
+export const getRankings = (period = 'week') =>
+  API.get('/api/rankings', {
+    params: { period },
+  });
+
 export function updateAPI() {
   API = axios.create({
     baseURL: import.meta.env.VITE_REACT_APP_SERVER_URL

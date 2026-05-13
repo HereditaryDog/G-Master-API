@@ -21,6 +21,7 @@ import React, { useState, memo } from 'react';
 import PricingFilterModal from '../../modal/PricingFilterModal';
 import PricingVendorIntroWithSkeleton from './PricingVendorIntroWithSkeleton';
 import SearchActions from './SearchActions';
+import ModelRankingsStrip from './ModelRankingsStrip';
 
 const PricingTopSection = memo(
   ({
@@ -114,6 +115,7 @@ const PricingTopSection = memo(
             setTokenUnit={setTokenUnit}
           />
         )}
+        <ModelRankingsStrip t={t} />
       </>
     );
   },

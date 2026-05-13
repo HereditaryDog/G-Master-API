@@ -49,6 +49,7 @@ import { IconGift } from '@douyinfe/semi-icons';
 import { useMinimumLoadingTime } from '../../hooks/common/useMinimumLoadingTime';
 import { getCurrencyConfig } from '../../helpers/render';
 import SubscriptionPlansCard from './SubscriptionPlansCard';
+import WalletSubscriptionSummary from './WalletSubscriptionSummary';
 
 const { Text } = Typography;
 
@@ -120,6 +121,20 @@ const RechargeCard = ({
   }, [shouldShowSubscription, activeTab]);
   const topupContent = (
     <Space vertical style={{ width: '100%' }}>
+      <WalletSubscriptionSummary
+        t={t}
+        userState={userState}
+        renderQuota={renderQuota}
+        billingPreference={billingPreference}
+        activeSubscriptions={activeSubscriptions}
+        allSubscriptions={allSubscriptions}
+        payMethods={payMethods}
+        enableStripeTopUp={enableStripeTopUp}
+        enableCreemTopUp={enableCreemTopUp}
+        enableOnlineTopUp={enableOnlineTopUp}
+        enableWaffoTopUp={enableWaffoTopUp}
+        enableWaffoPancakeTopUp={enableWaffoPancakeTopUp}
+      />
       {/* 统计数据 */}
       <Card
         className='!rounded-xl w-full'

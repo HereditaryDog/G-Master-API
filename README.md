@@ -18,24 +18,25 @@
 ## 项目说明
 
 > [!IMPORTANT]
-> - `G-Master API` 是基于 [`QuantumNous/new-api`](https://github.com/QuantumNous/new-api) 持续同步的品牌化分支，继续保留 `AGPL-3.0` 与上游致谢。
-> - 本仓库面向 **自托管、多模型统一接入、用户与令牌管理、渠道管理、计费与控制台运营** 场景。
+> - `G-Master API` 面向 **自托管、多模型统一接入、用户与令牌管理、渠道管理、计费与控制台运营** 场景。
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前源码稳定基线：[`v0.13.2-gmaster.6`](./VERSION)
+当前源码稳定基线：[`v1.0.0-rc.5-GM.1`](./VERSION)
 
 > [!NOTE]
-> `v0.13.2-gmaster.6` 已在 `new-api v0.13.2` 基线上选择性同步上游 `v1.0.0-rc.5` 的兼容修复。当前生产仍保留 G-Master 品牌前端，暂不切换上游新前端，避免影响当前生产 UI、Gaster Code 页面和桌面端网页登录授权链路。
+> `v1.0.0-rc.5-GM.1` 是 G-Master API 的 v1 RC 功能版本，新增性能指标、模型排行、日志追踪、钱包订阅摘要和渠道编辑器能力提示，并继续保留当前生产前端、Gaster Code 页面和桌面端网页登录授权链路。
 
-## 与上游的主要差异
+## G-Master API 主要能力
 
 - 对外产品名统一为 `G-Master API`，仓库链接、公共文案、主页与文档入口都以当前品牌为准。
-- 默认部署方式调整为 **直接构建当前仓库源码**，而不是仅依赖上游镜像。
+- 默认部署方式为 **直接构建当前仓库源码**，便于掌控前端、后端、文档和发布产物。
 - 默认服务名、容器名、systemd 服务名统一为 `g-master-api`。
 - 面向当前业务保留 `标准用户组 / VIP用户组` 等分组策略，以及相关充值升级逻辑。
 - 新增 Gaster Code 桌面端网页登录授权接口，桌面端可通过浏览器登录或注册、PKCE 授权码、本地回调与专用 Provider Token 完成接入。
 - 首页顶栏提供 `Gaster Code` 详情入口，面向所有用户展示桌面端能力、安装包选择、自动更新说明，并统一跳转到公开 release-only 下载仓库。
+- 控制台与模型广场提供模型健康度、性能指标和热度排行，用于观察渠道延迟、成功率、TPS 和模型用量趋势；性能指标采集默认关闭，可通过 `perf_metrics_setting.enabled` 显式开启。
+- 使用日志保留本地与供应商 Request ID，钱包/订阅页和渠道编辑器提供紧凑状态摘要，便于运营排查计费、订阅抵扣和渠道配置问题。
 - 维护独立的 GitHub Release、GHCR 镜像、Apifox 导入产物与中文优先文档。
 
 ## 快速开始
@@ -85,7 +86,7 @@ docker compose up -d --build
 | 接口整理 | [docs/apifox/README.md](./docs/apifox/README.md) | Apifox 导入与接口整理 |
 | 贡献指南 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 提交 PR、Issue 与协作约定 |
 | 更新日志 | [CHANGELOG.md](./CHANGELOG.md) | 版本历史与发布记录 |
-| 上游致谢 | [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md) | 分支来源、授权与归属 |
+| 授权与致谢 | [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md) | 授权、许可证与归属说明 |
 | 安全策略 | [.github/SECURITY.md](./.github/SECURITY.md) | 漏洞反馈与安全提醒 |
 
 ## 主要特性
@@ -181,13 +182,13 @@ docker compose up -d --build
 
 - 是否已经阅读 [README](./README.md)、[部署说明](./docs/installation/BT.md) 与 [更新日志](./CHANGELOG.md)
 - 是否能稳定复现问题
-- 是否已经确认不是上游已知行为或配置问题
+- 是否已经确认不是已知配置、网络或服务商行为
 
-## 许可证与上游致谢
+## 许可证与致谢
 
 本项目继续使用 [`AGPL-3.0`](./LICENSE)。
 
-上游来源与授权说明请见 [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md)。如果你要二次分发、商用或对外提供网络服务，请先确认自己理解 AGPL 在网络服务场景下的义务。
+授权与归属说明请见 [`ACKNOWLEDGMENTS.md`](./ACKNOWLEDGMENTS.md)。如果你要二次分发、商用或对外提供网络服务，请先确认自己理解 AGPL 在网络服务场景下的义务。
 
 ---
 

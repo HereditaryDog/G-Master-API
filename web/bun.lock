@@ -52,7 +52,7 @@
         "eslint": "8.57.0",
         "eslint-plugin-header": "^3.1.1",
         "eslint-plugin-react-hooks": "^5.2.0",
-        "i18next-cli": "^1.10.3",
+        "i18next-cli": "1.15.0",
         "postcss": "^8.5.3",
         "prettier": "^3.0.0",
         "tailwindcss": "^3",

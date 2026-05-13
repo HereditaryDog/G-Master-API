@@ -50,10 +50,10 @@
     "eslint": "bunx eslint \"**/*.{js,jsx}\" --cache",
     "eslint:fix": "bunx eslint \"**/*.{js,jsx}\" --fix --cache",
     "preview": "vite preview",
-    "i18n:extract": "bunx i18next-cli extract",
-    "i18n:status": "bunx i18next-cli status",
-    "i18n:sync": "bunx i18next-cli sync",
-    "i18n:lint": "bunx i18next-cli lint"
+    "i18n:extract": "i18next-cli extract",
+    "i18n:status": "i18next-cli status",
+    "i18n:sync": "i18next-cli sync",
+    "i18n:lint": "i18next-cli lint"
   },
   "eslintConfig": {
     "extends": [
@@ -82,7 +82,7 @@
     "eslint": "8.57.0",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "i18next-cli": "^1.10.3",
+    "i18next-cli": "1.15.0",
     "postcss": "^8.5.3",
     "prettier": "^3.0.0",
     "tailwindcss": "^3",

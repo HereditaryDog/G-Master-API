@@ -105,6 +105,14 @@ const LogsFilters = ({
           {isAdminUser && (
             <>
               <Form.Input
+                field='upstream_request_id'
+                prefix={<IconSearch />}
+                placeholder={t('Upstream Request ID')}
+                showClear
+                pure
+                size='small'
+              />
+              <Form.Input
                 field='channel'
                 prefix={<IconSearch />}
                 placeholder={t('渠道 ID')}

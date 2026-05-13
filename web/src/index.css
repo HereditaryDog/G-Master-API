@@ -2303,6 +2303,98 @@ html.dark .gm-docs-search-input:focus {
   z-index: 5;
 }
 
+.gm-pricing-rankings-strip {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--semi-color-border);
+  border-radius: 8px;
+  background: var(--semi-color-bg-1);
+}
+
+.gm-pricing-rankings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gm-pricing-rankings-head span {
+  color: var(--semi-color-text-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.gm-pricing-rankings-head strong {
+  color: var(--semi-color-text-0);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.gm-pricing-rankings-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gm-pricing-ranking-item {
+  display: grid;
+  min-height: 74px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: space-between;
+  align-items: center;
+  gap: 5px 8px;
+  padding: 9px;
+  border: 1px solid var(--semi-color-border);
+  border-radius: 8px;
+  background: var(--semi-color-bg-0);
+}
+
+.gm-pricing-ranking-item i {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(var(--gm-brand-primary-rgb), 0.14);
+  color: var(--semi-color-primary);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.gm-pricing-ranking-item span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--semi-color-text-0);
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gm-pricing-ranking-item em {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--semi-color-text-2);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gm-pricing-ranking-item .semi-tag {
+  grid-column: 1 / -1;
+  width: fit-content;
+}
+
+.gm-pricing-rankings-empty {
+  color: var(--semi-color-text-2);
+  font-size: 13px;
+}
+
 .pricing-view-container {
   flex: 1;
   overflow: auto;
@@ -5905,6 +5997,122 @@ html.dark .gm-home-icon-orb {
   box-shadow: 0 10px 18px rgba(92, 73, 255, 0.32);
 }
 
+.gm-perf-health-panel {
+  margin-bottom: 16px;
+  padding: 18px;
+  border: 1px solid var(--gm-dash-border);
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 94% 0%, rgba(34, 197, 94, 0.09), transparent 42%),
+    var(--gm-dash-panel);
+  box-shadow:
+    0 18px 22px rgba(5, 9, 21, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.gm-perf-health-head,
+.gm-perf-card-top,
+.gm-perf-metrics {
+  display: flex;
+  align-items: center;
+}
+
+.gm-perf-health-head {
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.gm-perf-health-head h3 {
+  margin: 3px 0 0;
+  color: var(--gm-dash-text);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.gm-perf-refresh {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.42);
+  color: #c8d3ef;
+  cursor: pointer;
+}
+
+.gm-perf-refresh:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.gm-perf-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gm-console-page .gm-perf-card {
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.gm-perf-card-inner {
+  min-height: 126px;
+  padding: 14px;
+}
+
+.gm-perf-card-top {
+  justify-content: space-between;
+  gap: 8px;
+  color: #93c5fd;
+}
+
+.gm-perf-card-inner[data-tone='warning'] .gm-perf-card-top,
+.gm-perf-card-inner[data-tone='slow'] .gm-perf-card-top {
+  color: #fbbf24;
+}
+
+.gm-perf-card-inner > strong {
+  display: block;
+  min-height: 38px;
+  margin: 13px 0 12px;
+  overflow: hidden;
+  color: var(--gm-dash-text);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.gm-perf-metrics {
+  justify-content: space-between;
+  gap: 10px;
+  color: #d8def1;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.gm-perf-metrics span {
+  min-width: 0;
+}
+
+.gm-perf-metrics em {
+  display: block;
+  margin-bottom: 3px;
+  color: #8f9ab6;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.gm-perf-empty {
+  padding: 16px 0 4px;
+  color: #8f9ab6;
+  font-size: 13px;
+}
+
 .gm-figma-overview-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.96fr) minmax(0, 1.12fr);
@@ -6608,6 +6816,28 @@ html:not(.dark) .gm-console-kpi-signal[data-direction='neutral'] strong {
   color: #475569;
 }
 
+html:not(.dark) .gm-perf-health-panel {
+  background:
+    radial-gradient(circle at 94% 0%, rgba(34, 197, 94, 0.1), transparent 42%),
+    rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 18px 32px rgba(80, 95, 142, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+html:not(.dark) .gm-console-page .gm-perf-card {
+  background: rgba(248, 250, 252, 0.86);
+}
+
+html:not(.dark) .gm-perf-refresh {
+  background: rgba(255, 255, 255, 0.76);
+  color: #475569;
+}
+
+html:not(.dark) .gm-perf-metrics {
+  color: #253149;
+}
+
 html:not(.dark) .gm-figma-panel {
   border-color: var(--gm-dash-border);
   background:
@@ -6811,8 +7041,13 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
   }
 
   .gm-console-kpi-grid,
-  .gm-figma-overview-grid {
+  .gm-figma-overview-grid,
+  .gm-perf-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gm-pricing-rankings-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .gm-figma-overview-grid {
@@ -6832,6 +7067,8 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
 
   .gm-console-kpi-grid,
   .gm-figma-overview-grid,
+  .gm-perf-card-grid,
+  .gm-pricing-rankings-list,
   .gm-donut-content,
   .gm-system-grid {
     grid-template-columns: 1fr;

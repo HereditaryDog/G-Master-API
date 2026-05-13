@@ -65,6 +65,7 @@ import SingleModelSelectModal from './SingleModelSelectModal';
 import OllamaModelModal from './OllamaModelModal';
 import CodexOAuthModal from './CodexOAuthModal';
 import ParamOverrideEditorModal from './ParamOverrideEditorModal';
+import ChannelEditorCapabilitySummary from './ChannelEditorCapabilitySummary';
 import JSONEditor from '../../../common/ui/JSONEditor';
 import SecureVerificationModal from '../../../common/modals/SecureVerificationModal';
 import StatusCodeRiskGuardModal from './StatusCodeRiskGuardModal';
@@ -2810,6 +2811,14 @@ const EditChannelModal = (props) => {
                         }
                       />
                     )}
+                    <ChannelEditorCapabilitySummary
+                      t={t}
+                      inputs={inputs}
+                      pollingModeDependencyMissing={
+                        pollingModeDependencyMissing
+                      }
+                      upstreamDetectedModels={upstreamDetectedModels}
+                    />
                     {/* Core Configuration Card - Always Visible */}
                     <Card className='!rounded-2xl shadow-sm border-0'>
                       {/* Header */}

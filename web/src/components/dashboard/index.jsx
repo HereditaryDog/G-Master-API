@@ -24,6 +24,7 @@ import { StatusContext } from '../../context/Status';
 
 import DashboardHeader from './DashboardHeader';
 import StatsCards from './StatsCards';
+import PerformanceHealthPanel from './PerformanceHealthPanel';
 import DashboardOverviewGrid from './DashboardOverviewGrid';
 import AnnouncementsPanel from './AnnouncementsPanel';
 import FaqPanel from './FaqPanel';
@@ -175,6 +176,8 @@ const Dashboard = () => {
         loading={dashboardData.loading}
         CARD_PROPS={CARD_PROPS}
       />
+
+      <PerformanceHealthPanel t={dashboardData.t} />
 
       <DashboardOverviewGrid
         quotaData={dashboardData.quotaData}

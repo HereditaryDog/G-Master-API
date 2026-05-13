@@ -14,6 +14,7 @@ import (
 	"github.com/yangjunyu/G-Master-API/logger"
 	"github.com/yangjunyu/G-Master-API/model"
 	"github.com/yangjunyu/G-Master-API/pkg/billingexpr"
+	perfmetrics "github.com/yangjunyu/G-Master-API/pkg/perf_metrics"
 	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
 	"github.com/yangjunyu/G-Master-API/setting/ratio_setting"
 	"github.com/yangjunyu/G-Master-API/setting/system_setting"
@@ -374,6 +375,9 @@ func PostAudioConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, u
 		IsStream:         relayInfo.IsStream,
 		Group:            relayInfo.UsingGroup,
 		Other:            other,
+	})
+	gopool.Go(func() {
+		perfmetrics.RecordRelaySample(relayInfo, true, int64(usage.CompletionTokens))
 	})
 }
 

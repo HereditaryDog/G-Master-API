@@ -15,6 +15,7 @@ import (
 	"github.com/yangjunyu/G-Master-API/logger"
 	"github.com/yangjunyu/G-Master-API/middleware"
 	"github.com/yangjunyu/G-Master-API/model"
+	perfmetrics "github.com/yangjunyu/G-Master-API/pkg/perf_metrics"
 	"github.com/yangjunyu/G-Master-API/relay"
 	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
 	relayconstant "github.com/yangjunyu/G-Master-API/relay/constant"
@@ -238,6 +239,11 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 	if len(useChannel) > 1 {
 		retryLogStr := fmt.Sprintf("重试：%s", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(useChannel)), "->"), "[]"))
 		logger.LogInfo(c, retryLogStr)
+	}
+	if newAPIError != nil {
+		gopool.Go(func() {
+			perfmetrics.RecordRelaySample(relayInfo, false, 0)
+		})
 	}
 }
 
