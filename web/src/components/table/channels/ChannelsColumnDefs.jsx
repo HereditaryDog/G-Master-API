@@ -525,7 +525,7 @@ export const getChannelsColumns = ({
     {
       key: COLUMN_KEYS.BALANCE,
       title: t('已用/剩余'),
-      dataIndex: 'expired_time',
+      dataIndex: 'balance',
       render: (text, record, index) => {
         if (record.children === undefined) {
           return (

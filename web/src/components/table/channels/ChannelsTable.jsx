@@ -26,6 +26,21 @@ import {
 } from '@douyinfe/semi-illustrations';
 import { getChannelsColumns } from './ChannelsColumnDefs';
 
+const SERVER_SORTABLE_COLUMN_KEYS = new Set([
+  'id',
+  'name',
+  'priority',
+  'balance',
+  'response_time',
+]);
+
+const getSemiSortOrder = (channelSortConfig, columnKey) => {
+  if (channelSortConfig?.sortBy !== columnKey) {
+    return false;
+  }
+  return channelSortConfig.sortOrder === 'asc' ? 'ascend' : 'descend';
+};
+
 const ChannelsTable = (channelsData) => {
   const {
     channels,
@@ -37,9 +52,11 @@ const ChannelsTable = (channelsData) => {
     enableBatchDelete,
     compactMode,
     visibleColumns,
+    channelSortConfig,
     setSelectedChannels,
     handlePageChange,
     handlePageSizeChange,
+    handleTableChange,
     handleRow,
     t,
     COLUMN_KEYS,
@@ -126,10 +143,21 @@ const ChannelsTable = (channelsData) => {
   }, [visibleColumns, allColumns]);
 
   const tableColumns = useMemo(() => {
-    return compactMode
+    const columns = compactMode
       ? visibleColumnsList.map(({ fixed, ...rest }) => rest)
       : visibleColumnsList;
-  }, [compactMode, visibleColumnsList]);
+
+    return columns.map((column) => {
+      if (!SERVER_SORTABLE_COLUMN_KEYS.has(column.key)) {
+        return column;
+      }
+      return {
+        ...column,
+        sorter: true,
+        sortOrder: getSemiSortOrder(channelSortConfig, column.key),
+      };
+    });
+  }, [compactMode, visibleColumnsList, channelSortConfig]);
 
   return (
     <CardTable
@@ -147,6 +175,7 @@ const ChannelsTable = (channelsData) => {
       }}
       hidePagination={true}
       expandAllRows={false}
+      onChange={handleTableChange}
       onRow={handleRow}
       rowSelection={
         enableBatchDelete

@@ -40,6 +40,21 @@ import { parseUpstreamUpdateMeta } from './upstreamUpdateUtils';
 import { Modal, Button } from '@douyinfe/semi-ui';
 import { openCodexUsageModal } from '../../components/table/channels/modals/CodexUsageModal';
 
+const SORTABLE_CHANNEL_COLUMNS = new Set([
+  'id',
+  'name',
+  'priority',
+  'balance',
+  'response_time',
+]);
+
+const getSortQuery = (sortConfig) => {
+  if (!sortConfig?.sortBy || !sortConfig?.sortOrder) {
+    return '';
+  }
+  return `&sort_by=${sortConfig.sortBy}&sort_order=${sortConfig.sortOrder}`;
+};
+
 export const useChannelsData = () => {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
@@ -53,6 +68,10 @@ export const useChannelsData = () => {
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [channelCount, setChannelCount] = useState(0);
   const [groupOptions, setGroupOptions] = useState([]);
+  const [channelSortConfig, setChannelSortConfig] = useState({
+    sortBy: '',
+    sortOrder: '',
+  });
 
   // UI states
   const [showEdit, setShowEdit] = useState(false);
@@ -324,6 +343,7 @@ export const useChannelsData = () => {
     enableTagMode,
     typeKey = activeTypeKey,
     statusF,
+    sortConfig = channelSortConfig,
   ) => {
     if (statusF === undefined) statusF = statusFilter;
 
@@ -337,6 +357,7 @@ export const useChannelsData = () => {
         page,
         pageSize,
         idSort,
+        sortConfig,
       );
       setLoading(false);
       return;
@@ -346,8 +367,9 @@ export const useChannelsData = () => {
     setLoading(true);
     const typeParam = typeKey !== 'all' ? `&type=${typeKey}` : '';
     const statusParam = statusF !== 'all' ? `&status=${statusF}` : '';
+    const sortParam = getSortQuery(sortConfig);
     const res = await API.get(
-      `/api/channel/?p=${page}&page_size=${pageSize}&id_sort=${idSort}&tag_mode=${enableTagMode}${typeParam}${statusParam}`,
+      `/api/channel/?p=${page}&page_size=${pageSize}&id_sort=${idSort}&tag_mode=${enableTagMode}${typeParam}${statusParam}${sortParam}`,
     );
 
     if (res === undefined || reqId !== requestCounter.current) {
@@ -380,6 +402,7 @@ export const useChannelsData = () => {
     page = 1,
     pageSz = pageSize,
     sortFlag = idSort,
+    sortConfig = channelSortConfig,
   ) => {
     const { searchKeyword, searchGroup, searchModel } = getFormValues();
     setSearching(true);
@@ -392,14 +415,16 @@ export const useChannelsData = () => {
           enableTagMode,
           typeKey,
           statusF,
+          sortConfig,
         );
         return;
       }
 
       const typeParam = typeKey !== 'all' ? `&type=${typeKey}` : '';
       const statusParam = statusF !== 'all' ? `&status=${statusF}` : '';
+      const sortParam = getSortQuery(sortConfig);
       const res = await API.get(
-        `/api/channel/search?keyword=${searchKeyword}&group=${searchGroup}&model=${searchModel}&id_sort=${sortFlag}&tag_mode=${enableTagMode}&p=${page}&page_size=${pageSz}${typeParam}${statusParam}`,
+        `/api/channel/search?keyword=${searchKeyword}&group=${searchGroup}&model=${searchModel}&id_sort=${sortFlag}&tag_mode=${enableTagMode}&p=${page}&page_size=${pageSz}${typeParam}${statusParam}${sortParam}`,
       );
       const { success, message, data } = res.data;
       if (success) {
@@ -424,7 +449,15 @@ export const useChannelsData = () => {
   const refresh = async (page = activePage) => {
     const { searchKeyword, searchGroup, searchModel } = getFormValues();
     if (searchKeyword === '' && searchGroup === '' && searchModel === '') {
-      await loadChannels(page, pageSize, idSort, enableTagMode);
+      await loadChannels(
+        page,
+        pageSize,
+        idSort,
+        enableTagMode,
+        activeTypeKey,
+        statusFilter,
+        channelSortConfig,
+      );
     } else {
       await searchChannels(
         enableTagMode,
@@ -433,6 +466,7 @@ export const useChannelsData = () => {
         page,
         pageSize,
         idSort,
+        channelSortConfig,
       );
     }
   };
@@ -521,7 +555,15 @@ export const useChannelsData = () => {
     const { searchKeyword, searchGroup, searchModel } = getFormValues();
     setActivePage(page);
     if (searchKeyword === '' && searchGroup === '' && searchModel === '') {
-      loadChannels(page, pageSize, idSort, enableTagMode).then(() => {});
+      loadChannels(
+        page,
+        pageSize,
+        idSort,
+        enableTagMode,
+        activeTypeKey,
+        statusFilter,
+        channelSortConfig,
+      ).then(() => {});
     } else {
       searchChannels(
         enableTagMode,
@@ -530,6 +572,7 @@ export const useChannelsData = () => {
         page,
         pageSize,
         idSort,
+        channelSortConfig,
       );
     }
   };
@@ -540,7 +583,15 @@ export const useChannelsData = () => {
     setActivePage(1);
     const { searchKeyword, searchGroup, searchModel } = getFormValues();
     if (searchKeyword === '' && searchGroup === '' && searchModel === '') {
-      loadChannels(1, size, idSort, enableTagMode)
+      loadChannels(
+        1,
+        size,
+        idSort,
+        enableTagMode,
+        activeTypeKey,
+        statusFilter,
+        channelSortConfig,
+      )
         .then()
         .catch((reason) => {
           showError(reason);
@@ -553,6 +604,51 @@ export const useChannelsData = () => {
         1,
         size,
         idSort,
+        channelSortConfig,
+      );
+    }
+  };
+
+  const handleTableChange = async ({ sorter, extra } = {}) => {
+    if (extra?.changeType && extra.changeType !== 'sorter') {
+      return;
+    }
+
+    const sortBy = sorter?.dataIndex;
+    const sortOrder =
+      sorter?.sortOrder === 'ascend'
+        ? 'asc'
+        : sorter?.sortOrder === 'descend'
+          ? 'desc'
+          : '';
+    const nextSortConfig =
+      sortBy && sortOrder && SORTABLE_CHANNEL_COLUMNS.has(sortBy)
+        ? { sortBy, sortOrder }
+        : { sortBy: '', sortOrder: '' };
+
+    setChannelSortConfig(nextSortConfig);
+    setActivePage(1);
+
+    const { searchKeyword, searchGroup, searchModel } = getFormValues();
+    if (searchKeyword === '' && searchGroup === '' && searchModel === '') {
+      await loadChannels(
+        1,
+        pageSize,
+        idSort,
+        enableTagMode,
+        activeTypeKey,
+        statusFilter,
+        nextSortConfig,
+      );
+    } else {
+      await searchChannels(
+        enableTagMode,
+        activeTypeKey,
+        statusFilter,
+        1,
+        pageSize,
+        idSort,
+        nextSortConfig,
       );
     }
   };
@@ -1147,6 +1243,7 @@ export const useChannelsData = () => {
     enableBatchDelete,
     statusFilter,
     compactMode,
+    channelSortConfig,
     globalPassThroughEnabled,
 
     // UI states
@@ -1222,6 +1319,7 @@ export const useChannelsData = () => {
     manageTag,
     handlePageChange,
     handlePageSizeChange,
+    handleTableChange,
     copySelectedChannel,
     updateChannelProperty,
     submitTagEdit,

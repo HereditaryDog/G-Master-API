@@ -93,6 +93,13 @@ Potential later pass:
 - SQLite, MySQL, and PostgreSQL compatibility.
 - AGPL notices and upstream attribution.
 
+## Applied Decisions
+
+- Ported explicit reasoning forwarding, OpenAI image-edit reference fields, and Vertex gateway URL compatibility with targeted tests.
+- Ported channel table server-side sorting into the backend and the current `web/src` classic channel table, without adopting upstream `web/default`.
+- Kept upstream `web/default` API-key default-group and token ratio display fixes out of this pass because production still uses `web/src`; G-Master's current Gaster Code provider token group behavior is covered by service tests, and the current token table already loads group ratio data.
+- Deferred performance metrics, rankings, and video-task lanes to later passes because they need schema, data-quality, and product-surface review before production use.
+
 ## Verification Gates
 
 - `mise x bun@1.3.12 -- bun run build` in `web/`.
