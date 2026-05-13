@@ -581,6 +581,7 @@ const TopUp = () => {
           amount_options: data.amount_options || [],
           discount: data.discount || {},
         });
+        setTopUpLink(data.topup_link || statusState?.status?.top_up_link || '');
 
         // 处理支付方式
         let payMethods = data.pay_methods || [];

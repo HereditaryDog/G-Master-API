@@ -2307,7 +2307,15 @@ export function renderTieredModelPrice(opts) {
   const { symbol, rate } = getCurrencyConfig();
   const gr = groupRatio || 1;
 
-  const priceLines = BILLING_PRICING_VARS.map((v) => [v.field, v.label]);
+  const hasAnyCacheTokens =
+    cacheTokens > 0 ||
+    cacheCreationTokens > 0 ||
+    cacheCreationTokens5m > 0 ||
+    cacheCreationTokens1h > 0;
+
+  const priceLines = BILLING_PRICING_VARS.filter(
+    (v) => v.group !== 'cache' || hasAnyCacheTokens,
+  ).map((v) => [v.field, v.label]);
 
   const lines = [
     buildBillingText('命中档位：{{tier}}', { tier: matchedTier || tier.label }),
@@ -2363,10 +2371,14 @@ export function renderTieredModelPriceSimple(opts) {
     }
 
     if (tier && isPriceDisplayMode(displayMode)) {
-      const priceSegments = BILLING_PRICING_VARS.map((v) => [
-        v.field,
-        v.shortLabel,
-      ]);
+      const hasAnyCacheTokens =
+        cacheTokens > 0 ||
+        cacheCreationTokens > 0 ||
+        cacheCreationTokens5m > 0 ||
+        cacheCreationTokens1h > 0;
+      const priceSegments = BILLING_PRICING_VARS.filter(
+        (v) => v.group !== 'cache' || hasAnyCacheTokens,
+      ).map((v) => [v.field, v.shortLabel]);
       for (const [field, label] of priceSegments) {
         if (tier[field] > 0) {
           segments.push({

@@ -97,6 +97,8 @@ Potential later pass:
 
 - Ported explicit reasoning forwarding, OpenAI image-edit reference fields, and Vertex gateway URL compatibility with targeted tests.
 - Ported channel table server-side sorting into the backend and the current `web/src` classic channel table, without adopting upstream `web/default`.
+- Ported authenticated top-up info exposure of `topup_link` and updated the current top-up page to prefer it, while keeping the public status field for existing G-Master home/docs links.
+- Ported the tiered billing price-display fix that hides cache-price rows when a request has no cache tokens.
 - Kept upstream `web/default` API-key default-group and token ratio display fixes out of this pass because production still uses `web/src`; G-Master's current Gaster Code provider token group behavior is covered by service tests, and the current token table already loads group ratio data.
 - Deferred performance metrics, rankings, and video-task lanes to later passes because they need schema, data-quality, and product-surface review before production use.
 
