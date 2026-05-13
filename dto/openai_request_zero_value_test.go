@@ -3,9 +3,9 @@ package dto
 import (
 	"testing"
 
-	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
+	"github.com/yangjunyu/G-Master-API/common"
 )
 
 func TestGeneralOpenAIRequestPreserveExplicitZeroValues(t *testing.T) {
@@ -70,4 +70,31 @@ func TestOpenAIResponsesRequestPreserveExplicitZeroValues(t *testing.T) {
 	require.True(t, gjson.GetBytes(encoded, "max_tool_calls").Exists())
 	require.True(t, gjson.GetBytes(encoded, "stream").Exists())
 	require.True(t, gjson.GetBytes(encoded, "top_p").Exists())
+}
+
+func TestImageRequestPreservesEditReferenceFields(t *testing.T) {
+	raw := []byte(`{
+		"model":"gpt-image-1",
+		"prompt":"edit the image",
+		"images":["data:image/png;base64,reference"],
+		"mask":"data:image/png;base64,mask",
+		"input_fidelity":"high",
+		"watermark":false
+	}`)
+
+	var req ImageRequest
+	err := common.Unmarshal(raw, &req)
+	require.NoError(t, err)
+
+	encoded, err := common.Marshal(req)
+	require.NoError(t, err)
+
+	require.True(t, gjson.GetBytes(encoded, "images").Exists())
+	require.Equal(t, "data:image/png;base64,reference", gjson.GetBytes(encoded, "images.0").String())
+	require.True(t, gjson.GetBytes(encoded, "mask").Exists())
+	require.Equal(t, "data:image/png;base64,mask", gjson.GetBytes(encoded, "mask").String())
+	require.True(t, gjson.GetBytes(encoded, "input_fidelity").Exists())
+	require.Equal(t, "high", gjson.GetBytes(encoded, "input_fidelity").String())
+	require.True(t, gjson.GetBytes(encoded, "watermark").Exists())
+	require.False(t, gjson.GetBytes(encoded, "watermark").Bool())
 }

@@ -12,6 +12,8 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/gin-gonic/gin"
+	"github.com/samber/lo"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/dto"
@@ -23,8 +25,6 @@ import (
 	"github.com/yangjunyu/G-Master-API/setting/model_setting"
 	"github.com/yangjunyu/G-Master-API/setting/reasoning"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/gin-gonic/gin"
-	"github.com/samber/lo"
 )
 
 // https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference?hl=zh-cn#blob
@@ -1097,7 +1097,7 @@ func responseGeminiChat2OpenAI(c *gin.Context, response *dto.GeminiChatResponse)
 						toolCalls = append(toolCalls, *call)
 					}
 				} else if part.Thought {
-					choice.Message.ReasoningContent = part.Text
+					choice.Message.ReasoningContent = &part.Text
 				} else {
 					if part.ExecutableCode != nil {
 						texts = append(texts, "```"+part.ExecutableCode.Language+"\n"+part.ExecutableCode.Code+"\n```")
