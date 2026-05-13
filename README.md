@@ -81,6 +81,7 @@ docker compose up -d --build
 | OpenClaw 英文页 | [gmapi.fun/docs/openclaw-en](https://gmapi.fun/docs/openclaw-en) | Apifox OpenClaw 英文配置页 |
 | 部署说明 | [docs/installation/BT.md](./docs/installation/BT.md) | 宝塔 / VPS 场景说明 |
 | Gaster Code 桌面端授权 | [docs/gaster-code-desktop-auth.md](./docs/gaster-code-desktop-auth.md) | 桌面端网页登录、Provider Token、下载入口与更新说明 |
+| 图片生成异步任务 | [docs/image-generation-async.md](./docs/image-generation-async.md) | `gpt-image-2` 等长耗时图片模型的创建任务与轮询接口 |
 | 接口整理 | [docs/apifox/README.md](./docs/apifox/README.md) | Apifox 导入与接口整理 |
 | 贡献指南 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 提交 PR、Issue 与协作约定 |
 | 更新日志 | [CHANGELOG.md](./CHANGELOG.md) | 版本历史与发布记录 |
@@ -110,6 +111,7 @@ docker compose up -d --build
 - 当前公开稳定安装包覆盖 macOS Apple Silicon、macOS Intel、Linux x64。
 - 页面说明本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、桌面端会话、绘图与 IM 远程入口等能力。
 - 公开下载仓库只分发安装包、签名文件和 updater 元数据，不暴露 Gaster Code 私有主仓库。
+- 绘图页可使用 `POST /v1/images/generations/async` 创建图片任务，再轮询 `/v1/images/jobs/{task_id}`，避免长连接等待导致 524。
 
 ### 存储与部署兼容
 

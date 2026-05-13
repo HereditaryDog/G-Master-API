@@ -138,6 +138,12 @@ const DOC_GROUPS = [
         note: 'OpenAI 风格图像生成入口。',
       },
       {
+        title: '异步图片任务',
+        type: 'POST + GET',
+        endpoint: '/v1/images/generations/async',
+        note: '适合 gpt-image-2 等长耗时生成，创建任务后轮询 /v1/images/jobs/{task_id}。',
+      },
+      {
         title: '编辑图片',
         type: 'POST',
         endpoint: '/v1/images/edits',

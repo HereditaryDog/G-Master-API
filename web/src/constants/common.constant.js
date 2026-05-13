@@ -32,6 +32,8 @@ export const API_ENDPOINTS = [
   '/v1/embeddings',
   '/v1/rerank',
   '/v1/images/generations',
+  '/v1/images/generations/async',
+  '/v1/images/jobs/{task_id}',
   '/v1/images/edits',
   '/v1/images/variations',
   '/v1/audio/speech',

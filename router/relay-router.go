@@ -66,6 +66,13 @@ func SetRelayRouter(router *gin.Engine) {
 	{
 		playgroundRouter.POST("/chat/completions", controller.Playground)
 	}
+	imageJobRouter := router.Group("/v1/images/jobs")
+	imageJobRouter.Use(middleware.RouteTag("relay"))
+	imageJobRouter.Use(middleware.SystemPerformanceCheck())
+	imageJobRouter.Use(middleware.TokenAuthReadOnly())
+	{
+		imageJobRouter.GET("/:task_id", controller.RelayImageJobFetch)
+	}
 	relayV1Router := router.Group("/v1")
 	relayV1Router.Use(middleware.RouteTag("relay"))
 	relayV1Router.Use(middleware.SystemPerformanceCheck())
@@ -109,6 +116,7 @@ func SetRelayRouter(router *gin.Engine) {
 		httpRouter.POST("/edits", func(c *gin.Context) {
 			controller.Relay(c, types.RelayFormatOpenAIImage)
 		})
+		httpRouter.POST("/images/generations/async", controller.RelayImageGenerationAsync)
 		httpRouter.POST("/images/generations", func(c *gin.Context) {
 			controller.Relay(c, types.RelayFormatOpenAIImage)
 		})
