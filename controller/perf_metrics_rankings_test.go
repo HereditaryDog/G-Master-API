@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/model"
+	perfmetrics "github.com/yangjunyu/G-Master-API/pkg/perf_metrics"
 	"gorm.io/gorm"
 )
 
@@ -135,6 +136,55 @@ func TestGetPerfMetricsSummaryFallsBackToUsageLogs(t *testing.T) {
 	require.Equal(t, int64(3000), response.Data.Models[0].AvgLatencyMs)
 	require.Equal(t, 50.0, response.Data.Models[0].SuccessRate)
 	require.Equal(t, 16.67, response.Data.Models[0].AvgTps)
+}
+
+func TestGetPerfMetricsSummaryPrefersUsageLogsWhenMetricsAreSparse(t *testing.T) {
+	setupPerfMetricsControllerTestDB(t)
+	gin.SetMode(gin.TestMode)
+	now := time.Now().Unix()
+	perfmetrics.Record(perfmetrics.Sample{
+		Model:        "live-only-model",
+		Group:        "auto",
+		LatencyMs:    1000,
+		Success:      true,
+		OutputTokens: 10,
+		GenerationMs: 1000,
+	})
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		CreatedAt:        now - 60,
+		Type:             model.LogTypeConsume,
+		ModelName:        "gpt-5.4",
+		CompletionTokens: 100,
+		UseTime:          2,
+	}).Error)
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		CreatedAt: now - 30,
+		Type:      model.LogTypeError,
+		ModelName: "gpt-5.4",
+		UseTime:   4,
+	}).Error)
+
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest(http.MethodGet, "/api/perf-metrics/summary?hours=24", nil)
+
+	GetPerfMetricsSummary(ctx)
+
+	require.Equal(t, http.StatusOK, recorder.Code)
+	var response struct {
+		Success bool `json:"success"`
+		Data    struct {
+			Models []struct {
+				ModelName    string `json:"model_name"`
+				RequestCount int64  `json:"request_count"`
+			} `json:"models"`
+		} `json:"data"`
+	}
+	require.NoError(t, common.Unmarshal(recorder.Body.Bytes(), &response))
+	require.True(t, response.Success)
+	require.Len(t, response.Data.Models, 1)
+	require.Equal(t, "gpt-5.4", response.Data.Models[0].ModelName)
+	require.Equal(t, int64(2), response.Data.Models[0].RequestCount)
 }
 
 func TestGetPerfMetricsRequiresModel(t *testing.T) {

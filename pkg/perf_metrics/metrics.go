@@ -167,13 +167,16 @@ func QuerySummaryAll(hours int) (SummaryAllResult, error) {
 		return true
 	})
 
-	if len(totals) == 0 {
-		logRows, err := model.GetLogPerfMetricsSummaryAll(startTs, endTs)
-		if err != nil {
-			return SummaryAllResult{}, err
+	metricRequestCount := totalRequestCount(totals)
+	logRows, logErr := model.GetLogPerfMetricsSummaryAll(startTs, endTs)
+	if logErr != nil {
+		if metricRequestCount == 0 {
+			return SummaryAllResult{}, logErr
 		}
+	} else {
+		logTotals := map[string]counters{}
 		for _, row := range logRows {
-			totals[row.ModelName] = counters{
+			logTotals[row.ModelName] = counters{
 				requestCount:   row.RequestCount,
 				successCount:   row.SuccessCount,
 				totalLatencyMs: row.TotalLatencyMs,
@@ -181,6 +184,17 @@ func QuerySummaryAll(hours int) (SummaryAllResult, error) {
 				generationMs:   row.GenerationMs,
 			}
 		}
+		// Deployments that previously had performance metrics disabled can have
+		// rich usage logs but only one or two fresh in-memory metric samples. In
+		// that case prefer log-derived summaries so the health panel is populated
+		// from real historical calls instead of looking empty or sparse.
+		if totalRequestCount(logTotals) > metricRequestCount {
+			totals = logTotals
+		}
+	}
+
+	if len(totals) == 0 {
+		return SummaryAllResult{Models: []ModelSummary{}}, nil
 	}
 
 	models := make([]ModelSummary, 0, len(totals))
@@ -207,6 +221,14 @@ func QuerySummaryAll(hours int) (SummaryAllResult, error) {
 	})
 
 	return SummaryAllResult{Models: models}, nil
+}
+
+func totalRequestCount(totals map[string]counters) int64 {
+	var count int64
+	for _, total := range totals {
+		count += total.requestCount
+	}
+	return count
 }
 
 func bucketStart(ts int64) int64 {
