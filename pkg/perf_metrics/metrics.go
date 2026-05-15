@@ -167,6 +167,22 @@ func QuerySummaryAll(hours int) (SummaryAllResult, error) {
 		return true
 	})
 
+	if len(totals) == 0 {
+		logRows, err := model.GetLogPerfMetricsSummaryAll(startTs, endTs)
+		if err != nil {
+			return SummaryAllResult{}, err
+		}
+		for _, row := range logRows {
+			totals[row.ModelName] = counters{
+				requestCount:   row.RequestCount,
+				successCount:   row.SuccessCount,
+				totalLatencyMs: row.TotalLatencyMs,
+				outputTokens:   row.OutputTokens,
+				generationMs:   row.GenerationMs,
+			}
+		}
+	}
+
 	models := make([]ModelSummary, 0, len(totals))
 	for name, total := range totals {
 		if total.requestCount == 0 {

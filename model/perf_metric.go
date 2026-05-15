@@ -79,6 +79,20 @@ func GetPerfMetricsSummaryAll(startTs int64, endTs int64) ([]PerfMetricSummary, 
 	return summaries, err
 }
 
+func GetLogPerfMetricsSummaryAll(startTs int64, endTs int64) ([]PerfMetricSummary, error) {
+	var summaries []PerfMetricSummary
+	err := LOG_DB.Model(&Log{}).
+		Select(
+			"model_name, COUNT(*) as request_count, SUM(CASE WHEN type = ? THEN 1 ELSE 0 END) as success_count, SUM(use_time * 1000) as total_latency_ms, SUM(completion_tokens) as output_tokens, SUM(use_time * 1000) as generation_ms",
+			LogTypeConsume,
+		).
+		Where("created_at >= ? AND created_at <= ? AND model_name <> '' AND type IN ?", startTs, endTs, []int{LogTypeConsume, LogTypeError}).
+		Group("model_name").
+		Having("COUNT(*) > 0").
+		Find(&summaries).Error
+	return summaries, err
+}
+
 func DeletePerfMetricsBefore(cutoffTs int64) error {
 	if cutoffTs <= 0 {
 		return nil

@@ -11,4 +11,4 @@
 - 更新日志：[CHANGELOG.md](./CHANGELOG.md)
 - 授权与致谢说明：[ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md)
 
-当前源码稳定基线：[`v1.0.0-rc.5-GM.1`](./VERSION)
+当前源码稳定基线：[`v1.0.0-rc.5-GM.2`](./VERSION)

@@ -32,7 +32,7 @@ func setupPerfMetricsControllerTestDB(t *testing.T) {
 	common.UsingMySQL = false
 	common.UsingPostgreSQL = false
 	common.RedisEnabled = false
-	require.NoError(t, db.AutoMigrate(&model.PerfMetric{}, &model.QuotaData{}, &model.Ability{}, &model.Model{}, &model.Vendor{}))
+	require.NoError(t, db.AutoMigrate(&model.PerfMetric{}, &model.Log{}, &model.QuotaData{}, &model.Ability{}, &model.Model{}, &model.Vendor{}))
 	model.InvalidatePricingCache()
 	t.Cleanup(func() {
 		model.DB = oldDB
@@ -88,6 +88,53 @@ func TestGetPerfMetricsSummaryReturnsAggregatedModels(t *testing.T) {
 	require.Equal(t, int64(1500), response.Data.Models[0].AvgLatencyMs)
 	require.Equal(t, 50.0, response.Data.Models[0].SuccessRate)
 	require.Equal(t, 600.0, response.Data.Models[0].AvgTps)
+}
+
+func TestGetPerfMetricsSummaryFallsBackToUsageLogs(t *testing.T) {
+	setupPerfMetricsControllerTestDB(t)
+	gin.SetMode(gin.TestMode)
+	now := time.Now().Unix()
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		CreatedAt:        now - 60,
+		Type:             model.LogTypeConsume,
+		ModelName:        "gpt-5.4",
+		CompletionTokens: 100,
+		UseTime:          2,
+	}).Error)
+	require.NoError(t, model.LOG_DB.Create(&model.Log{
+		CreatedAt: now - 30,
+		Type:      model.LogTypeError,
+		ModelName: "gpt-5.4",
+		UseTime:   4,
+	}).Error)
+
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest(http.MethodGet, "/api/perf-metrics/summary?hours=24", nil)
+
+	GetPerfMetricsSummary(ctx)
+
+	require.Equal(t, http.StatusOK, recorder.Code)
+	var response struct {
+		Success bool `json:"success"`
+		Data    struct {
+			Models []struct {
+				ModelName    string  `json:"model_name"`
+				RequestCount int64   `json:"request_count"`
+				AvgLatencyMs int64   `json:"avg_latency_ms"`
+				SuccessRate  float64 `json:"success_rate"`
+				AvgTps       float64 `json:"avg_tps"`
+			} `json:"models"`
+		} `json:"data"`
+	}
+	require.NoError(t, common.Unmarshal(recorder.Body.Bytes(), &response))
+	require.True(t, response.Success)
+	require.Len(t, response.Data.Models, 1)
+	require.Equal(t, "gpt-5.4", response.Data.Models[0].ModelName)
+	require.Equal(t, int64(2), response.Data.Models[0].RequestCount)
+	require.Equal(t, int64(3000), response.Data.Models[0].AvgLatencyMs)
+	require.Equal(t, 50.0, response.Data.Models[0].SuccessRate)
+	require.Equal(t, 16.67, response.Data.Models[0].AvgTps)
 }
 
 func TestGetPerfMetricsRequiresModel(t *testing.T) {
