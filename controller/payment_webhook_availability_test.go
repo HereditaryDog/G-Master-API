@@ -8,7 +8,22 @@ import (
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 )
 
+func withPaymentComplianceForTest(t *testing.T, confirmed bool) {
+	t.Helper()
+	paymentSetting := operation_setting.GetPaymentSetting()
+	originalConfirmed := paymentSetting.ComplianceConfirmed
+	originalTermsVersion := paymentSetting.ComplianceTermsVersion
+	t.Cleanup(func() {
+		paymentSetting.ComplianceConfirmed = originalConfirmed
+		paymentSetting.ComplianceTermsVersion = originalTermsVersion
+	})
+	paymentSetting.ComplianceConfirmed = confirmed
+	paymentSetting.ComplianceTermsVersion = operation_setting.CurrentComplianceTermsVersion
+}
+
 func TestStripeWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
+	withPaymentComplianceForTest(t, true)
+
 	originalAPISecret := setting.StripeApiSecret
 	originalWebhookSecret := setting.StripeWebhookSecret
 	originalPriceID := setting.StripePriceId
@@ -31,6 +46,8 @@ func TestStripeWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
 }
 
 func TestCreemWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
+	withPaymentComplianceForTest(t, true)
+
 	originalAPIKey := setting.CreemApiKey
 	originalProducts := setting.CreemProducts
 	originalWebhookSecret := setting.CreemWebhookSecret
@@ -53,6 +70,8 @@ func TestCreemWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
 }
 
 func TestWaffoWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
+	withPaymentComplianceForTest(t, true)
+
 	originalEnabled := setting.WaffoEnabled
 	originalSandbox := setting.WaffoSandbox
 	originalAPIKey := setting.WaffoApiKey
@@ -97,6 +116,8 @@ func TestWaffoWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
 }
 
 func TestWaffoPancakeWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
+	withPaymentComplianceForTest(t, true)
+
 	originalEnabled := setting.WaffoPancakeEnabled
 	originalSandbox := setting.WaffoPancakeSandbox
 	originalMerchantID := setting.WaffoPancakeMerchantID
@@ -141,6 +162,8 @@ func TestWaffoPancakeWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
 }
 
 func TestEpayWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
+	withPaymentComplianceForTest(t, true)
+
 	originalPayAddress := operation_setting.PayAddress
 	originalEpayID := operation_setting.EpayId
 	originalEpayKey := operation_setting.EpayKey
@@ -162,5 +185,37 @@ func TestEpayWebhookEnabledRequiresTopUpAndWebhookConfig(t *testing.T) {
 	require.True(t, isEpayWebhookEnabled())
 
 	operation_setting.PayMethods = nil
+	require.False(t, isEpayWebhookEnabled())
+}
+
+func TestPaymentWebhookEnabledRequiresComplianceWhenExplicitlyDisabled(t *testing.T) {
+	withPaymentComplianceForTest(t, false)
+
+	originalStripeAPISecret := setting.StripeApiSecret
+	originalStripeWebhookSecret := setting.StripeWebhookSecret
+	originalStripePriceID := setting.StripePriceId
+	originalPayAddress := operation_setting.PayAddress
+	originalEpayID := operation_setting.EpayId
+	originalEpayKey := operation_setting.EpayKey
+	originalPayMethods := operation_setting.PayMethods
+	t.Cleanup(func() {
+		setting.StripeApiSecret = originalStripeAPISecret
+		setting.StripeWebhookSecret = originalStripeWebhookSecret
+		setting.StripePriceId = originalStripePriceID
+		operation_setting.PayAddress = originalPayAddress
+		operation_setting.EpayId = originalEpayID
+		operation_setting.EpayKey = originalEpayKey
+		operation_setting.PayMethods = originalPayMethods
+	})
+
+	setting.StripeApiSecret = "sk_test_123"
+	setting.StripeWebhookSecret = "whsec_test"
+	setting.StripePriceId = "price_123"
+	operation_setting.PayAddress = "https://pay.example.com"
+	operation_setting.EpayId = "epay_id"
+	operation_setting.EpayKey = "epay_key"
+	operation_setting.PayMethods = []map[string]string{{"type": "alipay"}}
+
+	require.False(t, isStripeWebhookEnabled())
 	require.False(t, isEpayWebhookEnabled())
 }

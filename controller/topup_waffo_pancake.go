@@ -111,6 +111,10 @@ func getWaffoPancakeReturnURL() string {
 }
 
 func RequestWaffoPancakePay(c *gin.Context) {
+	if !requirePaymentCompliance(c) {
+		return
+	}
+
 	if !setting.WaffoPancakeEnabled {
 		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "Waffo Pancake 支付未启用"})
 		return
