@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -24,10 +25,13 @@ import (
 	"github.com/yangjunyu/G-Master-API/relay/helper"
 	"github.com/yangjunyu/G-Master-API/service"
 	"github.com/yangjunyu/G-Master-API/setting"
+	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 	"github.com/yangjunyu/G-Master-API/types"
 )
 
 const imageGenerationJobObject = "image.generation.job"
+const httpStatusCloudflareTimeout = 524
+const minAsyncImageGenerationRetryTimes = 1
 
 type imageGenerationJobResponse struct {
 	ID         string             `json:"id"`
@@ -56,6 +60,8 @@ var enqueueAsyncImageGenerationJob = func(job asyncImageJobContext) {
 		runAsyncImageGenerationJob(job)
 	})
 }
+
+var imageGenerationJobRelay = relay.ImageHelper
 
 func RelayImageGenerationAsync(c *gin.Context) {
 	requestId := c.GetString(common.RequestIdKey)
@@ -240,8 +246,7 @@ func runAsyncImageGenerationJob(job asyncImageJobContext) {
 		return
 	}
 
-	ctx, recorder := newAsyncImageGinContext(job)
-	newAPIError := relay.ImageHelper(ctx, job.relayInfo)
+	recorder, newAPIError := runAsyncImageGenerationJobAttempts(job)
 	if newAPIError != nil {
 		failAsyncImageTask(task, newAPIError.ToOpenAIError(), newAPIError.ErrorWithStatusCode())
 		return
@@ -265,6 +270,120 @@ func runAsyncImageGenerationJob(job asyncImageJobContext) {
 	}
 
 	finishAsyncImageTask(task, responseBody)
+}
+
+func runAsyncImageGenerationJobAttempts(job asyncImageJobContext) (*httptest.ResponseRecorder, *types.NewAPIError) {
+	ctx, recorder := newAsyncImageGinContext(job)
+	retryTimes := asyncImageGenerationRetryTimes()
+	retryParam := &service.RetryParam{
+		Ctx:        ctx,
+		TokenGroup: job.relayInfo.TokenGroup,
+		ModelName:  job.relayInfo.OriginModelName,
+		Retry:      common.GetPointer(0),
+	}
+	job.relayInfo.RetryIndex = 0
+	job.relayInfo.LastError = nil
+
+	var newAPIError *types.NewAPIError
+	for ; retryParam.GetRetry() <= retryTimes; retryParam.IncreaseRetry() {
+		job.relayInfo.RetryIndex = retryParam.GetRetry()
+		if retryParam.GetRetry() > 0 {
+			resetAsyncImageRecorder(recorder)
+		}
+
+		channel, channelErr := getChannel(ctx, job.relayInfo, retryParam)
+		if channelErr != nil {
+			return recorder, channelErr
+		}
+		addUsedChannel(ctx, channel.Id)
+		resetAsyncImageRequestBody(ctx, job.requestBody)
+
+		newAPIError = imageGenerationJobRelay(ctx, job.relayInfo)
+		if newAPIError == nil {
+			job.relayInfo.LastError = nil
+			return recorder, nil
+		}
+
+		newAPIError = service.NormalizeViolationFeeError(newAPIError)
+		job.relayInfo.LastError = newAPIError
+		processChannelError(ctx, *types.NewChannelError(
+			channel.Id,
+			channel.Type,
+			channel.Name,
+			channel.ChannelInfo.IsMultiKey,
+			common.GetContextKeyString(ctx, constant.ContextKeyChannelKey),
+			channel.GetAutoBan(),
+		), newAPIError)
+
+		if !shouldRetryAsyncImageGenerationJob(ctx, newAPIError, retryTimes-retryParam.GetRetry()) {
+			break
+		}
+	}
+
+	return recorder, newAPIError
+}
+
+func asyncImageGenerationRetryTimes() int {
+	if common.RetryTimes < minAsyncImageGenerationRetryTimes {
+		return minAsyncImageGenerationRetryTimes
+	}
+	return common.RetryTimes
+}
+
+func resetAsyncImageRequestBody(ctx *gin.Context, requestBody []byte) {
+	common.CleanupBodyStorage(ctx)
+	ctx.Set(common.KeyRequestBody, nil)
+	ctx.Request.Body = io.NopCloser(bytes.NewReader(requestBody))
+	ctx.Request.ContentLength = int64(len(requestBody))
+}
+
+func resetAsyncImageRecorder(recorder *httptest.ResponseRecorder) {
+	recorder.Body.Reset()
+	recorder.Code = http.StatusOK
+	for key := range recorder.Header() {
+		recorder.Header().Del(key)
+	}
+}
+
+func shouldRetryAsyncImageGenerationJob(c *gin.Context, openaiErr *types.NewAPIError, retryTimes int) bool {
+	if openaiErr == nil {
+		return false
+	}
+	if c != nil && service.ShouldSkipRetryAfterChannelAffinityFailure(c) {
+		return false
+	}
+	if retryTimes <= 0 {
+		return false
+	}
+	if c != nil {
+		if _, ok := c.Get("specific_channel_id"); ok {
+			return false
+		}
+	}
+	if types.IsSkipRetryError(openaiErr) {
+		return false
+	}
+	if types.IsChannelError(openaiErr) {
+		return true
+	}
+
+	code := openaiErr.StatusCode
+	if code == http.StatusGatewayTimeout || code == httpStatusCloudflareTimeout {
+		return true
+	}
+	if openaiErr.GetErrorCode() == types.ErrorCodeUpstreamTimeout {
+		return true
+	}
+	if code >= 200 && code < 300 {
+		return false
+	}
+	if code < 100 || code > 599 {
+		return true
+	}
+	if operation_setting.IsAlwaysSkipRetryCode(openaiErr.GetErrorCode()) {
+		return false
+	}
+	return operation_setting.ShouldRetryByStatusCode(code)
 }
 
 func newAsyncImageGinContext(job asyncImageJobContext) (*gin.Context, *httptest.ResponseRecorder) {
@@ -400,6 +519,9 @@ func cloneKeyMap(keys map[string]any) map[string]any {
 	}
 	out := make(map[string]any, len(keys))
 	for key, value := range keys {
+		if key == common.KeyBodyStorage || key == common.KeyRequestBody {
+			continue
+		}
 		out[key] = value
 	}
 	return out

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -221,4 +222,143 @@ func TestInitAsyncImageTaskCapturesBillingSnapshot(t *testing.T) {
 	require.NoError(t, task.GetData(&storedRequest))
 	assert.Equal(t, "gpt-image-2", storedRequest.Model)
 	assert.Equal(t, "draw a clean architecture diagram", storedRequest.Prompt)
+}
+
+func TestCloneGinKeysDropsRequestBodyStorageForAsyncImageJobs(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
+	storage, err := common.CreateBodyStorage([]byte(`{"model":"gpt-image-2","prompt":"original prompt"}`))
+	require.NoError(t, err)
+	ctx.Set(common.KeyBodyStorage, storage)
+	ctx.Set(common.KeyRequestBody, []byte(`{"prompt":"stale cached prompt"}`))
+	ctx.Set("channel_id", 12)
+
+	keys := cloneGinKeys(ctx)
+
+	_, hasBodyStorage := keys[common.KeyBodyStorage]
+	_, hasRequestBody := keys[common.KeyRequestBody]
+	assert.False(t, hasBodyStorage)
+	assert.False(t, hasRequestBody)
+	assert.Equal(t, 12, keys["channel_id"])
+}
+
+func TestRunAsyncImageGenerationJobRetriesTimeoutAndPreservesPrompt(t *testing.T) {
+	setupImageGenerationJobTestDB(t)
+	gin.SetMode(gin.TestMode)
+
+	originalRetryTimes := common.RetryTimes
+	common.RetryTimes = 0
+	t.Cleanup(func() {
+		common.RetryTimes = originalRetryTimes
+	})
+
+	task := &model.Task{
+		TaskID:     "task_image_retry",
+		Platform:   constant.TaskPlatformOpenAIImage,
+		UserId:     7,
+		ChannelId:  12,
+		Status:     model.TaskStatusQueued,
+		Progress:   "0%",
+		SubmitTime: time.Now().Unix(),
+		Properties: model.Properties{
+			OriginModelName: "gpt-image-2",
+		},
+	}
+	require.NoError(t, model.DB.Create(task).Error)
+
+	originalRelay := imageGenerationJobRelay
+	t.Cleanup(func() {
+		imageGenerationJobRelay = originalRelay
+	})
+
+	const prompt = "A complex, multi-scene architectural image prompt with exact lighting notes; do not rewrite this."
+	attempts := 0
+	var prompts []string
+	imageGenerationJobRelay = func(ctx *gin.Context, info *relaycommon.RelayInfo) *types.NewAPIError {
+		attempts++
+
+		storage, err := common.GetBodyStorage(ctx)
+		require.NoError(t, err)
+		requestBytes, err := storage.Bytes()
+		require.NoError(t, err)
+
+		var imageRequest dto.ImageRequest
+		require.NoError(t, common.Unmarshal(requestBytes, &imageRequest))
+		prompts = append(prompts, imageRequest.Prompt)
+
+		if attempts == 1 {
+			ctx.JSON(http.StatusGatewayTimeout, gin.H{"error": gin.H{"message": "stale timeout response"}})
+			return types.WithOpenAIError(types.OpenAIError{
+				Message:        "gpt-image-2 image generation timed out upstream",
+				Type:           string(types.ErrorTypeImageTimeout),
+				Code:           types.ErrorCodeUpstreamTimeout,
+				UpstreamStatus: 524,
+			}, 524)
+		}
+
+		ctx.JSON(http.StatusOK, dto.ImageResponse{
+			Created: time.Now().Unix(),
+			Data: []dto.ImageData{
+				{Url: "https://example.com/generated-after-retry.png"},
+			},
+		})
+		return nil
+	}
+
+	requestBody, err := common.Marshal(dto.ImageRequest{
+		Model:  "gpt-image-2",
+		Prompt: prompt,
+		Size:   "1024x1536",
+	})
+	require.NoError(t, err)
+
+	runAsyncImageGenerationJob(asyncImageJobContext{
+		taskID: task.TaskID,
+		relayInfo: &relaycommon.RelayInfo{
+			UserId:          7,
+			TokenGroup:      "default",
+			UsingGroup:      "default",
+			OriginModelName: "gpt-image-2",
+			PriceData: types.PriceData{
+				OtherRatios: map[string]float64{},
+			},
+		},
+		requestBody: requestBody,
+		headers: http.Header{
+			"Content-Type": []string{"application/json"},
+		},
+		keys: map[string]any{
+			string(constant.ContextKeyUserId):               7,
+			string(constant.ContextKeyTokenGroup):           "default",
+			string(constant.ContextKeyUsingGroup):           "default",
+			string(constant.ContextKeyOriginalModel):        "gpt-image-2",
+			string(constant.ContextKeyChannelId):            12,
+			string(constant.ContextKeyChannelName):          "image-primary",
+			string(constant.ContextKeyChannelType):          constant.ChannelTypeOpenAI,
+			string(constant.ContextKeyChannelAutoBan):       false,
+			string(constant.ContextKeyChannelBaseUrl):       "https://api.openai.example",
+			string(constant.ContextKeyChannelKey):           "sk-test",
+			string(constant.ContextKeyChannelCreateTime):    int64(1),
+			string(constant.ContextKeyChannelIsMultiKey):    false,
+			string(constant.ContextKeyChannelMultiKeyIndex): 0,
+		},
+	})
+
+	reloaded, exists, err := model.GetByOnlyTaskId(task.TaskID)
+	require.NoError(t, err)
+	require.True(t, exists)
+	assert.EqualValues(t, model.TaskStatusSuccess, reloaded.Status)
+	assert.Equal(t, 2, attempts)
+	assert.Equal(t, []string{prompt, prompt}, prompts)
+
+	var response dto.ImageResponse
+	require.NoError(t, reloaded.GetData(&response))
+	require.Len(t, response.Data, 1)
+	assert.Equal(t, "https://example.com/generated-after-retry.png", response.Data[0].Url)
+	assert.Empty(t, reloaded.FailReason)
+}
+
+func TestAsyncImageGenerationRetrySkipsNonGatewayFailures(t *testing.T) {
+	assert.False(t, shouldRetryAsyncImageGenerationJob(nil, types.NewOpenAIError(errors.New("bad request"), types.ErrorCodeBadResponseStatusCode, http.StatusBadRequest), 1))
 }
