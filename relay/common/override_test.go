@@ -9,9 +9,9 @@ import (
 	common2 "github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/types"
 
+	"github.com/samber/lo"
 	"github.com/yangjunyu/G-Master-API/dto"
 	"github.com/yangjunyu/G-Master-API/setting/model_setting"
-	"github.com/samber/lo"
 )
 
 func TestApplyParamOverrideTrimPrefix(t *testing.T) {
@@ -2166,6 +2166,12 @@ func TestApplyParamOverrideWithRelayInfoRecordsOnlyKeyOperationsWhenDebugDisable
 			},
 		},
 	}
+	if !shouldAuditParamPath("input.0.content") {
+		t.Fatalf("expected input path to require audit")
+	}
+	if !shouldEnableParamOverrideAudit(info.ChannelMeta.ParamOverride) {
+		t.Fatalf("expected source path to enable param override audit")
+	}
 
 	_, err := ApplyParamOverrideWithRelayInfo([]byte(`{
 		"model":"gpt-4.1",
@@ -2181,6 +2187,78 @@ func TestApplyParamOverrideWithRelayInfoRecordsOnlyKeyOperationsWhenDebugDisable
 	}
 	if !reflect.DeepEqual(info.ParamOverrideAudit, expected) {
 		t.Fatalf("unexpected param override audit, got %#v", info.ParamOverrideAudit)
+	}
+}
+
+func TestApplyParamOverrideWithRelayInfoAuditsSensitiveBodyPathsWhenDebugDisabled(t *testing.T) {
+	originalDebugEnabled := common2.DebugEnabled
+	common2.DebugEnabled = false
+	t.Cleanup(func() {
+		common2.DebugEnabled = originalDebugEnabled
+	})
+
+	info := &RelayInfo{
+		ChannelMeta: &ChannelMeta{
+			ParamOverride: map[string]interface{}{
+				"operations": []interface{}{
+					map[string]interface{}{
+						"mode":  "set",
+						"path":  "messages.0.content",
+						"value": "redacted",
+					},
+					map[string]interface{}{
+						"mode":  "set",
+						"path":  "temperature",
+						"value": 0.1,
+					},
+				},
+			},
+		},
+	}
+
+	_, err := ApplyParamOverrideWithRelayInfo([]byte(`{
+		"messages":[{"role":"user","content":"hello"}],
+		"temperature":0.7
+	}`), info)
+	if err != nil {
+		t.Fatalf("ApplyParamOverrideWithRelayInfo returned error: %v", err)
+	}
+
+	expected := []string{
+		"set messages.0.content = redacted",
+	}
+	if !reflect.DeepEqual(info.ParamOverrideAudit, expected) {
+		t.Fatalf("unexpected param override audit, got %#v", info.ParamOverrideAudit)
+	}
+}
+
+func TestParamOverrideAuditSensitiveSourcePathEnablesRecorder(t *testing.T) {
+	originalDebugEnabled := common2.DebugEnabled
+	common2.DebugEnabled = false
+	t.Cleanup(func() {
+		common2.DebugEnabled = originalDebugEnabled
+	})
+
+	paramOverride := map[string]interface{}{
+		"operations": []interface{}{
+			map[string]interface{}{
+				"mode": "copy",
+				"from": "input.0.content",
+				"to":   "metadata.copied_input",
+			},
+		},
+	}
+
+	if !shouldAuditParamPath("input.0.content") {
+		t.Fatalf("expected input path to require audit")
+	}
+	if !shouldEnableParamOverrideAudit(paramOverride) {
+		t.Fatalf("expected source path to enable param override audit")
+	}
+
+	line := buildParamOverrideAuditLine("copy", "", "input.0.content", "metadata.copied_input", nil)
+	if line != "copy input.0.content -> metadata.copied_input" {
+		t.Fatalf("unexpected audit line: %s", line)
 	}
 }
 
