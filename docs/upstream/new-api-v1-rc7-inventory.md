@@ -4,6 +4,7 @@
 
 - Current G-Master source baseline: `v1.0.0-rc.5-GM.2`.
 - Current G-Master HEAD at inventory time: `9946dc62b`.
+- Implemented G-Master sync version: `v1.0.0-rc.7-GM.1`.
 - Latest verified upstream release: `QuantumNous/new-api v1.0.0-rc.7`.
 - Upstream `main` is ahead of `v1.0.0-rc.7` by 10 commits; those commits are evaluated as unreleased and are not automatically merged.
 - Recommended sync branch: `GMaster/upstream-rc7-catchup`.
@@ -28,7 +29,7 @@ Already present locally:
 - `model/model_meta.go`
 - `web/src/pages/Setting/Payment/SettingsPaymentGatewayWaffoPancake.jsx`
 
-Still missing locally and worth inspecting:
+Originally missing locally and implemented in this sync:
 
 - `middleware/header_nav.go`
 - `middleware/header_nav_test.go`
@@ -36,6 +37,14 @@ Still missing locally and worth inspecting:
 - `controller/subscription_payment_waffo_pancake.go`
 - `controller/model_owned_by_test.go`
 - `model/model_owner_test.go`
+
+Also reconciled in this sync:
+
+- Waffo Pancake充值/订阅路由和 webhook 共用基础配置。
+- 性能指标按有效分组过滤，并保留使用日志兜底。
+- 参数覆写审计覆盖敏感来源路径。
+- 渠道亲和补充 `request_header` Key 来源和前端编辑入口。
+- 渠道列表分组过滤、使用日志 contains 筛选、注册开关状态、用户删除错误返回和 Debug 日志按需格式化已补齐。
 
 ## Required Lanes
 
@@ -46,9 +55,26 @@ Still missing locally and worth inspecting:
 | Model ownership/channel metadata | Port `owned_by` behavior and tests while preserving current model list/API contracts. |
 | Usage logs/request tracing | Port only missing request tracing/filter/detail refinements; keep existing `upstream_request_id`. |
 | Relay request/stream compatibility | Port low-risk fixes with relay tests, preserving explicit zero-value DTO semantics. |
-| Channel affinity | Reconcile against existing G-Master implementation; avoid duplicate logic. |
+| Channel affinity | Reconcile against existing G-Master implementation; add request-header key source without duplicating cache logic. |
 | Waffo Pancake/subscription payments | Reconcile carefully because G-Master already has Waffo Pancake code. Test before behavior changes. |
 | Performance metrics | Preserve G-Master default-on and usage-log fallback fixes from `9946dc62b`. |
+
+## Implementation Status
+
+| Lane | Status |
+| --- | --- |
+| Header navigation/status payload | Done |
+| Payment compliance/webhook availability | Done |
+| Model ownership/channel metadata | Done |
+| Usage logs/request tracing | Done; request ID already present, contains filters reconciled |
+| Relay request/stream compatibility | Done for sensitive override audit and request ID capture paths |
+| Channel affinity | Done; added `request_header` key source and visual editor support |
+| Waffo Pancake/subscription payments | Done |
+| Performance metrics | Done |
+| Channel list filters | Done; no-keyword group filter now applies to list, tag mode and type counts |
+| Auth registration status | Done; `/api/status` exposes register flags and login page gates sign-up link |
+| User management fixes | Done; delete errors return errors, add-user password validation added |
+| Debug log performance | Done; heavy debug strings are formatted only when Debug is enabled |
 
 ## Deferred By Default
 
@@ -75,4 +101,3 @@ Still missing locally and worth inspecting:
 - `mise x bun@1.3.12 -- bun run build` in `web/`
 - `git diff --check`
 - Local browser smoke for `/`, `/gaster-code`, `/console`, `/console/log`, `/console/topup`, `/console/subscription`, `/console/channel`, and `/console/models`.
-

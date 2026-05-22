@@ -3,7 +3,7 @@ package operation_setting
 import "github.com/yangjunyu/G-Master-API/setting/config"
 
 type ChannelAffinityKeySource struct {
-	Type string `json:"type"` // context_int, context_string, gjson
+	Type string `json:"type"` // context_int, context_string, gjson, request_header
 	Key  string `json:"key,omitempty"`
 	Path string `json:"path,omitempty"`
 }

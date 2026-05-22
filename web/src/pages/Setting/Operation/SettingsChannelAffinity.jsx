@@ -70,6 +70,7 @@ const KEY_SOURCE_TYPES = [
   { label: 'context_int', value: 'context_int' },
   { label: 'context_string', value: 'context_string' },
   { label: 'gjson', value: 'gjson' },
+  { label: 'request_header', value: 'request_header' },
 ];
 
 const CONTEXT_KEY_PRESETS = [
@@ -91,6 +92,7 @@ const RULES_JSON_PLACEHOLDER = `[
     "path_regex": ["/v1/chat/completions"],
     "user_agent_include": ["curl", "PostmanRuntime"],
     "key_sources": [
+      { "type": "request_header", "key": "X-Gmaster-Trace-Id" },
       { "type": "gjson", "path": "metadata.conversation_id" },
       { "type": "context_string", "key": "conversation_id" }
     ],
@@ -659,7 +661,11 @@ export default function SettingsChannelAffinity(props) {
     const xs = (keySources || []).map(normalizeKeySource).filter((x) => x.type);
     if (xs.length === 0) return { ok: false, message: 'Key 来源不能为空' };
     for (const x of xs) {
-      if (x.type === 'context_int' || x.type === 'context_string') {
+      if (
+        x.type === 'context_int' ||
+        x.type === 'context_string' ||
+        x.type === 'request_header'
+      ) {
         if (!x.key) return { ok: false, message: 'Key 不能为空' };
       } else if (x.type === 'gjson') {
         if (!x.path) return { ok: false, message: 'Path 不能为空' };
@@ -906,7 +912,7 @@ export default function SettingsChannelAffinity(props) {
       fullMode={false}
       type='info'
       description={t(
-        '渠道亲和性会基于从请求上下文或 JSON Body 提取的 Key，优先复用上一次成功的渠道。',
+        '渠道亲和性会基于从请求上下文、请求头或 JSON Body 提取的 Key，优先复用上一次成功的渠道。',
       )}
     />
   );
@@ -1316,7 +1322,7 @@ export default function SettingsChannelAffinity(props) {
           </Space>
           <Text type='tertiary' size='small'>
             {t(
-              'context_int/context_string 从请求上下文读取；gjson 从入口请求的 JSON body 按 gjson path 读取。',
+              'context_int/context_string 从请求上下文读取；request_header 从入口请求头读取；gjson 从入口请求的 JSON body 按 gjson path 读取。',
             )}
           </Text>
           <div style={{ marginTop: 8, marginBottom: 8 }}>
@@ -1355,10 +1361,15 @@ export default function SettingsChannelAffinity(props) {
                     editingRule?.key_sources?.[idx],
                   );
                   const isGjson = src.type === 'gjson';
+                  const isRequestHeader = src.type === 'request_header';
                   return (
                     <Input
                       placeholder={
-                        isGjson ? 'metadata.conversation_id' : 'user_id'
+                        isGjson
+                          ? 'metadata.conversation_id'
+                          : isRequestHeader
+                            ? 'X-Gmaster-Trace-Id'
+                            : 'user_id'
                       }
                       aria-label={t('Key 或 Path')}
                       value={isGjson ? src.path : src.key}

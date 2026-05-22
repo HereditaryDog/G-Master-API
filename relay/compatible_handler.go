@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/samber/lo"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/constant"
 	"github.com/yangjunyu/G-Master-API/dto"
@@ -18,7 +19,6 @@ import (
 	"github.com/yangjunyu/G-Master-API/setting/model_setting"
 	"github.com/yangjunyu/G-Master-API/setting/ratio_setting"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/samber/lo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -174,7 +174,7 @@ func TextHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *types
 			}
 		}
 
-		logger.LogDebug(c, fmt.Sprintf("text request body: %s", string(jsonData)))
+		logger.LogDebug(c, "text request body: %s", jsonData)
 
 		requestBody = bytes.NewBuffer(jsonData)
 	}

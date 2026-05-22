@@ -112,3 +112,32 @@ func TestGetUserLogsFiltersByUpstreamRequestID(t *testing.T) {
 	require.Equal(t, "local-user-1", logs[0].RequestId)
 	require.Equal(t, "upstream-user-keep", logs[0].UpstreamRequestId)
 }
+
+func TestGetAllLogsUsesEscapedContainsFilters(t *testing.T) {
+	setupLogUpstreamRequestIDTestDB(t)
+	require.NoError(t, LOG_DB.Create(&Log{
+		UserId:    1,
+		Username:  "alice-main",
+		CreatedAt: 100,
+		Type:      LogTypeConsume,
+		ModelName: "gpt-4_pro",
+		TokenName: "desktop-token",
+		RequestId: "keep",
+	}).Error)
+	require.NoError(t, LOG_DB.Create(&Log{
+		UserId:    2,
+		Username:  "alice-main",
+		CreatedAt: 101,
+		Type:      LogTypeConsume,
+		ModelName: "gpt-4apro",
+		TokenName: "desktop-token",
+		RequestId: "drop",
+	}).Error)
+
+	logs, total, err := GetAllLogs(LogTypeUnknown, 0, 0, "4_", "alice", "desktop", 0, 10, 0, "", "", "")
+
+	require.NoError(t, err)
+	require.Equal(t, int64(1), total)
+	require.Len(t, logs, 1)
+	require.Equal(t, "keep", logs[0].RequestId)
+}

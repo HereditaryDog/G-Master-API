@@ -53,6 +53,12 @@ const AddUserModal = (props) => {
 
   const submit = async (values) => {
     setLoading(true);
+    const passwordLength = values.password?.length || 0;
+    if (passwordLength < 8 || passwordLength > 20) {
+      showError(t('密码长度必须在 8 到 20 位之间'));
+      setLoading(false);
+      return;
+    }
     const res = await API.post(`/api/user/`, values);
     const { success, message } = res.data;
     if (success) {
@@ -161,7 +167,18 @@ const AddUserModal = (props) => {
                       label={t('密码')}
                       type='password'
                       placeholder={t('请输入密码')}
-                      rules={[{ required: true, message: t('请输入密码') }]}
+                      rules={[
+                        { required: true, message: t('请输入密码') },
+                        {
+                          validator: (_, value) => {
+                            const len = value?.length || 0;
+                            if (len >= 8 && len <= 20) return Promise.resolve();
+                            return Promise.reject(
+                              t('密码长度必须在 8 到 20 位之间'),
+                            );
+                          },
+                        },
+                      ]}
                       showClear
                     />
                   </Col>

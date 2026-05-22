@@ -9,14 +9,14 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/samber/hot"
+	"github.com/tidwall/gjson"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/dto"
 	"github.com/yangjunyu/G-Master-API/pkg/cachex"
 	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 	"github.com/yangjunyu/G-Master-API/types"
-	"github.com/gin-gonic/gin"
-	"github.com/samber/hot"
-	"github.com/tidwall/gjson"
 )
 
 const (
@@ -287,7 +287,7 @@ func matchAnyIncludeFold(patterns []string, s string) bool {
 }
 
 func extractChannelAffinityValue(c *gin.Context, src operation_setting.ChannelAffinityKeySource) string {
-	switch src.Type {
+	switch strings.TrimSpace(src.Type) {
 	case "context_int":
 		if src.Key == "" {
 			return ""
@@ -302,6 +302,15 @@ func extractChannelAffinityValue(c *gin.Context, src operation_setting.ChannelAf
 			return ""
 		}
 		return strings.TrimSpace(c.GetString(src.Key))
+	case "request_header":
+		headerName := strings.TrimSpace(src.Key)
+		if headerName == "" {
+			headerName = strings.TrimSpace(src.Path)
+		}
+		if headerName == "" || c == nil || c.Request == nil {
+			return ""
+		}
+		return strings.TrimSpace(c.GetHeader(headerName))
 	case "gjson":
 		if src.Path == "" {
 			return ""

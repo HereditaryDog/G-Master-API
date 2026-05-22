@@ -54,6 +54,36 @@ func TestSearchChannelsAppliesExplicitSort(t *testing.T) {
 	require.Equal(t, []string{"gamma", "alpha"}, channelNames(channels))
 }
 
+func TestApplyChannelGroupFilterMatchesDelimitedGroups(t *testing.T) {
+	setupChannelSortTestDB(t)
+	seedChannelSortRows(t)
+
+	var channels []*Channel
+	err := NewChannelSortOptions("name", "asc", false).
+		Apply(ApplyChannelGroupFilter(DB.Model(&Channel{}).Omit("key"), "vip")).
+		Find(&channels).Error
+
+	require.NoError(t, err)
+	require.Equal(t, []string{"alpha", "gamma"}, channelNames(channels))
+}
+
+func TestChannelTagQueriesRespectGroupFilter(t *testing.T) {
+	setupChannelSortTestDB(t)
+	seedChannelSortRows(t)
+	tag := "shared"
+	require.NoError(t, DB.Model(&Channel{}).Where("name IN ?", []string{"alpha", "beta"}).Update("tag", tag).Error)
+	otherTag := "vip-only"
+	require.NoError(t, DB.Model(&Channel{}).Where("name = ?", "gamma").Update("tag", otherTag).Error)
+
+	tags, err := GetPaginatedChannelTags(ApplyChannelGroupFilter(DB.Model(&Channel{}), "vip"), 0, 10)
+	require.NoError(t, err)
+	require.ElementsMatch(t, []*string{&tag, &otherTag}, tags)
+
+	total, err := CountChannelTags(ApplyChannelGroupFilter(DB.Model(&Channel{}), "vip"))
+	require.NoError(t, err)
+	require.Equal(t, int64(2), total)
+}
+
 func seedChannelSortRows(t *testing.T) {
 	t.Helper()
 

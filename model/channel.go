@@ -128,6 +128,41 @@ func resolveChannelSortOptions(idSort bool, sortOptions []ChannelSortOptions) Ch
 	return options
 }
 
+func NormalizeChannelGroupFilter(group string) string {
+	group = strings.TrimSpace(group)
+	if group == "" || strings.EqualFold(group, "all") || strings.EqualFold(group, "null") {
+		return ""
+	}
+	return group
+}
+
+func channelGroupFilterCondition() string {
+	if commonGroupCol == "" {
+		initCol()
+	}
+	if common.UsingMySQL {
+		return `CONCAT(',', ` + commonGroupCol + `, ',') LIKE ? ESCAPE '!'`
+	}
+	return `(',' || ` + commonGroupCol + ` || ',') LIKE ? ESCAPE '!'`
+}
+
+func channelGroupFilterPattern(group string) string {
+	group = strings.NewReplacer(
+		"!", "!!",
+		"%", "!%",
+		"_", "!_",
+	).Replace(group)
+	return "%," + group + ",%"
+}
+
+func ApplyChannelGroupFilter(query *gorm.DB, group string) *gorm.DB {
+	group = NormalizeChannelGroupFilter(group)
+	if group == "" || query == nil {
+		return query
+	}
+	return query.Where(channelGroupFilterCondition(), channelGroupFilterPattern(group))
+}
+
 // Value implements driver.Valuer interface
 func (c ChannelInfo) Value() (driver.Value, error) {
 	return common.Marshal(&c)
@@ -847,6 +882,20 @@ func GetPaginatedTags(offset int, limit int) ([]*string, error) {
 	return tags, err
 }
 
+func GetPaginatedChannelTags(query *gorm.DB, offset int, limit int) ([]*string, error) {
+	var tags []*string
+	if query == nil {
+		query = DB.Model(&Channel{})
+	}
+	err := query.
+		Select("DISTINCT tag").
+		Where("tag is not null AND tag != ''").
+		Offset(offset).
+		Limit(limit).
+		Find(&tags).Error
+	return tags, err
+}
+
 func SearchTags(keyword string, group string, model string, idSort bool) ([]*string, error) {
 	var tags []*string
 	modelsCol := "`models`"
@@ -1031,6 +1080,15 @@ func CountAllChannels() (int64, error) {
 func CountAllTags() (int64, error) {
 	var total int64
 	err := DB.Model(&Channel{}).Where("tag is not null AND tag != ''").Distinct("tag").Count(&total).Error
+	return total, err
+}
+
+func CountChannelTags(query *gorm.DB) (int64, error) {
+	var total int64
+	if query == nil {
+		query = DB.Model(&Channel{})
+	}
+	err := query.Where("tag is not null AND tag != ''").Distinct("tag").Count(&total).Error
 	return total, err
 }
 

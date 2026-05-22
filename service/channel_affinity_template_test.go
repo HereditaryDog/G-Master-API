@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
-	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
+	relaycommon "github.com/yangjunyu/G-Master-API/relay/common"
+	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 )
 
 func buildChannelAffinityTemplateContextForTest(meta channelAffinityMeta) *gin.Context {
@@ -244,4 +244,55 @@ func TestChannelAffinityHitCodexTemplatePassHeadersEffective(t *testing.T) {
 	require.False(t, exists)
 	_, exists = info.RuntimeHeadersOverride["x-codex-turn-metadata"]
 	require.False(t, exists)
+}
+
+func TestChannelAffinityHitRequestHeaderSource(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	setting := operation_setting.GetChannelAffinitySetting()
+	require.NotNil(t, setting)
+
+	originalRules := setting.Rules
+	defer func() {
+		setting.Rules = originalRules
+	}()
+
+	rule := operation_setting.ChannelAffinityRule{
+		Name:       "header trace",
+		ModelRegex: []string{"^gpt-.*$"},
+		PathRegex:  []string{"/v1/responses"},
+		KeySources: []operation_setting.ChannelAffinityKeySource{
+			{Type: "request_header", Key: "X-Gmaster-Trace-Id"},
+		},
+		TTLSeconds:        3600,
+		IncludeUsingGroup: true,
+		IncludeModelName:  true,
+		IncludeRuleName:   true,
+	}
+	setting.Rules = []operation_setting.ChannelAffinityRule{rule}
+
+	affinityValue := fmt.Sprintf("header-hit-%d", time.Now().UnixNano())
+	cacheKeySuffix := buildChannelAffinityCacheKeySuffix(rule, "gpt-5", "vip", affinityValue)
+
+	cache := getChannelAffinityCache()
+	require.NoError(t, cache.SetWithTTL(cacheKeySuffix, 9528, time.Minute))
+	t.Cleanup(func() {
+		_, _ = cache.DeleteMany([]string{cacheKeySuffix})
+	})
+
+	rec := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(rec)
+	ctx.Request = httptest.NewRequest(http.MethodPost, "/v1/responses", strings.NewReader(`{"input":"hello"}`))
+	ctx.Request.Header.Set("X-Gmaster-Trace-Id", affinityValue)
+
+	channelID, found := GetPreferredChannelByAffinity(ctx, "gpt-5", "vip")
+	require.True(t, found)
+	require.Equal(t, 9528, channelID)
+
+	meta, ok := getChannelAffinityMeta(ctx)
+	require.True(t, ok)
+	require.Equal(t, "request_header", meta.KeySourceType)
+	require.Equal(t, "X-Gmaster-Trace-Id", meta.KeySourceKey)
+	require.Equal(t, "gpt-5", meta.ModelName)
+	require.Equal(t, "vip", meta.UsingGroup)
 }
