@@ -22,10 +22,10 @@
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前源码稳定基线：[`v1.0.0-rc.7-GM.1`](./VERSION)
+当前源码稳定基线：[`v1.0.0-rc.7-GM.2`](./VERSION)
 
 > [!NOTE]
-> `v1.0.0-rc.7-GM.1` 是 G-Master API 的 v1 RC 同步版本，补齐支付合规、模型归属、性能健康、日志追踪、Waffo Pancake 订阅、钱包订阅摘要、渠道亲和请求头来源、渠道列表筛选和渠道编辑器能力，并继续保留当前生产前端、Gaster Code 页面和桌面端网页登录授权链路。
+> `v1.0.0-rc.7-GM.2` 是 G-Master API 的 v1 RC 同步热修版本，保留 `GM.1` 的支付合规、模型归属、性能健康、日志追踪、Waffo Pancake 订阅、钱包订阅摘要、渠道亲和请求头来源、渠道列表筛选和渠道编辑器能力，并修复 Gaster Code 绘图异步任务在上游网关 504/524 超时时的队列重试、请求体复用和任务初始化 panic 问题。
 
 ## G-Master API 主要能力
 
@@ -114,7 +114,7 @@ docker compose up -d --build
 - 当前公开稳定安装包覆盖 macOS Apple Silicon、macOS Intel、Linux x64。
 - 页面说明本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、桌面端会话、绘图与 IM 远程入口等能力。
 - 公开下载仓库只分发安装包、签名文件和 updater 元数据，不暴露 Gaster Code 私有主仓库。
-- 绘图页可使用 `POST /v1/images/generations/async` 创建图片任务，再轮询 `/v1/images/jobs/{task_id}`，避免长连接等待导致 524。
+- 绘图页可使用 `POST /v1/images/generations/async` 创建图片任务，再轮询 `/v1/images/jobs/{task_id}`，避免长连接等待导致 524；异步队列会对上游 504/524 超时执行受控重试，并保留客户端传入的原始提示词。
 
 ### 存储与部署兼容
 

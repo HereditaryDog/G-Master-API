@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -69,6 +70,27 @@ func RelayImageGenerationAsync(c *gin.Context) {
 	var relayInfo *relaycommon.RelayInfo
 
 	defer func() {
+		if recovered := recover(); recovered != nil {
+			logger.LogError(c, fmt.Sprintf("async image generation panic: %v\n%s", recovered, string(debug.Stack())))
+			if relayInfo != nil && relayInfo.Billing != nil {
+				relayInfo.Billing.Refund(c)
+			}
+			if !c.Writer.Written() {
+				message := common.MessageWithRequestId(
+					"Async image generation gateway failed before the job could be queued. The original prompt was not rewritten; retry after the gateway is healthy.",
+					requestId,
+				)
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": types.OpenAIError{
+						Message:   message,
+						Type:      "server_error",
+						Code:      "async_image_generation_panic",
+						RequestID: requestId,
+					},
+				})
+			}
+			return
+		}
 		if newAPIError == nil {
 			return
 		}

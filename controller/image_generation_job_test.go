@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"bytes"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -32,7 +33,7 @@ func setupImageGenerationJobTestDB(t *testing.T) {
 	common.UsingPostgreSQL = false
 	common.RedisEnabled = false
 
-	require.NoError(t, db.AutoMigrate(&model.Task{}))
+	require.NoError(t, db.AutoMigrate(&model.Task{}, &model.User{}, &model.Token{}, &model.UserSubscription{}))
 	t.Cleanup(func() {
 		sqlDB, err := db.DB()
 		if err == nil {
@@ -359,6 +360,125 @@ func TestRunAsyncImageGenerationJobRetriesTimeoutAndPreservesPrompt(t *testing.T
 	assert.Empty(t, reloaded.FailReason)
 }
 
+func TestRelayImageGenerationAsyncQueuesExactPrompt(t *testing.T) {
+	setupImageGenerationJobTestDB(t)
+	gin.SetMode(gin.TestMode)
+
+	originalEnqueue := enqueueAsyncImageGenerationJob
+	t.Cleanup(func() {
+		enqueueAsyncImageGenerationJob = originalEnqueue
+	})
+
+	var enqueued asyncImageJobContext
+	enqueueAsyncImageGenerationJob = func(job asyncImageJobContext) {
+		enqueued = job
+	}
+
+	const prompt = "  Complex cinematic prompt with exact spacing, punctuation; do not rewrite.  "
+	ctx, recorder := newAsyncImageGenerationRequestContext(t, prompt)
+
+	RelayImageGenerationAsync(ctx)
+
+	require.Equal(t, http.StatusAccepted, recorder.Code)
+	require.NotEmpty(t, enqueued.taskID)
+
+	var request dto.ImageRequest
+	require.NoError(t, common.Unmarshal(enqueued.requestBody, &request))
+	assert.Equal(t, prompt, request.Prompt)
+	assert.Equal(t, "gpt-image-2", request.Model)
+
+	_, hasBodyStorage := enqueued.keys[common.KeyBodyStorage]
+	_, hasRequestBody := enqueued.keys[common.KeyRequestBody]
+	assert.False(t, hasBodyStorage)
+	assert.False(t, hasRequestBody)
+
+	task, exists, err := model.GetByOnlyTaskId(enqueued.taskID)
+	require.NoError(t, err)
+	require.True(t, exists)
+	assert.EqualValues(t, model.TaskStatusQueued, task.Status)
+	assert.Equal(t, prompt, task.Properties.Input)
+}
+
+func TestRelayImageGenerationAsyncRecoversQueuePanic(t *testing.T) {
+	setupImageGenerationJobTestDB(t)
+	gin.SetMode(gin.TestMode)
+
+	originalEnqueue := enqueueAsyncImageGenerationJob
+	t.Cleanup(func() {
+		enqueueAsyncImageGenerationJob = originalEnqueue
+	})
+
+	enqueueAsyncImageGenerationJob = func(job asyncImageJobContext) {
+		panic("simulated async queue panic")
+	}
+
+	ctx, recorder := newAsyncImageGenerationRequestContext(t, "prompt that should never be rewritten")
+
+	require.NotPanics(t, func() {
+		RelayImageGenerationAsync(ctx)
+	})
+	require.Equal(t, http.StatusInternalServerError, recorder.Code)
+
+	var body map[string]any
+	require.NoError(t, common.Unmarshal(recorder.Body.Bytes(), &body))
+	errorBody, ok := body["error"].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "async_image_generation_panic", errorBody["code"])
+	assert.Contains(t, errorBody["message"], "original prompt was not rewritten")
+}
+
 func TestAsyncImageGenerationRetrySkipsNonGatewayFailures(t *testing.T) {
 	assert.False(t, shouldRetryAsyncImageGenerationJob(nil, types.NewOpenAIError(errors.New("bad request"), types.ErrorCodeBadResponseStatusCode, http.StatusBadRequest), 1))
+}
+
+func newAsyncImageGenerationRequestContext(t *testing.T, prompt string) (*gin.Context, *httptest.ResponseRecorder) {
+	t.Helper()
+
+	require.NoError(t, model.DB.Create(&model.User{
+		Id:       7,
+		Username: "async-image-user",
+		Password: "password123",
+		Quota:    1_000_000_000,
+		Group:    "default",
+	}).Error)
+	require.NoError(t, model.DB.Create(&model.Token{
+		Id:          34,
+		UserId:      7,
+		Key:         "sk-test",
+		Status:      common.TokenStatusEnabled,
+		RemainQuota: 1_000_000_000,
+		Group:       "default",
+	}).Error)
+
+	requestBody, err := common.Marshal(dto.ImageRequest{
+		Model:  "gpt-image-2",
+		Prompt: prompt,
+		Size:   "1024x1024",
+	})
+	require.NoError(t, err)
+
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest(http.MethodPost, "/pg/v1/images/generations/async", bytes.NewReader(requestBody))
+	ctx.Request.Header.Set("Content-Type", "application/json")
+	ctx.Set(common.RequestIdKey, "req_async_image_test")
+	common.SetContextKey(ctx, constant.ContextKeyRequestStartTime, time.Now())
+	common.SetContextKey(ctx, constant.ContextKeyUserId, 7)
+	common.SetContextKey(ctx, constant.ContextKeyUserGroup, "default")
+	common.SetContextKey(ctx, constant.ContextKeyUsingGroup, "default")
+	common.SetContextKey(ctx, constant.ContextKeyTokenGroup, "default")
+	common.SetContextKey(ctx, constant.ContextKeyTokenId, 34)
+	common.SetContextKey(ctx, constant.ContextKeyTokenKey, "sk-test")
+	common.SetContextKey(ctx, constant.ContextKeyOriginalModel, "gpt-image-2")
+	common.SetContextKey(ctx, constant.ContextKeyUserSetting, dto.UserSetting{AcceptUnsetRatioModel: true})
+	common.SetContextKey(ctx, constant.ContextKeyChannelId, 12)
+	common.SetContextKey(ctx, constant.ContextKeyChannelName, "image-primary")
+	common.SetContextKey(ctx, constant.ContextKeyChannelType, constant.ChannelTypeOpenAI)
+	common.SetContextKey(ctx, constant.ContextKeyChannelAutoBan, false)
+	common.SetContextKey(ctx, constant.ContextKeyChannelBaseUrl, "https://api.openai.example")
+	common.SetContextKey(ctx, constant.ContextKeyChannelKey, "sk-test")
+	common.SetContextKey(ctx, constant.ContextKeyChannelCreateTime, int64(1))
+	common.SetContextKey(ctx, constant.ContextKeyChannelIsMultiKey, false)
+	common.SetContextKey(ctx, constant.ContextKeyChannelMultiKeyIndex, 0)
+	return ctx, recorder
 }
