@@ -77,6 +77,7 @@ const SubscriptionPlansCard = ({
   enableOnlineTopUp = false,
   enableStripeTopUp = false,
   enableCreemTopUp = false,
+  enableWaffoPancakeSubscription = false,
   billingPreference,
   onChangeBillingPreference,
   activeSubscriptions = [],
@@ -149,6 +150,34 @@ const SubscriptionPlansCard = ({
     setPaying(true);
     try {
       const res = await API.post('/api/subscription/creem/pay', {
+        plan_id: selectedPlan.plan.id,
+      });
+      if (res.data?.message === 'success') {
+        window.open(res.data.data?.checkout_url, '_blank');
+        showSuccess(t('已打开支付页面'));
+        closeBuy();
+      } else {
+        const errorMsg =
+          typeof res.data?.data === 'string'
+            ? res.data.data
+            : res.data?.message || t('支付失败');
+        showError(errorMsg);
+      }
+    } catch (e) {
+      showError(t('支付请求失败'));
+    } finally {
+      setPaying(false);
+    }
+  };
+
+  const payWaffoPancake = async () => {
+    if (!selectedPlan?.plan?.waffo_pancake_product_id) {
+      showError(t('该套餐未配置 Waffo Pancake'));
+      return;
+    }
+    setPaying(true);
+    try {
+      const res = await API.post('/api/subscription/waffo-pancake/pay', {
         plan_id: selectedPlan.plan.id,
       });
       if (res.data?.message === 'success') {
@@ -673,6 +702,7 @@ const SubscriptionPlansCard = ({
         enableOnlineTopUp={enableOnlineTopUp}
         enableStripeTopUp={enableStripeTopUp}
         enableCreemTopUp={enableCreemTopUp}
+        enableWaffoPancakeSubscription={enableWaffoPancakeSubscription}
         purchaseLimitInfo={
           selectedPlan?.plan?.id
             ? {
@@ -683,6 +713,7 @@ const SubscriptionPlansCard = ({
         }
         onPayStripe={payStripe}
         onPayCreem={payCreem}
+        onPayWaffoPancake={payWaffoPancake}
         onPayEpay={payEpay}
       />
     </>

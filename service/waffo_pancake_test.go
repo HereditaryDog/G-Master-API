@@ -29,7 +29,7 @@ func setupWaffoPancakeTestDB(t *testing.T) *gorm.DB {
 	model.DB = db
 	model.LOG_DB = db
 
-	require.NoError(t, db.AutoMigrate(&model.User{}, &model.TopUp{}))
+	require.NoError(t, db.AutoMigrate(&model.User{}, &model.TopUp{}, &model.SubscriptionPlan{}, &model.SubscriptionOrder{}))
 
 	t.Cleanup(func() {
 		sqlDB, err := db.DB()
@@ -110,6 +110,40 @@ func TestResolveWaffoPancakeTradeNo_FailsWhenWebhookOrderIDIsUnknown(t *testing.
 	})
 	require.Error(t, err)
 	require.Empty(t, tradeNo)
+}
+
+func TestResolveWaffoPancakeSubscriptionTradeNo_UsesWebhookOrderIDWhenOrderExists(t *testing.T) {
+	db := setupWaffoPancakeTestDB(t)
+
+	plan := &model.SubscriptionPlan{
+		Id:            7001,
+		Title:         "Waffo Plan",
+		PriceAmount:   19.99,
+		Currency:      "USD",
+		DurationUnit:  model.SubscriptionDurationMonth,
+		DurationValue: 1,
+		Enabled:       true,
+		TotalAmount:   1000,
+	}
+	require.NoError(t, db.Create(plan).Error)
+	require.NoError(t, db.Create(&model.SubscriptionOrder{
+		UserId:          1,
+		PlanId:          plan.Id,
+		Money:           plan.PriceAmount,
+		TradeNo:         "WAFFO_PANCAKE_SUB-1-123456-abc123",
+		PaymentMethod:   model.PaymentMethodWaffoPancake,
+		PaymentProvider: model.PaymentProviderWaffoPancake,
+		CreateTime:      time.Now().Unix(),
+		Status:          common.TopUpStatusPending,
+	}).Error)
+
+	tradeNo, err := ResolveWaffoPancakeSubscriptionTradeNo(&waffoPancakeWebhookEvent{
+		Data: waffoPancakeWebhookData{
+			OrderID: "WAFFO_PANCAKE_SUB-1-123456-abc123",
+		},
+	})
+	require.NoError(t, err)
+	require.Equal(t, "WAFFO_PANCAKE_SUB-1-123456-abc123", tradeNo)
 }
 
 func TestResolveWaffoPancakeWebhookEnvironment(t *testing.T) {

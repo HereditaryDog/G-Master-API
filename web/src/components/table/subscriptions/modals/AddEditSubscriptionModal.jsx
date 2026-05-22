@@ -97,6 +97,7 @@ const AddEditSubscriptionModal = ({
     upgrade_group: '',
     stripe_price_id: '',
     creem_product_id: '',
+    waffo_pancake_product_id: '',
   });
 
   const buildFormValues = () => {
@@ -123,6 +124,7 @@ const AddEditSubscriptionModal = ({
       upgrade_group: p.upgrade_group || '',
       stripe_price_id: p.stripe_price_id || '',
       creem_product_id: p.creem_product_id || '',
+      waffo_pancake_product_id: p.waffo_pancake_product_id || '',
     };
   };
 
@@ -516,7 +518,7 @@ const AddEditSubscriptionModal = ({
                         {t('第三方支付配置')}
                       </Text>
                       <div className='text-xs text-gray-600'>
-                        {t('Stripe/Creem 商品ID（可选）')}
+                        {t('Stripe/Creem/Waffo Pancake 商品ID（可选）')}
                       </div>
                     </div>
                   </div>
@@ -535,6 +537,15 @@ const AddEditSubscriptionModal = ({
                       <Form.Input
                         field='creem_product_id'
                         label='Creem ProductId'
+                        placeholder='prod_...'
+                        showClear
+                      />
+                    </Col>
+
+                    <Col span={24}>
+                      <Form.Input
+                        field='waffo_pancake_product_id'
+                        label='Waffo Pancake ProductId'
                         placeholder='prod_...'
                         showClear
                       />

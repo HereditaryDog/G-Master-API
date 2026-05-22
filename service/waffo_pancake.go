@@ -176,6 +176,22 @@ func ResolveWaffoPancakeTradeNo(event *waffoPancakeWebhookEvent) (string, error)
 	return "", fmt.Errorf("missing webhook orderId")
 }
 
+func ResolveWaffoPancakeSubscriptionTradeNo(event *waffoPancakeWebhookEvent) (string, error) {
+	if event == nil {
+		return "", fmt.Errorf("missing webhook event")
+	}
+
+	if tradeNo := strings.TrimSpace(event.Data.OrderID); tradeNo != "" {
+		order := model.GetSubscriptionOrderByTradeNo(tradeNo)
+		if order != nil && order.PaymentProvider == model.PaymentProviderWaffoPancake {
+			return tradeNo, nil
+		}
+		return "", fmt.Errorf("waffo pancake subscription order not found for webhook orderId=%s", tradeNo)
+	}
+
+	return "", fmt.Errorf("missing webhook orderId")
+}
+
 func normalizeRSAPrivateKey(raw string) (string, error) {
 	return normalizePEMKey(raw, "PRIVATE KEY", "RSA PRIVATE KEY")
 }
