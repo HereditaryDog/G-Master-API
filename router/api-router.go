@@ -63,6 +63,12 @@ func SetApiRouter(router *gin.Engine) {
 			gasterCodeRoute.POST("/auth/revoke", controller.GasterCodeAuthRevoke)
 			gasterCodeRoute.GET("/me", controller.GasterCodeMe)
 			gasterCodeRoute.POST("/provider-token", controller.GasterCodeProviderToken)
+			gasterCodeRoute.GET("/billing/plans", controller.GasterCodeBillingPlans)
+			gasterCodeRoute.POST("/billing/checkout", middleware.CriticalRateLimit(), controller.GasterCodeBillingCheckout)
+			gasterCodeRoute.GET("/billing/checkout/:id", controller.GasterCodeBillingCheckoutStatus)
+			gasterCodeRoute.GET("/billing/transactions", controller.GasterCodeBillingTransactions)
+			gasterCodeRoute.POST("/subscription/cancel", middleware.CriticalRateLimit(), controller.GasterCodeSubscriptionCancel)
+			gasterCodeRoute.POST("/subscription/resume", middleware.CriticalRateLimit(), controller.GasterCodeSubscriptionResume)
 		}
 		gasterCodeAdminRoute := apiRouter.Group("/gaster-code/admin")
 		gasterCodeAdminRoute.Use(middleware.AdminAuth())

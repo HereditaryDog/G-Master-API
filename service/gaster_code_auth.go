@@ -8,11 +8,13 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/model"
+	"github.com/yangjunyu/G-Master-API/setting/operation_setting"
 	"gorm.io/gorm"
 )
 
@@ -68,16 +70,18 @@ type GasterCodeTokenResult struct {
 }
 
 type GasterCodeSubscriptionInfo struct {
-	Id              int    `json:"id"`
-	PlanId          int    `json:"plan_id"`
-	Status          string `json:"status"`
-	StartTime       int64  `json:"start_time"`
-	EndTime         int64  `json:"end_time"`
-	AmountTotal     int64  `json:"amount_total"`
-	AmountUsed      int64  `json:"amount_used"`
-	AmountRemaining int64  `json:"amount_remaining"`
-	Unlimited       bool   `json:"unlimited"`
-	UpgradeGroup    string `json:"upgrade_group"`
+	Id                int    `json:"id"`
+	PlanId            int    `json:"plan_id"`
+	Status            string `json:"status"`
+	StartTime         int64  `json:"start_time"`
+	EndTime           int64  `json:"end_time"`
+	AmountTotal       int64  `json:"amount_total"`
+	AmountUsed        int64  `json:"amount_used"`
+	AmountRemaining   int64  `json:"amount_remaining"`
+	Unlimited         bool   `json:"unlimited"`
+	UpgradeGroup      string `json:"upgrade_group"`
+	CancelAtPeriodEnd bool   `json:"cancel_at_period_end"`
+	Resumable         bool   `json:"resumable"`
 }
 
 type GasterCodeSubscriptionSnapshot struct {
@@ -91,10 +95,25 @@ type GasterCodeQuotaSnapshot struct {
 	Unlimited bool `json:"unlimited"`
 }
 
+type GasterCodeWalletSnapshot struct {
+	Balance    int    `json:"balance"`
+	Currency   string `json:"currency"`
+	LowBalance bool   `json:"low_balance"`
+}
+
+type GasterCodeEntitlementsSnapshot struct {
+	CanUseBuiltinProvider bool     `json:"can_use_builtin_provider"`
+	EnabledModels         []string `json:"enabled_models"`
+	EnabledFeatures       []string `json:"enabled_features"`
+	ExpiresAt             int64    `json:"expires_at"`
+}
+
 type GasterCodeMeResult struct {
 	User                  GasterCodeUserInfo             `json:"user"`
 	Subscription          GasterCodeSubscriptionSnapshot `json:"subscription"`
 	Quota                 GasterCodeQuotaSnapshot        `json:"quota"`
+	Wallet                GasterCodeWalletSnapshot       `json:"wallet"`
+	Entitlements          GasterCodeEntitlementsSnapshot `json:"entitlements"`
 	CanUseBuiltinProvider bool                           `json:"can_use_builtin_provider"`
 	BillingURL            string                         `json:"billing_url"`
 	AccountURL            string                         `json:"account_url"`
@@ -397,11 +416,20 @@ func BuildGasterCodeMeResult(userID int, publicBaseURL string) (*GasterCodeMeRes
 	}
 	subscription := buildGasterCodeSubscriptionSnapshot(activeSubs)
 	canUse := user.Status == common.UserStatusEnabled && (user.Quota > 0 || hasUsableGasterCodeSubscription(subscription))
+	enabledModels := getGasterCodeEnabledModels(user.Group)
+	entitlements := GasterCodeEntitlementsSnapshot{
+		CanUseBuiltinProvider: canUse,
+		EnabledModels:         enabledModels,
+		EnabledFeatures:       getGasterCodeEnabledFeatures(canUse),
+		ExpiresAt:             getGasterCodeEntitlementsExpiresAt(subscription),
+	}
 	base := normalizeGasterCodeBaseURL(publicBaseURL)
 	return &GasterCodeMeResult{
 		User:                  buildGasterCodeUserInfo(user),
 		Subscription:          subscription,
 		Quota:                 GasterCodeQuotaSnapshot{Remaining: user.Quota, Used: usedQuota, Unlimited: false},
+		Wallet:                GasterCodeWalletSnapshot{Balance: user.Quota, Currency: operation_setting.GetQuotaDisplayType(), LowBalance: user.Quota <= 0 && !hasUsableGasterCodeSubscription(subscription)},
+		Entitlements:          entitlements,
 		CanUseBuiltinProvider: canUse,
 		BillingURL:            base + "/console/topup",
 		AccountURL:            base + "/console/personal",
@@ -603,16 +631,18 @@ func buildGasterCodeSubscriptionSnapshot(activeSubs []model.SubscriptionSummary)
 			remaining = 0
 		}
 		items = append(items, GasterCodeSubscriptionInfo{
-			Id:              sub.Id,
-			PlanId:          sub.PlanId,
-			Status:          sub.Status,
-			StartTime:       sub.StartTime,
-			EndTime:         sub.EndTime,
-			AmountTotal:     sub.AmountTotal,
-			AmountUsed:      sub.AmountUsed,
-			AmountRemaining: remaining,
-			Unlimited:       sub.AmountTotal == 0,
-			UpgradeGroup:    sub.UpgradeGroup,
+			Id:                sub.Id,
+			PlanId:            sub.PlanId,
+			Status:            sub.Status,
+			StartTime:         sub.StartTime,
+			EndTime:           sub.EndTime,
+			AmountTotal:       sub.AmountTotal,
+			AmountUsed:        sub.AmountUsed,
+			AmountRemaining:   remaining,
+			Unlimited:         sub.AmountTotal == 0,
+			UpgradeGroup:      sub.UpgradeGroup,
+			CancelAtPeriodEnd: sub.CancelAtPeriodEnd,
+			Resumable:         sub.CancelAtPeriodEnd && sub.Status == "active" && sub.EndTime > common.GetTimestamp(),
 		})
 	}
 	return GasterCodeSubscriptionSnapshot{
@@ -628,6 +658,52 @@ func hasUsableGasterCodeSubscription(snapshot GasterCodeSubscriptionSnapshot) bo
 		}
 	}
 	return false
+}
+
+func getGasterCodeEntitlementsExpiresAt(snapshot GasterCodeSubscriptionSnapshot) int64 {
+	var expiresAt int64
+	for _, item := range snapshot.Items {
+		if item.EndTime > expiresAt {
+			expiresAt = item.EndTime
+		}
+	}
+	return expiresAt
+}
+
+func getGasterCodeEnabledModels(group string) []string {
+	models := model.GetGroupEnabledModels(group)
+	if len(models) == 0 {
+		defaultModels := getGasterCodeDefaultModels()
+		models = []string{defaultModels.Main, defaultModels.Haiku, defaultModels.Sonnet, defaultModels.Opus}
+	}
+	deduped := make([]string, 0, len(models))
+	seen := make(map[string]struct{}, len(models))
+	for _, modelName := range models {
+		modelName = strings.TrimSpace(modelName)
+		if modelName == "" {
+			continue
+		}
+		if _, ok := seen[modelName]; ok {
+			continue
+		}
+		seen[modelName] = struct{}{}
+		deduped = append(deduped, modelName)
+	}
+	sort.Strings(deduped)
+	return deduped
+}
+
+func getGasterCodeEnabledFeatures(canUseBuiltinProvider bool) []string {
+	features := []string{
+		"account",
+		"billing",
+		"subscription",
+		"provider_token",
+	}
+	if canUseBuiltinProvider {
+		features = append(features, "chat", "terminal", "desktop_workflow", "image_generation")
+	}
+	return features
 }
 
 func getReusableGasterCodeProviderToken(session *model.GasterCodeSession) (*model.Token, error) {

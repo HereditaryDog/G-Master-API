@@ -166,7 +166,8 @@ HTTP/1.1 401 Unauthorized
 {
   "success": false,
   "message": "missing Authorization bearer token",
-  "code": "authentication_failed",
+  "code": "GMASTER_AUTH_EXPIRED",
+  "legacy_code": "authentication_failed",
   "reason": "login_required",
   "action": "relogin",
   "userMessage": "G-Master API login is required. Please sign in again in Gaster Code."
@@ -183,7 +184,8 @@ HTTP/1.1 401 Unauthorized
 {
   "success": false,
   "message": "refresh_token is invalid",
-  "code": "authentication_failed",
+  "code": "GMASTER_AUTH_EXPIRED",
+  "legacy_code": "authentication_failed",
   "reason": "session_expired",
   "action": "relogin",
   "userMessage": "G-Master API login has expired. Please sign in again in Gaster Code."
@@ -229,7 +231,9 @@ Response:
           "amount_used": 120000,
           "amount_remaining": 880000,
           "unlimited": false,
-          "upgrade_group": "weekly"
+          "upgrade_group": "weekly",
+          "cancel_at_period_end": false,
+          "resumable": false
         }
       ]
     },
@@ -238,6 +242,17 @@ Response:
       "used": 80000,
       "unlimited": false
     },
+    "wallet": {
+      "balance": 200000,
+      "currency": "USD",
+      "low_balance": false
+    },
+    "entitlements": {
+      "can_use_builtin_provider": true,
+      "enabled_models": ["deepseek-v4-pro", "gpt-image-2"],
+      "enabled_features": ["account", "billing", "subscription", "provider_token", "chat", "terminal", "desktop_workflow", "image_generation"],
+      "expires_at": 1772592000
+    },
     "can_use_builtin_provider": true,
     "billing_url": "https://gmapi.fun/console/topup",
     "account_url": "https://gmapi.fun/console/personal"
@@ -245,7 +260,202 @@ Response:
 }
 ```
 
-## 7. Provider Token
+## 7. Account Center Billing APIs
+
+All account center APIs use the same desktop bearer token:
+
+```text
+Authorization: Bearer gc_at_xxx
+```
+
+All success responses use:
+
+```json
+{ "success": true, "message": "", "data": {} }
+```
+
+All failure responses use:
+
+```json
+{ "success": false, "code": "GMASTER_BILLING_PLAN_UNAVAILABLE", "message": "subscription plan is unavailable" }
+```
+
+Stable error codes:
+
+- `GMASTER_AUTH_EXPIRED`
+- `GMASTER_BILLING_CHECKOUT_FAILED`
+- `GMASTER_BILLING_PAYMENT_PENDING`
+- `GMASTER_BILLING_PLAN_UNAVAILABLE`
+- `GMASTER_BILLING_PROVIDER_UNAVAILABLE`
+- `GMASTER_SUBSCRIPTION_NOT_FOUND`
+- `GMASTER_SUBSCRIPTION_NOT_RESUMABLE`
+
+### Billing Plans
+
+`GET /api/gaster-code/billing/plans`
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "plans": [
+      {
+        "id": "topup_100",
+        "kind": "topup",
+        "name": "充值 100",
+        "description": "G-Master API 额度充值，可用于 Gaster Code Desktop 内置 provider。",
+        "price": 100,
+        "currency": "USD",
+        "interval": "one_time",
+        "quota_amount": 500000,
+        "unlimited": false,
+        "recommended": true
+      },
+      {
+        "id": "subscription_2",
+        "kind": "subscription",
+        "name": "VIP 月度套餐",
+        "description": "桌面端订阅额度",
+        "price": 19.9,
+        "currency": "USD",
+        "interval": "month",
+        "quota_amount": 0,
+        "unlimited": true,
+        "recommended": true
+      }
+    ]
+  }
+}
+```
+
+`kind` is included so the desktop UI can pass the same `kind` and `plan_id` into checkout. Top-up plan IDs are `topup_<amount>`; subscription plan IDs are `subscription_<plan_id>`.
+
+### Create Checkout
+
+`POST /api/gaster-code/billing/checkout`
+
+Request:
+
+```json
+{
+  "kind": "subscription",
+  "plan_id": "subscription_2",
+  "return_to": "account"
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "id": "gcbc_xxx",
+    "url": "https://gmapi.fun/console/topup?source=gaster-code&checkout_id=gcbc_xxx&kind=subscription&plan_id=subscription_2&return_to=account",
+    "status": "pending",
+    "kind": "subscription",
+    "expires_at": 1770001800
+  }
+}
+```
+
+The desktop opens `data.url` in the browser and does not handle provider payment secrets. The backend also creates a pending Gaster Code Desktop order record so admin order/payment pages can see the request.
+
+### Poll Checkout
+
+`GET /api/gaster-code/billing/checkout/:id`
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "id": "gcbc_xxx",
+    "url": "https://gmapi.fun/console/topup?source=gaster-code&checkout_id=gcbc_xxx&kind=subscription&plan_id=subscription_2&return_to=account",
+    "status": "paid",
+    "kind": "subscription",
+    "expires_at": 1770001800
+  }
+}
+```
+
+Checkout status values are `pending`, `paid`, `failed`, `expired`, and `cancelled`.
+When the user finishes payment through the existing web console flow, polling can also infer `paid` from the user's successful top-up record or newly active subscription for the same plan.
+
+### Transactions
+
+`GET /api/gaster-code/billing/transactions`
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "transactions": [
+      {
+        "id": "gc_subscription_xxx",
+        "kind": "subscription",
+        "status": "paid",
+        "amount": 19.9,
+        "currency": "USD",
+        "created_at": 1770000000,
+        "description": "Gaster Code Desktop 订阅订单 #2"
+      },
+      {
+        "id": "log_123",
+        "kind": "usage",
+        "status": "paid",
+        "amount": 800,
+        "currency": "quota",
+        "created_at": 1770000100,
+        "description": "Gaster Code Desktop usage"
+      }
+    ]
+  }
+}
+```
+
+Transaction kinds are `topup`, `subscription`, `usage`, `refund`, and `adjustment`. Status values are `pending`, `paid`, `failed`, `refunded`, and `cancelled`.
+
+### Cancel Subscription
+
+`POST /api/gaster-code/subscription/cancel`
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": { "ok": true }
+}
+```
+
+Cancellation is cancel-at-period-end. The subscription remains active until `end_time`; `/me.subscription.items[].resumable` becomes `true` while it can still be resumed.
+
+### Resume Subscription
+
+`POST /api/gaster-code/subscription/resume`
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "",
+  "data": { "ok": true }
+}
+```
+
+## 8. Provider Token
 
 `POST /api/gaster-code/provider-token`
 
@@ -286,7 +496,7 @@ Response:
 
 Use the returned `api_key` against Anthropic-compatible endpoints such as `/v1/messages`.
 
-## 8. Revoke Desktop Session
+## 9. Revoke Desktop Session
 
 `POST /api/gaster-code/auth/revoke`
 
@@ -347,13 +557,16 @@ Provider api_format: anthropic
 7. Confirm the local callback receives `code` and the original `state`.
 8. Call `POST /api/gaster-code/auth/token` with `code`, `code_verifier`, and the same `redirect_uri`.
 9. Call `GET /api/gaster-code/me` with `Authorization: Bearer <access_token>`.
-10. Call `POST /api/gaster-code/provider-token` with the same bearer token.
-11. Use returned `provider.api_key` against `/v1/messages`.
-12. Call `POST /api/gaster-code/auth/revoke` and verify `/me` rejects the revoked token.
+10. Call `GET /api/gaster-code/billing/plans`.
+11. Call `POST /api/gaster-code/billing/checkout`, open `data.url`, and poll `GET /api/gaster-code/billing/checkout/:id`.
+12. Call `GET /api/gaster-code/billing/transactions`.
+13. Call `POST /api/gaster-code/provider-token` with the same bearer token.
+14. Use returned `provider.api_key` against `/v1/messages`.
+15. Call `POST /api/gaster-code/auth/revoke` and verify `/me` rejects the revoked token.
 
 ## Known Limitations
 
 - The first MVP confirmation page is backend-rendered HTML, not a full React page.
-- 2FA, registration, password reset, OAuth login, and subscription purchase remain in the existing web flow.
+- 2FA, registration, password reset, OAuth login, and final payment confirmation remain in the existing web flow.
 - `can_use_builtin_provider` is a coarse availability flag based on account status, wallet quota, and active subscription quota. Actual model calls still go through normal gateway billing and channel selection.
 - Provider token model defaults are server-configurable through environment variables; Gaster Code should not hard-code model names if the API response supplies them.

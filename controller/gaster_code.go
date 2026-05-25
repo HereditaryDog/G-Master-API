@@ -41,7 +41,8 @@ type gasterCodeRevokeRequest struct {
 }
 
 const (
-	gasterCodeAuthErrorCode         = "authentication_failed"
+	gasterCodeAuthErrorCode         = "GMASTER_AUTH_EXPIRED"
+	gasterCodeAuthLegacyErrorCode   = "authentication_failed"
 	gasterCodeAuthActionRelogin     = "relogin"
 	gasterCodeAuthReasonLogin       = "login_required"
 	gasterCodeAuthReasonExpired     = "session_expired"
@@ -185,7 +186,7 @@ func GasterCodeMe(c *gin.Context) {
 	}
 	result, err := service.BuildGasterCodeMeResult(session.UserID, getGasterCodePublicBaseURL(c))
 	if err != nil {
-		common.ApiError(c, err)
+		writeGasterCodeAuthError(c, gasterCodeAuthReasonExpired, err.Error())
 		return
 	}
 	common.ApiSuccess(c, result)
@@ -290,6 +291,7 @@ func writeGasterCodeAuthError(c *gin.Context, reason string, message string) {
 		"success":     false,
 		"message":     message,
 		"code":        gasterCodeAuthErrorCode,
+		"legacy_code": gasterCodeAuthLegacyErrorCode,
 		"reason":      reason,
 		"action":      gasterCodeAuthActionRelogin,
 		"userMessage": userMessageForGasterCodeAuthReason(reason),

@@ -35,6 +35,8 @@ const (
 var (
 	ErrSubscriptionOrderNotFound      = errors.New("subscription order not found")
 	ErrSubscriptionOrderStatusInvalid = errors.New("subscription order status invalid")
+	ErrUserSubscriptionNotFound       = errors.New("user subscription not found")
+	ErrUserSubscriptionNotResumable   = errors.New("user subscription is not resumable")
 )
 
 const (
@@ -252,6 +254,10 @@ type UserSubscription struct {
 	UpgradeGroup  string `json:"upgrade_group" gorm:"type:varchar(64);default:''"`
 	PrevUserGroup string `json:"prev_user_group" gorm:"type:varchar(64);default:''"`
 
+	CancelAtPeriodEnd  bool   `json:"cancel_at_period_end" gorm:"default:false"`
+	CancelledAt        int64  `json:"cancelled_at" gorm:"type:bigint;default:0"`
+	CancellationReason string `json:"cancellation_reason" gorm:"type:varchar(255);default:''"`
+
 	CreatedAt int64 `json:"created_at" gorm:"bigint"`
 	UpdatedAt int64 `json:"updated_at" gorm:"bigint"`
 }
@@ -394,8 +400,16 @@ func getUserGroupByIdTx(tx *gorm.DB, userId int) (string, error) {
 	if tx == nil {
 		tx = DB
 	}
+	groupCol := commonGroupCol
+	if groupCol == "" {
+		if common.UsingPostgreSQL {
+			groupCol = `"group"`
+		} else {
+			groupCol = "`group`"
+		}
+	}
 	var group string
-	if err := tx.Model(&User{}).Where("id = ?", userId).Select(commonGroupCol).Find(&group).Error; err != nil {
+	if err := tx.Model(&User{}).Where("id = ?", userId).Select(groupCol).Find(&group).Error; err != nil {
 		return "", err
 	}
 	return group, nil
@@ -848,6 +862,62 @@ func AdminDeleteUserSubscription(userSubscriptionId int) (string, error) {
 		return fmt.Sprintf("用户分组将回退到 %s", downgradeGroup), nil
 	}
 	return "", nil
+}
+
+// CancelCurrentUserSubscription marks the latest active user subscription as
+// cancel-at-period-end. The subscription remains usable until EndTime.
+func CancelCurrentUserSubscription(userId int) error {
+	if userId <= 0 {
+		return errors.New("invalid userId")
+	}
+	now := common.GetTimestamp()
+	return DB.Transaction(func(tx *gorm.DB) error {
+		var sub UserSubscription
+		if err := tx.Set("gorm:query_option", "FOR UPDATE").
+			Where("user_id = ? AND status = ? AND end_time > ?", userId, "active", now).
+			Order("end_time desc, id desc").
+			First(&sub).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return ErrUserSubscriptionNotFound
+			}
+			return err
+		}
+		return tx.Model(&sub).Updates(map[string]interface{}{
+			"cancel_at_period_end": true,
+			"cancelled_at":         now,
+			"updated_at":           now,
+		}).Error
+	})
+}
+
+// ResumeCurrentUserSubscription clears cancel-at-period-end for the latest
+// active subscription when it is still resumable.
+func ResumeCurrentUserSubscription(userId int) error {
+	if userId <= 0 {
+		return errors.New("invalid userId")
+	}
+	now := common.GetTimestamp()
+	return DB.Transaction(func(tx *gorm.DB) error {
+		var sub UserSubscription
+		if err := tx.Set("gorm:query_option", "FOR UPDATE").
+			Where("user_id = ? AND status = ? AND end_time > ?", userId, "active", now).
+			Order("end_time desc, id desc").
+			First(&sub).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return ErrUserSubscriptionNotFound
+			}
+			return err
+		}
+		if !sub.CancelAtPeriodEnd {
+			return ErrUserSubscriptionNotResumable
+		}
+		return tx.Model(&sub).Updates(map[string]interface{}{
+			"cancel_at_period_end": false,
+			"cancelled_at":         int64(0),
+			"cancellation_reason":  "",
+			"updated_at":           now,
+		}).Error
+	})
 }
 
 type SubscriptionPreConsumeResult struct {

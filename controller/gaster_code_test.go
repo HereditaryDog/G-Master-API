@@ -25,7 +25,19 @@ func setupGasterCodeControllerTestDB(t *testing.T) {
 	common.UsingMySQL = false
 	common.UsingPostgreSQL = false
 	common.RedisEnabled = false
-	require.NoError(t, db.AutoMigrate(&model.GasterCodeSession{}))
+	require.NoError(t, db.AutoMigrate(
+		&model.User{},
+		&model.Token{},
+		&model.Log{},
+		&model.Ability{},
+		&model.TopUp{},
+		&model.SubscriptionPlan{},
+		&model.SubscriptionOrder{},
+		&model.UserSubscription{},
+		&model.GasterCodeAuthRequest{},
+		&model.GasterCodeSession{},
+		&model.GasterCodeBillingCheckout{},
+	))
 	t.Cleanup(func() {
 		sqlDB, err := db.DB()
 		if err == nil {
@@ -67,7 +79,8 @@ func TestGasterCodeMeMissingBearerReturnsMachineReadableLoginRequired(t *testing
 	var body map[string]any
 	require.NoError(t, common.Unmarshal(recorder.Body.Bytes(), &body))
 	assert.Equal(t, false, body["success"])
-	assert.Equal(t, "authentication_failed", body["code"])
+	assert.Equal(t, "GMASTER_AUTH_EXPIRED", body["code"])
+	assert.Equal(t, "authentication_failed", body["legacy_code"])
 	assert.Equal(t, "login_required", body["reason"])
 	assert.Equal(t, "relogin", body["action"])
 	assert.NotEmpty(t, body["userMessage"])
@@ -87,7 +100,8 @@ func TestGasterCodeAuthRefreshInvalidTokenReturnsMachineReadableSessionExpired(t
 	var body map[string]any
 	require.NoError(t, common.Unmarshal(recorder.Body.Bytes(), &body))
 	assert.Equal(t, false, body["success"])
-	assert.Equal(t, "authentication_failed", body["code"])
+	assert.Equal(t, "GMASTER_AUTH_EXPIRED", body["code"])
+	assert.Equal(t, "authentication_failed", body["legacy_code"])
 	assert.Equal(t, "session_expired", body["reason"])
 	assert.Equal(t, "relogin", body["action"])
 	assert.NotEmpty(t, body["userMessage"])
