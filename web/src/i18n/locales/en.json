@@ -3638,6 +3638,7 @@
     "销毁容器": "Destroy Container",
     "销毁容器失败": "Failed to destroy container",
     "错误": "errors",
+    "错误代码": "Error Code",
     "错误代码（可选）": "Error Code (optional)",
     "错误消息（必填）": "Error Message (required)",
     "错误类型（可选）": "Error Type (optional)",

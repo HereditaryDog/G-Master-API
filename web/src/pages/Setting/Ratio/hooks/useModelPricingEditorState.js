@@ -26,6 +26,9 @@ import {
 export const PAGE_SIZE = 10;
 export const PRICE_SUFFIX = '$/1M tokens';
 const EMPTY_CANDIDATE_MODEL_NAMES = [];
+const DISPLAY_DECIMALS = 12;
+const SNAP_DECIMALS = 8;
+const SNAP_EPSILON = 1e-12;
 
 const EMPTY_MODEL = {
   name: '',
@@ -75,12 +78,30 @@ const toNumberOrNull = (value) => {
   return Number.isFinite(num) ? num : null;
 };
 
+const roundToDecimals = (value, decimals) => {
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+};
+
+const snapFloatDrift = (value) => {
+  const tolerance = Math.max(SNAP_EPSILON, Math.abs(value) * Number.EPSILON * 8);
+
+  for (let decimals = 0; decimals <= SNAP_DECIMALS; decimals += 1) {
+    const rounded = roundToDecimals(value, decimals);
+    if (Math.abs(value - rounded) <= tolerance) {
+      return rounded;
+    }
+  }
+
+  return value;
+};
+
 const formatNumber = (value) => {
   const num = toNumberOrNull(value);
   if (num === null) {
     return '';
   }
-  return parseFloat(num.toFixed(12)).toString();
+  return parseFloat(snapFloatDrift(num).toFixed(DISPLAY_DECIMALS)).toString();
 };
 
 const toNormalizedNumber = (value) => {

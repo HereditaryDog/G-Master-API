@@ -25,7 +25,7 @@ type WaffoPancakePayRequest struct {
 
 func RequestWaffoPancakeAmount(c *gin.Context) {
 	var req WaffoPancakePayRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := common.DecodeJson(c.Request.Body, &req); err != nil {
 		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "参数错误"})
 		return
 	}
@@ -98,7 +98,7 @@ func getWaffoPancakeBuyerEmail(user *model.User) string {
 		return user.Email
 	}
 	if user != nil {
-		return fmt.Sprintf("%d@new-api.local", user.Id)
+		return fmt.Sprintf("%d@gmaster-api.local", user.Id)
 	}
 	return ""
 }
@@ -108,6 +108,206 @@ func getWaffoPancakeReturnURL() string {
 		return setting.WaffoPancakeReturnURL
 	}
 	return strings.TrimRight(system_setting.ServerAddress, "/") + "/console/topup?show_history=true"
+}
+
+type waffoPancakeCredsRequest struct {
+	MerchantID string `json:"merchant_id"`
+	PrivateKey string `json:"private_key"`
+}
+
+type saveWaffoPancakeRequest struct {
+	MerchantID string `json:"merchant_id"`
+	PrivateKey string `json:"private_key"`
+	ReturnURL  string `json:"return_url"`
+	StoreID    string `json:"store_id"`
+	ProductID  string `json:"product_id"`
+}
+
+type createWaffoPancakePairRequest struct {
+	MerchantID string `json:"merchant_id"`
+	PrivateKey string `json:"private_key"`
+	ReturnURL  string `json:"return_url"`
+}
+
+func SaveWaffoPancake(c *gin.Context) {
+	var req saveWaffoPancakeRequest
+	if err := common.DecodeJson(c.Request.Body, &req); err != nil {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "参数错误"})
+		return
+	}
+	if err := service.SaveWaffoPancakeConfig(
+		c.Request.Context(),
+		req.MerchantID,
+		req.PrivateKey,
+		req.ReturnURL,
+		req.StoreID,
+		req.ProductID,
+	); err != nil {
+		logger.LogError(c.Request.Context(), fmt.Sprintf("Waffo Pancake 保存配置失败 store_id=%q product_id=%q error=%q", req.StoreID, req.ProductID, err.Error()))
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "保存配置失败"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+		"data": gin.H{
+			"product_id": setting.WaffoPancakeProductID,
+			"store_id":   setting.WaffoPancakeStoreID,
+		},
+	})
+}
+
+func resolveWaffoPancakeAdminCreds(bodyMerchantID, bodyPrivateKey string) (string, string) {
+	merchantID := strings.TrimSpace(bodyMerchantID)
+	privateKey := strings.TrimSpace(bodyPrivateKey)
+	if merchantID == "" && privateKey == "" {
+		return setting.WaffoPancakeMerchantID, setting.WaffoPancakePrivateKey
+	}
+	return merchantID, privateKey
+}
+
+func CreateWaffoPancakePair(c *gin.Context) {
+	var req createWaffoPancakePairRequest
+	if c.Request.ContentLength > 0 {
+		if err := common.DecodeJson(c.Request.Body, &req); err != nil {
+			c.JSON(http.StatusOK, gin.H{"message": "error", "data": "参数错误"})
+			return
+		}
+	}
+	merchantID, privateKey := resolveWaffoPancakeAdminCreds(req.MerchantID, req.PrivateKey)
+	if merchantID == "" || privateKey == "" {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "Waffo Pancake 凭证未配置"})
+		return
+	}
+	result, err := service.CreateWaffoPancakePrimaryPair(c.Request.Context(), merchantID, privateKey, req.ReturnURL)
+	if err != nil {
+		orphan := result != nil && result.OrphanStore
+		storeID := ""
+		storeName := ""
+		if result != nil {
+			storeID = result.StoreID
+			storeName = result.StoreName
+		}
+		logger.LogError(c.Request.Context(), fmt.Sprintf("Waffo Pancake 创建店铺与产品失败 orphan_store=%t store_id=%q error=%q", orphan, storeID, err.Error()))
+		data := gin.H{"error": err.Error()}
+		if orphan {
+			data["store_id"] = storeID
+			data["store_name"] = storeName
+			data["orphan_store"] = true
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": data})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+		"data": gin.H{
+			"store_id":     result.StoreID,
+			"store_name":   result.StoreName,
+			"product_id":   result.ProductID,
+			"product_name": result.ProductName,
+		},
+	})
+}
+
+func ListWaffoPancakeCatalog(c *gin.Context) {
+	var req waffoPancakeCredsRequest
+	if c.Request.ContentLength > 0 {
+		if err := common.DecodeJson(c.Request.Body, &req); err != nil {
+			c.JSON(http.StatusOK, gin.H{"message": "error", "data": "参数错误"})
+			return
+		}
+	}
+	merchantID, privateKey := resolveWaffoPancakeAdminCreds(req.MerchantID, req.PrivateKey)
+	if merchantID == "" || privateKey == "" {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "Waffo Pancake 凭证未配置"})
+		return
+	}
+	catalog, err := service.ListWaffoPancakeCatalog(c.Request.Context(), merchantID, privateKey)
+	if err != nil {
+		logger.LogError(c.Request.Context(), fmt.Sprintf("Waffo Pancake 拉取店铺与产品目录失败 error=%q", err.Error()))
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "拉取目录失败"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": catalog})
+}
+
+type createWaffoPancakeSubscriptionProductRequest struct {
+	Name   string `json:"name"`
+	Amount string `json:"amount"`
+}
+
+func CreateWaffoPancakeSubscriptionProduct(c *gin.Context) {
+	var req createWaffoPancakeSubscriptionProductRequest
+	if c.Request.ContentLength > 0 {
+		if err := common.DecodeJson(c.Request.Body, &req); err != nil {
+			c.JSON(http.StatusOK, gin.H{"message": "error", "data": "参数错误"})
+			return
+		}
+	}
+	if strings.TrimSpace(req.Name) == "" {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "套餐名称不能为空"})
+		return
+	}
+	if strings.TrimSpace(req.Amount) == "" {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "套餐价格不能为空"})
+		return
+	}
+	merchantID, privateKey := resolveWaffoPancakeAdminCreds("", "")
+	storeID := strings.TrimSpace(setting.WaffoPancakeStoreID)
+	if merchantID == "" || privateKey == "" || storeID == "" {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "Waffo Pancake 未完成配置，请先在支付设置中完成网关绑定"})
+		return
+	}
+	productID, err := service.CreateWaffoPancakeProductForPlan(
+		c.Request.Context(),
+		merchantID,
+		privateKey,
+		storeID,
+		req.Name,
+		req.Amount,
+		setting.WaffoPancakeReturnURL,
+	)
+	if err != nil {
+		logger.LogError(c.Request.Context(), fmt.Sprintf("Waffo Pancake 创建套餐产品失败 store_id=%q name=%q amount=%q error=%q", storeID, req.Name, req.Amount, err.Error()))
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "创建套餐产品失败"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+		"data": gin.H{
+			"product_id":   productID,
+			"product_name": req.Name,
+			"store_id":     storeID,
+		},
+	})
+}
+
+func ListWaffoPancakeSubscriptionProductOptions(c *gin.Context) {
+	merchantID, privateKey := resolveWaffoPancakeAdminCreds("", "")
+	storeID := strings.TrimSpace(setting.WaffoPancakeStoreID)
+	if merchantID == "" || privateKey == "" || storeID == "" {
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "Waffo Pancake 未完成配置，请先在支付设置中完成网关绑定"})
+		return
+	}
+	catalog, err := service.ListWaffoPancakeCatalog(c.Request.Context(), merchantID, privateKey)
+	if err != nil {
+		logger.LogError(c.Request.Context(), fmt.Sprintf("Waffo Pancake 拉取订阅产品列表失败 store_id=%q error=%q", storeID, err.Error()))
+		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "拉取产品列表失败"})
+		return
+	}
+	products := []service.WaffoPancakeCatalogProduct{}
+	for _, store := range catalog.Stores {
+		if store.ID == storeID {
+			products = store.OnetimeProducts
+			break
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+		"data": gin.H{
+			"store_id": storeID,
+			"products": products,
+		},
+	})
 }
 
 func RequestWaffoPancakePay(c *gin.Context) {
@@ -133,7 +333,7 @@ func RequestWaffoPancakePay(c *gin.Context) {
 	}
 
 	var req WaffoPancakePayRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := common.DecodeJson(c.Request.Body, &req); err != nil {
 		c.JSON(http.StatusOK, gin.H{"message": "error", "data": "参数错误"})
 		return
 	}

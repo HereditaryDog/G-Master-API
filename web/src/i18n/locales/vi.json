@@ -4037,6 +4037,7 @@
     "销毁容器失败": "Failed to destroy container",
     "锁定": "Khóa",
     "错误": "Lỗi",
+    "错误代码": "Mã lỗi",
     "错误代码（可选）": "Mã lỗi (tùy chọn)",
     "错误信息": "Thông tin lỗi",
     "错误日志": "Nhật ký lỗi",

@@ -22,10 +22,10 @@
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前源码稳定基线：[`v1.0.0-rc.7-GM.2`](./VERSION)
+当前源码稳定基线：[`v1.0.0-rc.8-GM.1`](./VERSION)
 
 > [!NOTE]
-> `v1.0.0-rc.7-GM.2` 是 G-Master API 的 v1 RC 同步热修版本，保留 `GM.1` 的支付合规、模型归属、性能健康、日志追踪、Waffo Pancake 订阅、钱包订阅摘要、渠道亲和请求头来源、渠道列表筛选和渠道编辑器能力，并修复 Gaster Code 绘图异步任务在上游网关 504/524 超时时的队列重试、请求体复用和任务初始化 panic 问题。
+> `v1.0.0-rc.8-GM.1` 是 G-Master API 的 v1 RC 更新版本，新增 Waffo Pancake 店铺/产品目录绑定、支付合规加固、请求路径性能优化、模型价格显示归一化和通道测试错误码展示，同时保留 Gaster Code 桌面端入口、异步图片生成、模型健康度日志兜底、钱包订阅摘要与现有 G-Master 控制台体验。
 
 ## G-Master API 主要能力
 

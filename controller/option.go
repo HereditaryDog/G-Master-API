@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/yangjunyu/G-Master-API/common"
@@ -34,6 +35,19 @@ func isVisiblePublicKeyOption(key string) bool {
 	default:
 		return false
 	}
+}
+
+func isPaymentComplianceOptionKey(key string) bool {
+	return strings.HasPrefix(key, "payment_setting.compliance_")
+}
+
+func isPositiveOptionValue(value string) bool {
+	intValue, err := strconv.Atoi(strings.TrimSpace(value))
+	if err == nil {
+		return intValue > 0
+	}
+	floatValue, err := strconv.ParseFloat(strings.TrimSpace(value), 64)
+	return err == nil && floatValue > 0
 }
 
 func collectModelNamesFromOptionValue(raw string, modelNames map[string]struct{}) {
@@ -131,6 +145,18 @@ func UpdateOption(c *gin.Context) {
 		option.Value = common.Interface2String(option.Value.(int))
 	default:
 		option.Value = fmt.Sprintf("%v", option.Value)
+	}
+	switch option.Key {
+	case "QuotaForInviter", "QuotaForInvitee":
+		if isPositiveOptionValue(option.Value.(string)) && !operation_setting.IsPaymentComplianceConfirmed() {
+			common.ApiErrorMsg(c, "请先在支付设置中确认支付合规声明")
+			return
+		}
+	default:
+		if isPaymentComplianceOptionKey(option.Key) {
+			common.ApiErrorMsg(c, "合规确认字段不允许通过通用设置接口修改")
+			return
+		}
 	}
 	switch option.Key {
 	case "GitHubOAuthEnabled":

@@ -1029,17 +1029,24 @@ export const useChannelsData = () => {
     } catch (error) {
       // 处理网络错误
       const testKey = `${record.id}-${model}`;
+      const errorData = error?.response?.data || {};
+      const errorMessage =
+        errorData.message ||
+        errorData.error?.message ||
+        error.message ||
+        t('网络错误');
+      const errorCode = errorData.error_code || errorData.error?.code || null;
       setModelTestResults((prev) => ({
         ...prev,
         [testKey]: {
           success: false,
-          message: error.message || t('网络错误'),
+          message: errorMessage,
           time: 0,
           timestamp: Date.now(),
-          errorCode: null,
+          errorCode,
         },
       }));
-      showError(error.message || t('测试失败'));
+      showError(errorMessage || t('测试失败'));
     } finally {
       // 从正在测试的模型集合中移除
       setTestingModels((prev) => {

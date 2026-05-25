@@ -193,6 +193,16 @@ const ModelTestModal = ({
                 >
                   {testResult.message}
                 </Typography.Text>
+                {testResult.errorCode && (
+                  <Typography.Text
+                    type='tertiary'
+                    size='small'
+                    className='break-all'
+                    style={{ maxWidth: '400px', fontSize: '12px' }}
+                  >
+                    {t('错误代码')}: {testResult.errorCode}
+                  </Typography.Text>
+                )}
                 {testResult.errorCode === 'model_price_error' && (
                   <Button
                     size='small'

@@ -433,7 +433,7 @@ RESPONSE_EXAMPLES = {
         "data": {
             "system_name": "G-Master API",
             "server_address": "https://gmapi.fun",
-            "version": "v0.13.2-gmaster.3",
+            "version": "v1.0.0-rc.8-GM.1",
             "top_up_link": "https://gmtoken.shop",
         },
     },

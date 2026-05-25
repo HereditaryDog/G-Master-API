@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	pancake "github.com/waffo-com/waffo-pancake-sdk-go"
 	"github.com/yangjunyu/G-Master-API/common"
 	"github.com/yangjunyu/G-Master-API/dto"
 	"github.com/yangjunyu/G-Master-API/model"
@@ -190,6 +191,226 @@ func ResolveWaffoPancakeSubscriptionTradeNo(event *waffoPancakeWebhookEvent) (st
 	}
 
 	return "", fmt.Errorf("missing webhook orderId")
+}
+
+func newWaffoPancakeAdminClient(merchantID, privateKey string) (*pancake.Client, error) {
+	merchantID = strings.TrimSpace(merchantID)
+	privateKey = strings.TrimSpace(privateKey)
+	if merchantID == "" || privateKey == "" {
+		return nil, fmt.Errorf("merchant id and private key are required")
+	}
+	return pancake.New(pancake.Config{
+		MerchantID: merchantID,
+		PrivateKey: privateKey,
+	})
+}
+
+const (
+	defaultWaffoPancakeStoreName   = "g-master-api-store"
+	defaultWaffoPancakeProductName = "g-master-api-charge-product"
+)
+
+func optionalWaffoPancakeString(value string) *string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return nil
+	}
+	return &value
+}
+
+func CreateWaffoPancakePrimaryStore(ctx context.Context, merchantID, privateKey string) (string, error) {
+	client, err := newWaffoPancakeAdminClient(merchantID, privateKey)
+	if err != nil {
+		return "", err
+	}
+	storeRes, err := client.Stores.Create(ctx, pancake.CreateStoreParams{
+		Name: defaultWaffoPancakeStoreName,
+	})
+	if err != nil {
+		return "", fmt.Errorf("create Waffo Pancake store: %w", err)
+	}
+	return storeRes.Store.ID, nil
+}
+
+func CreateWaffoPancakeProductForPlan(ctx context.Context, merchantID, privateKey, storeID, name, amount, returnURL string) (string, error) {
+	storeID = strings.TrimSpace(storeID)
+	if storeID == "" {
+		return "", fmt.Errorf("store id is required to create a product")
+	}
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return "", fmt.Errorf("plan name is required")
+	}
+	amount = strings.TrimSpace(amount)
+	if amount == "" {
+		return "", fmt.Errorf("plan price is required")
+	}
+	client, err := newWaffoPancakeAdminClient(merchantID, privateKey)
+	if err != nil {
+		return "", err
+	}
+	prodRes, err := client.OnetimeProducts.Create(ctx, pancake.CreateOnetimeProductParams{
+		StoreID: storeID,
+		Name:    name,
+		Prices: pancake.Prices{
+			"USD": {
+				Amount:      amount,
+				TaxCategory: pancake.TaxCategory("saas"),
+			},
+		},
+		SuccessURL: optionalWaffoPancakeString(returnURL),
+	})
+	if err != nil {
+		return "", fmt.Errorf("create Waffo Pancake plan product: %w", err)
+	}
+	productID := prodRes.Product.ID
+	if _, err := client.OnetimeProducts.Publish(ctx, pancake.PublishOnetimeProductParams{ID: productID}); err != nil {
+		return "", fmt.Errorf("publish Waffo Pancake plan product: %w", err)
+	}
+	return productID, nil
+}
+
+func CreateWaffoPancakePrimaryProduct(ctx context.Context, merchantID, privateKey, storeID, returnURL string) (string, error) {
+	storeID = strings.TrimSpace(storeID)
+	if storeID == "" {
+		return "", fmt.Errorf("store id is required to create a product")
+	}
+	client, err := newWaffoPancakeAdminClient(merchantID, privateKey)
+	if err != nil {
+		return "", err
+	}
+	prodRes, err := client.OnetimeProducts.Create(ctx, pancake.CreateOnetimeProductParams{
+		StoreID: storeID,
+		Name:    defaultWaffoPancakeProductName,
+		Prices: pancake.Prices{
+			"USD": {
+				Amount:      "1.00",
+				TaxCategory: pancake.TaxCategory("saas"),
+			},
+		},
+		SuccessURL: optionalWaffoPancakeString(returnURL),
+	})
+	if err != nil {
+		return "", fmt.Errorf("create Waffo Pancake product: %w", err)
+	}
+	productID := prodRes.Product.ID
+	if _, err := client.OnetimeProducts.Publish(ctx, pancake.PublishOnetimeProductParams{ID: productID}); err != nil {
+		return "", fmt.Errorf("publish Waffo Pancake product: %w", err)
+	}
+	return productID, nil
+}
+
+type WaffoPancakePairResult struct {
+	StoreID     string
+	StoreName   string
+	ProductID   string
+	ProductName string
+	OrphanStore bool
+}
+
+func CreateWaffoPancakePrimaryPair(ctx context.Context, merchantID, privateKey, returnURL string) (*WaffoPancakePairResult, error) {
+	storeID, err := CreateWaffoPancakePrimaryStore(ctx, merchantID, privateKey)
+	if err != nil {
+		return nil, err
+	}
+	productID, err := CreateWaffoPancakePrimaryProduct(ctx, merchantID, privateKey, storeID, returnURL)
+	if err != nil {
+		return &WaffoPancakePairResult{
+			StoreID:     storeID,
+			StoreName:   defaultWaffoPancakeStoreName,
+			OrphanStore: true,
+		}, fmt.Errorf("store created at %s but product creation failed: %w", storeID, err)
+	}
+	return &WaffoPancakePairResult{
+		StoreID:     storeID,
+		StoreName:   defaultWaffoPancakeStoreName,
+		ProductID:   productID,
+		ProductName: defaultWaffoPancakeProductName,
+	}, nil
+}
+
+func SaveWaffoPancakeConfig(ctx context.Context, merchantID, privateKey, returnURL, storeID, productID string) error {
+	_ = ctx
+	merchantID = strings.TrimSpace(merchantID)
+	storeID = strings.TrimSpace(storeID)
+	productID = strings.TrimSpace(productID)
+	if merchantID == "" || storeID == "" || productID == "" {
+		return fmt.Errorf("merchant id, store id, and product id are required to save")
+	}
+	values := map[string]string{
+		"WaffoPancakeMerchantID": merchantID,
+		"WaffoPancakeReturnURL":  strings.TrimSpace(returnURL),
+		"WaffoPancakeStoreID":    storeID,
+		"WaffoPancakeProductID":  productID,
+	}
+	if privateKey = strings.TrimSpace(privateKey); privateKey != "" {
+		values["WaffoPancakePrivateKey"] = privateKey
+	}
+	if err := model.UpdateOptionsBulk(values); err != nil {
+		return fmt.Errorf("persist Waffo Pancake config: %w", err)
+	}
+	return nil
+}
+
+type WaffoPancakeCatalogProduct struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}
+
+type WaffoPancakeCatalogStore struct {
+	ID              string                       `json:"id"`
+	Name            string                       `json:"name"`
+	Status          string                       `json:"status"`
+	ProdEnabled     bool                         `json:"prodEnabled"`
+	OnetimeProducts []WaffoPancakeCatalogProduct `json:"onetimeProducts"`
+}
+
+type WaffoPancakeCatalog struct {
+	Stores []WaffoPancakeCatalogStore `json:"stores"`
+}
+
+func ListWaffoPancakeCatalog(ctx context.Context, merchantID, privateKey string) (*WaffoPancakeCatalog, error) {
+	client, err := newWaffoPancakeAdminClient(merchantID, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	type queryShape struct {
+		Stores []WaffoPancakeCatalogStore `json:"stores"`
+	}
+	resp, err := pancake.GraphQLQuery[queryShape](ctx, client, pancake.GraphQLParams{
+		Query: `query {
+			stores(limit: 100) {
+				id
+				name
+				status
+				prodEnabled
+				onetimeProducts {
+					id
+					name
+					status
+				}
+			}
+		}`,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("query Waffo Pancake catalog: %w", err)
+	}
+	if len(resp.Errors) > 0 {
+		return nil, fmt.Errorf("waffo pancake catalog query returned %d errors: %s", len(resp.Errors), resp.Errors[0].Message)
+	}
+	stores := resp.Data.Stores
+	for i := range stores {
+		active := stores[i].OnetimeProducts[:0]
+		for _, product := range stores[i].OnetimeProducts {
+			if strings.EqualFold(strings.TrimSpace(product.Status), "active") {
+				active = append(active, product)
+			}
+		}
+		stores[i].OnetimeProducts = active
+	}
+	return &WaffoPancakeCatalog{Stores: stores}, nil
 }
 
 func normalizeRSAPrivateKey(raw string) (string, error) {
