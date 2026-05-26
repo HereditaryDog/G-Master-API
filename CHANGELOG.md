@@ -2,6 +2,25 @@
 
 本文档记录 `G-Master API` 对外版本的主要变化。
 
+## v1.0.0-rc.8-GM.2 - 2026-05-26
+
+### 新增
+
+- 为 Gaster Code 桌面端内置账号中心新增后端接口：套餐列表、checkout 创建与轮询、交易记录、订阅取消和订阅恢复。
+- `/api/gaster-code/me` 扩展返回钱包余额、低余额状态、订阅条目、可用模型、可用功能和权益到期时间，便于桌面端直接展示账号中心。
+- 新增 `gaster_code_billing_checkouts` 持久化记录，桌面端 checkout 会写入可轮询的本地会话，并在用户通过现有网页支付流程完成充值或订阅后推断为 `paid`。
+
+### 变更
+
+- Gaster Code 桌面端认证失败统一返回 `GMASTER_AUTH_EXPIRED`，并保留 `legacy_code=authentication_failed` 以兼容旧桌面端判断。
+- Gaster Code Desktop 专用 provider token 在充值或订阅导致用户分组变化后继续同步最新用户分组和可用模型。
+- 交易记录接口会同时汇总充值、订阅订单、使用日志、退款和管理员额度调整记录。
+
+### 文档
+
+- 更新 Gaster Code Desktop Auth API 文档，补充账号中心接口清单、成功/失败 JSON 示例、稳定错误码和桌面端对接说明。
+- 更新版本号、README 当前稳定基线和 Apifox 导出版本到 `v1.0.0-rc.8-GM.2`。
+
 ## v1.0.0-rc.8-GM.1 - 2026-05-25
 
 ### 新增
