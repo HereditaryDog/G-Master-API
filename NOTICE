@@ -1,0 +1,43 @@
+G-Master API Notices
+
+G-Master API
+Copyright (c) yangjunyu and contributors.
+
+This project is licensed under the GNU Affero General Public License v3.0.
+See LICENSE for the full project license terms.
+
+==== Upstream Attribution ====
+
+G-Master API is maintained as a branded downstream distribution. It preserves
+the upstream lineage and license obligations documented in ACKNOWLEDGMENTS.md.
+
+Upstream lineage includes QuantumNous/new-api and One API.
+
+Modified versions must not misrepresent the origin of the software and must
+mark their changes in accordance with AGPLv3 Section 7(c).
+
+==== Third-Party Notices ====
+
+This product includes third-party open source software. Dependency and license
+inventory notes are listed in THIRD-PARTY-LICENSES.md.
+
+Apache-2.0 upstream NOTICE entries identified for direct dependencies are
+reproduced below. Preserve this file with Docker images, standalone binaries,
+frontend bundles, and desktop installers distributed to users.
+
+==== Apache-2.0 Notices ====
+
+AWS SDK for Go
+Copyright 2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2014-2015 Stripe, Inc.
+
+smithy-go
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+otp
+Copyright (c) 2014, Paul Querna
+
+This product includes software developed by
+Paul Querna (http://paul.querna.org/).
+
+==== End of Notices ====

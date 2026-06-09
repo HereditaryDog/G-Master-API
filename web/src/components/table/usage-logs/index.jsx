@@ -58,7 +58,7 @@ const LogsPage = () => {
         })}
         t={logsData.t}
       >
-        <LogsTable {...logsData} />
+        <LogsTable {...logsData} isMobile={isMobile} />
       </CardPro>
     </>
   );

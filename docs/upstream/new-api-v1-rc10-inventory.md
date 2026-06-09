@@ -105,6 +105,26 @@ Include in this pass:
 - System settings numeric/dirty-state fixes where they map to current `web/`.
 - Carefully selected frontend UX improvements for channel editor and usage logs.
 
+## Implementation Status
+
+Implemented release: `v1.0.0-rc.10-GM.1`
+
+Completed in this pass:
+
+- Relay image quality forwarding, large outbound JSON body storage, upstream `ContentLength` recovery, Claude/Gemini stream tool-use fixes, and oversized upstream error log preview truncation.
+- Usage-log exact filter semantics for model and username, while keeping token name exact.
+- Channel test user resolution, channel copy insertion, multi-key auto-disable/cache status recovery, and model-test duplicate toast suppression.
+- Waffo Pancake checkout `orderMerchantExternalId` propagation with webhook fallback to legacy `orderId`.
+- Balance-based subscription purchase endpoint and model-layer transaction coverage.
+- Current G-Master frontend mapped improvements: mobile usage-log cards, model mapping structure validation, and batch test notification cleanup.
+- Release metadata, README baseline, Apifox versions, NOTICE, third-party dependency notes, and Docker image license-file retention.
+
+Intentionally deferred:
+
+- Wholesale adoption of upstream `web/default`.
+- Dual default/classic frontend embedding and theme-aware static filesystem routing.
+- Unreleased upstream `main` commits after `v1.0.0-rc.10`.
+
 Defer unless explicitly requested:
 
 - Unreleased `upstream/main` commits after `v1.0.0-rc.10`.
@@ -154,4 +174,3 @@ Browser checks:
 - Subscription and wallet flows still show G-Master data and Gaster Code related records.
 - System settings save/dirty state works for numeric fields.
 - Model health panel still populates from usage logs after real calls.
-

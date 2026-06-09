@@ -33,6 +33,10 @@ RUN apt-get update \
     && update-ca-certificates
 
 COPY --from=builder /build/g-master-api /
+COPY --from=builder /build/LICENSE /licenses/LICENSE
+COPY --from=builder /build/NOTICE /licenses/NOTICE
+COPY --from=builder /build/ACKNOWLEDGMENTS.md /licenses/ACKNOWLEDGMENTS.md
+COPY --from=builder /build/THIRD-PARTY-LICENSES.md /licenses/THIRD-PARTY-LICENSES.md
 EXPOSE 3000
 WORKDIR /data
 ENTRYPOINT ["/g-master-api"]

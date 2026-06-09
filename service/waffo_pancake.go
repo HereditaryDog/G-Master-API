@@ -37,14 +37,15 @@ type WaffoPancakePriceSnapshot struct {
 }
 
 type WaffoPancakeCreateSessionParams struct {
-	StoreID          string                     `json:"storeId"`
-	ProductID        string                     `json:"productId"`
-	ProductType      string                     `json:"productType"`
-	Currency         string                     `json:"currency"`
-	PriceSnapshot    *WaffoPancakePriceSnapshot `json:"priceSnapshot,omitempty"`
-	BuyerEmail       string                     `json:"buyerEmail,omitempty"`
-	SuccessURL       string                     `json:"successUrl,omitempty"`
-	ExpiresInSeconds *int                       `json:"expiresInSeconds,omitempty"`
+	StoreID                 string                     `json:"storeId"`
+	ProductID               string                     `json:"productId"`
+	ProductType             string                     `json:"productType"`
+	Currency                string                     `json:"currency"`
+	PriceSnapshot           *WaffoPancakePriceSnapshot `json:"priceSnapshot,omitempty"`
+	BuyerEmail              string                     `json:"buyerEmail,omitempty"`
+	SuccessURL              string                     `json:"successUrl,omitempty"`
+	ExpiresInSeconds        *int                       `json:"expiresInSeconds,omitempty"`
+	OrderMerchantExternalID string                     `json:"orderMerchantExternalId,omitempty"`
 }
 
 type WaffoPancakeCheckoutSession struct {
@@ -65,13 +66,14 @@ type waffoPancakeCreateSessionResponse struct {
 }
 
 type waffoPancakeWebhookData struct {
-	ID          string          `json:"id"`
-	OrderID     string          `json:"orderId"`
-	BuyerEmail  string          `json:"buyerEmail"`
-	Currency    string          `json:"currency"`
-	Amount      dto.StringValue `json:"amount"`
-	TaxAmount   dto.StringValue `json:"taxAmount"`
-	ProductName string          `json:"productName"`
+	ID                      string          `json:"id"`
+	OrderID                 string          `json:"orderId"`
+	OrderMerchantExternalID string          `json:"orderMerchantExternalId"`
+	BuyerEmail              string          `json:"buyerEmail"`
+	Currency                string          `json:"currency"`
+	Amount                  dto.StringValue `json:"amount"`
+	TaxAmount               dto.StringValue `json:"taxAmount"`
+	ProductName             string          `json:"productName"`
 }
 
 type waffoPancakeWebhookEvent struct {
@@ -94,6 +96,9 @@ func (e *waffoPancakeWebhookEvent) NormalizedEventType() string {
 func CreateWaffoPancakeCheckoutSession(ctx context.Context, params *WaffoPancakeCreateSessionParams) (*WaffoPancakeCheckoutSession, error) {
 	if params == nil {
 		return nil, fmt.Errorf("missing checkout params")
+	}
+	if strings.TrimSpace(params.OrderMerchantExternalID) == "" {
+		return nil, fmt.Errorf("missing order merchant external id")
 	}
 
 	body, err := common.Marshal(params)
@@ -166,15 +171,15 @@ func ResolveWaffoPancakeTradeNo(event *waffoPancakeWebhookEvent) (string, error)
 		return "", fmt.Errorf("missing webhook event")
 	}
 
-	if tradeNo := strings.TrimSpace(event.Data.OrderID); tradeNo != "" {
+	if tradeNo := resolveWaffoPancakeWebhookTradeNo(event); tradeNo != "" {
 		topUp := model.GetTopUpByTradeNo(tradeNo)
-		if topUp != nil && topUp.PaymentMethod == model.PaymentMethodWaffoPancake {
+		if topUp != nil && topUp.PaymentProvider == model.PaymentProviderWaffoPancake {
 			return tradeNo, nil
 		}
-		return "", fmt.Errorf("waffo pancake order not found for webhook orderId=%s", tradeNo)
+		return "", fmt.Errorf("waffo pancake order not found for tradeNo=%s", tradeNo)
 	}
 
-	return "", fmt.Errorf("missing webhook orderId")
+	return "", fmt.Errorf("missing webhook orderMerchantExternalId")
 }
 
 func ResolveWaffoPancakeSubscriptionTradeNo(event *waffoPancakeWebhookEvent) (string, error) {
@@ -182,15 +187,27 @@ func ResolveWaffoPancakeSubscriptionTradeNo(event *waffoPancakeWebhookEvent) (st
 		return "", fmt.Errorf("missing webhook event")
 	}
 
-	if tradeNo := strings.TrimSpace(event.Data.OrderID); tradeNo != "" {
+	if tradeNo := resolveWaffoPancakeWebhookTradeNo(event); tradeNo != "" {
 		order := model.GetSubscriptionOrderByTradeNo(tradeNo)
 		if order != nil && order.PaymentProvider == model.PaymentProviderWaffoPancake {
 			return tradeNo, nil
 		}
-		return "", fmt.Errorf("waffo pancake subscription order not found for webhook orderId=%s", tradeNo)
+		return "", fmt.Errorf("waffo pancake subscription order not found for tradeNo=%s", tradeNo)
 	}
 
-	return "", fmt.Errorf("missing webhook orderId")
+	return "", fmt.Errorf("missing webhook orderMerchantExternalId")
+}
+
+func resolveWaffoPancakeWebhookTradeNo(event *waffoPancakeWebhookEvent) string {
+	if event == nil {
+		return ""
+	}
+	if tradeNo := strings.TrimSpace(event.Data.OrderMerchantExternalID); tradeNo != "" {
+		return tradeNo
+	}
+	// Backward compatibility for checkout sessions created before Waffo echoed
+	// the local trade_no through orderMerchantExternalId.
+	return strings.TrimSpace(event.Data.OrderID)
 }
 
 func newWaffoPancakeAdminClient(merchantID, privateKey string) (*pancake.Client, error) {

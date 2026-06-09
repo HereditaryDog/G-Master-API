@@ -2,6 +2,34 @@
 
 本文档记录 `G-Master API` 对外版本的主要变化。
 
+## v1.0.0-rc.10-GM.1 - 2026-06-09
+
+### 新增
+
+- 新增余额购买订阅接口 `POST /api/subscription/balance/pay`，用户可直接使用账户余额购买订阅套餐，订单会记录为 `balance` 支付来源。
+- 新增 `NOTICE` 与 `THIRD-PARTY-LICENSES.md`，并在 Docker 镜像中保留许可证、NOTICE、致谢与第三方依赖清单。
+- 使用日志移动端新增卡片视图，手机宽度下更容易扫描模型、费用、Token、耗时、Request ID 和展开详情。
+
+### 变更
+
+- 同步 v1 RC 上游 relay 稳定性更新：图片生成保留 `auto/high/medium/low` 等 quality 参数，大型 base64 请求体改用 body storage 包装并回填上游 `ContentLength`，降低内存峰值。
+- Claude/Gemini 流式工具调用转换补齐并发 tool-call 索引、Gemini-to-Claude stop/final usage 兼容和多媒体内容拼接内存优化。
+- 使用日志的模型名和用户名筛选改为“默认精确匹配，显式 `%` 才通配”，令牌名保持精确匹配。
+- 渠道测试改为使用当前登录用户或 root 用户兜底，不再硬编码用户 `1`；复制渠道改为直接插入单个 clone，保证返回 ID 正确。
+- 多 Key 渠道自动禁用逻辑会识别找不到当前 key、全部 key 禁用和 key 恢复场景，并在内存缓存状态变化时同步渠道状态。
+- Waffo Pancake checkout 创建时写入本地 `trade_no` 到 `orderMerchantExternalId`，webhook 优先用该字段映射订单，同时保留旧 `orderId` 回退。
+- 渠道批量模型测试不再为每个模型重复弹 toast，只保留批量进度和汇总；模型映射提交前校验必须是 JSON 对象且目标模型为字符串。
+
+### 修复
+
+- 上游异常响应体写入本地日志前会截断预览，避免超大错误 body 冲击日志存储；返回给调用方的机器可读错误结构保持完整。
+- 修复多 Key 渠道找不到当前 key 时可能误伤第一个 key 的问题。
+- 修复 Waffo Pancake webhook 使用平台内部 `ORD_*` 时无法稳定找到本地订阅/充值订单的问题。
+
+### 文档
+
+- 更新 rc.10 更新清单、README 当前稳定基线、Apifox 导出版本和 Docker 镜像授权文件保留策略。
+
 ## v1.0.0-rc.8-GM.2 - 2026-05-26
 
 ### 新增

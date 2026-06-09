@@ -960,6 +960,7 @@ export const useChannelsData = () => {
     model,
     endpointType = '',
     stream = false,
+    silent = false,
   ) => {
     const testKey = `${record.id}-${model}`;
 
@@ -979,7 +980,7 @@ export const useChannelsData = () => {
       if (stream) {
         url += `&stream=true`;
       }
-      const res = await API.get(url);
+      const res = await API.get(url, { skipErrorHandler: true });
 
       // 检查是否在请求期间被停止
       if (shouldStopBatchTestingRef.current && isBatchTesting) {
@@ -1007,6 +1008,9 @@ export const useChannelsData = () => {
           channel.test_time = Date.now() / 1000;
         });
 
+        if (silent) {
+          return;
+        }
         if (!model || model === '') {
           showInfo(
             t('通道 ${name} 测试成功，耗时 ${time.toFixed(2)} 秒。')
@@ -1023,7 +1027,7 @@ export const useChannelsData = () => {
               .replace('${time.toFixed(2)}', time.toFixed(2)),
           );
         }
-      } else {
+      } else if (!silent) {
         showError(message);
       }
     } catch (error) {
@@ -1046,7 +1050,9 @@ export const useChannelsData = () => {
           errorCode,
         },
       }));
-      showError(errorMessage || t('测试失败'));
+      if (!silent) {
+        showError(errorMessage || t('测试失败'));
+      }
     } finally {
       // 从正在测试的模型集合中移除
       setTestingModels((prev) => {
@@ -1121,6 +1127,7 @@ export const useChannelsData = () => {
             model,
             selectedEndpointType,
             isStreamTest,
+            true,
           ),
         );
         const batchResults = await Promise.allSettled(batchPromises);

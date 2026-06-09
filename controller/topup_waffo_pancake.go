@@ -97,9 +97,6 @@ func getWaffoPancakeBuyerEmail(user *model.User) string {
 	if user != nil && strings.TrimSpace(user.Email) != "" {
 		return user.Email
 	}
-	if user != nil {
-		return fmt.Sprintf("%d@gmaster-api.local", user.Id)
-	}
 	return ""
 }
 
@@ -380,10 +377,11 @@ func RequestWaffoPancakePay(c *gin.Context) {
 
 	expiresInSeconds := 45 * 60
 	session, err := service.CreateWaffoPancakeCheckoutSession(c.Request.Context(), &service.WaffoPancakeCreateSessionParams{
-		StoreID:     setting.WaffoPancakeStoreID,
-		ProductID:   setting.WaffoPancakeProductID,
-		ProductType: "onetime",
-		Currency:    strings.ToUpper(strings.TrimSpace(setting.WaffoPancakeCurrency)),
+		StoreID:                 setting.WaffoPancakeStoreID,
+		ProductID:               setting.WaffoPancakeProductID,
+		ProductType:             "onetime",
+		Currency:                strings.ToUpper(strings.TrimSpace(setting.WaffoPancakeCurrency)),
+		OrderMerchantExternalID: tradeNo,
 		PriceSnapshot: &service.WaffoPancakePriceSnapshot{
 			Amount:      formatWaffoPancakeAmount(payMoney),
 			TaxIncluded: false,
@@ -437,16 +435,20 @@ func WaffoPancakeWebhook(c *gin.Context) {
 		return
 	}
 
-	logger.LogInfo(c.Request.Context(), fmt.Sprintf("Waffo Pancake webhook 验签成功 event_type=%s event_id=%s order_id=%s client_ip=%s", event.NormalizedEventType(), event.ID, event.Data.OrderID, c.ClientIP()))
+	tradeNoCandidate := strings.TrimSpace(event.Data.OrderMerchantExternalID)
+	if tradeNoCandidate == "" {
+		tradeNoCandidate = strings.TrimSpace(event.Data.OrderID)
+	}
+	logger.LogInfo(c.Request.Context(), fmt.Sprintf("Waffo Pancake webhook 验签成功 event_type=%s event_id=%s order_id=%s trade_no=%s client_ip=%s", event.NormalizedEventType(), event.ID, event.Data.OrderID, tradeNoCandidate, c.ClientIP()))
 	if event.NormalizedEventType() != "order.completed" {
 		c.String(http.StatusOK, "OK")
 		return
 	}
 
-	if strings.HasPrefix(strings.TrimSpace(event.Data.OrderID), "WAFFO_PANCAKE_SUB-") {
+	if strings.HasPrefix(tradeNoCandidate, "WAFFO_PANCAKE_SUB-") {
 		tradeNo, err := service.ResolveWaffoPancakeSubscriptionTradeNo(event)
 		if err != nil {
-			logger.LogWarn(c.Request.Context(), fmt.Sprintf("Waffo Pancake webhook 订阅订单号映射失败 event_id=%s order_id=%s error=%q", event.ID, event.Data.OrderID, err.Error()))
+			logger.LogWarn(c.Request.Context(), fmt.Sprintf("Waffo Pancake webhook 订阅订单号映射失败 event_id=%s order_id=%s trade_no=%s error=%q", event.ID, event.Data.OrderID, tradeNoCandidate, err.Error()))
 			c.String(http.StatusOK, "OK")
 			return
 		}
@@ -467,7 +469,7 @@ func WaffoPancakeWebhook(c *gin.Context) {
 
 	tradeNo, err := service.ResolveWaffoPancakeTradeNo(event)
 	if err != nil {
-		logger.LogWarn(c.Request.Context(), fmt.Sprintf("Waffo Pancake webhook 订单号映射失败 event_id=%s order_id=%s error=%q", event.ID, event.Data.OrderID, err.Error()))
+		logger.LogWarn(c.Request.Context(), fmt.Sprintf("Waffo Pancake webhook 订单号映射失败 event_id=%s order_id=%s trade_no=%s error=%q", event.ID, event.Data.OrderID, tradeNoCandidate, err.Error()))
 		c.String(http.StatusOK, "OK")
 		return
 	}

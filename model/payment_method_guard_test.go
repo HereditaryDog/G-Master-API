@@ -172,3 +172,73 @@ func TestExpireSubscriptionOrder_RejectsMismatchedPaymentProvider(t *testing.T) 
 	require.NotNil(t, order)
 	assert.Equal(t, common.TopUpStatusPending, order.Status)
 }
+
+func TestPurchaseSubscriptionWithBalance_DeductsQuotaAndCreatesSubscription(t *testing.T) {
+	truncateTables(t)
+
+	originalQuotaPerUnit := common.QuotaPerUnit
+	common.QuotaPerUnit = 100
+	t.Cleanup(func() {
+		common.QuotaPerUnit = originalQuotaPerUnit
+	})
+
+	insertUserForPaymentGuardTest(t, 404, 1000)
+	plan := &SubscriptionPlan{
+		Id:            501,
+		Title:         "Balance Plan",
+		PriceAmount:   2.5,
+		Currency:      "USD",
+		DurationUnit:  SubscriptionDurationMonth,
+		DurationValue: 1,
+		Enabled:       true,
+		TotalAmount:   1000,
+		UpgradeGroup:  "vip",
+	}
+	require.NoError(t, DB.Create(plan).Error)
+	InvalidateSubscriptionPlanCache(plan.Id)
+
+	require.NoError(t, PurchaseSubscriptionWithBalance(404, plan.Id))
+
+	assert.Equal(t, 750, getUserQuotaForPaymentGuardTest(t, 404))
+	assert.Equal(t, int64(1), countUserSubscriptionsForPaymentGuardTest(t, 404))
+
+	var order SubscriptionOrder
+	require.NoError(t, DB.Where("user_id = ? AND plan_id = ?", 404, plan.Id).First(&order).Error)
+	assert.Equal(t, PaymentMethodBalance, order.PaymentMethod)
+	assert.Equal(t, PaymentProviderBalance, order.PaymentProvider)
+	assert.Equal(t, common.TopUpStatusSuccess, order.Status)
+	assert.Contains(t, order.ProviderPayload, "charged_quota=250")
+}
+
+func TestPurchaseSubscriptionWithBalance_RejectsInsufficientBalance(t *testing.T) {
+	truncateTables(t)
+
+	originalQuotaPerUnit := common.QuotaPerUnit
+	common.QuotaPerUnit = 100
+	t.Cleanup(func() {
+		common.QuotaPerUnit = originalQuotaPerUnit
+	})
+
+	insertUserForPaymentGuardTest(t, 405, 249)
+	plan := &SubscriptionPlan{
+		Id:            502,
+		Title:         "Balance Plan",
+		PriceAmount:   2.5,
+		Currency:      "USD",
+		DurationUnit:  SubscriptionDurationMonth,
+		DurationValue: 1,
+		Enabled:       true,
+		TotalAmount:   1000,
+	}
+	require.NoError(t, DB.Create(plan).Error)
+	InvalidateSubscriptionPlanCache(plan.Id)
+
+	err := PurchaseSubscriptionWithBalance(405, plan.Id)
+	require.Error(t, err)
+
+	assert.Equal(t, 249, getUserQuotaForPaymentGuardTest(t, 405))
+	assert.Zero(t, countUserSubscriptionsForPaymentGuardTest(t, 405))
+	var count int64
+	require.NoError(t, DB.Model(&SubscriptionOrder{}).Where("user_id = ?", 405).Count(&count).Error)
+	assert.Zero(t, count)
+}

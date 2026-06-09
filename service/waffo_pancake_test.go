@@ -60,13 +60,14 @@ func TestResolveWaffoPancakeTradeNo_UsesWebhookOrderIDWhenLocalOrderExists(t *te
 	db := setupWaffoPancakeTestDB(t)
 
 	topUp := &model.TopUp{
-		UserId:        1,
-		Amount:        10,
-		Money:         29,
-		TradeNo:       "ORD_5dXBtmF2HLlHfbPNm0Wcnz",
-		PaymentMethod: model.PaymentMethodWaffoPancake,
-		CreateTime:    time.Now().Unix(),
-		Status:        common.TopUpStatusPending,
+		UserId:          1,
+		Amount:          10,
+		Money:           29,
+		TradeNo:         "ORD_5dXBtmF2HLlHfbPNm0Wcnz",
+		PaymentMethod:   model.PaymentMethodWaffoPancake,
+		PaymentProvider: model.PaymentProviderWaffoPancake,
+		CreateTime:      time.Now().Unix(),
+		Status:          common.TopUpStatusPending,
 	}
 	require.NoError(t, db.Create(topUp).Error)
 
@@ -77,6 +78,31 @@ func TestResolveWaffoPancakeTradeNo_UsesWebhookOrderIDWhenLocalOrderExists(t *te
 	})
 	require.NoError(t, err)
 	require.Equal(t, "ORD_5dXBtmF2HLlHfbPNm0Wcnz", tradeNo)
+}
+
+func TestResolveWaffoPancakeTradeNo_PrefersMerchantExternalID(t *testing.T) {
+	db := setupWaffoPancakeTestDB(t)
+
+	topUp := &model.TopUp{
+		UserId:          1,
+		Amount:          10,
+		Money:           29,
+		TradeNo:         "WAFFO_PANCAKE-1-123456-abc123",
+		PaymentMethod:   model.PaymentMethodWaffoPancake,
+		PaymentProvider: model.PaymentProviderWaffoPancake,
+		CreateTime:      time.Now().Unix(),
+		Status:          common.TopUpStatusPending,
+	}
+	require.NoError(t, db.Create(topUp).Error)
+
+	tradeNo, err := ResolveWaffoPancakeTradeNo(&waffoPancakeWebhookEvent{
+		Data: waffoPancakeWebhookData{
+			OrderID:                 "ORD_5dXBtmF2HLlHfbPNm0Wcnz",
+			OrderMerchantExternalID: "WAFFO_PANCAKE-1-123456-abc123",
+		},
+	})
+	require.NoError(t, err)
+	require.Equal(t, "WAFFO_PANCAKE-1-123456-abc123", tradeNo)
 }
 
 func TestResolveWaffoPancakeTradeNo_FailsWhenWebhookOrderIDIsUnknown(t *testing.T) {
@@ -91,13 +117,14 @@ func TestResolveWaffoPancakeTradeNo_FailsWhenWebhookOrderIDIsUnknown(t *testing.
 	require.NoError(t, db.Create(user).Error)
 
 	topUp := &model.TopUp{
-		UserId:        user.Id,
-		Amount:        10,
-		Money:         29,
-		TradeNo:       "WAFFO_PANCAKE-42-123456-abc123",
-		PaymentMethod: model.PaymentMethodWaffoPancake,
-		CreateTime:    time.Now().Unix(),
-		Status:        common.TopUpStatusPending,
+		UserId:          user.Id,
+		Amount:          10,
+		Money:           29,
+		TradeNo:         "WAFFO_PANCAKE-42-123456-abc123",
+		PaymentMethod:   model.PaymentMethodWaffoPancake,
+		PaymentProvider: model.PaymentProviderWaffoPancake,
+		CreateTime:      time.Now().Unix(),
+		Status:          common.TopUpStatusPending,
 	}
 	require.NoError(t, db.Create(topUp).Error)
 
@@ -144,6 +171,41 @@ func TestResolveWaffoPancakeSubscriptionTradeNo_UsesWebhookOrderIDWhenOrderExist
 	})
 	require.NoError(t, err)
 	require.Equal(t, "WAFFO_PANCAKE_SUB-1-123456-abc123", tradeNo)
+}
+
+func TestResolveWaffoPancakeSubscriptionTradeNo_PrefersMerchantExternalID(t *testing.T) {
+	db := setupWaffoPancakeTestDB(t)
+
+	plan := &model.SubscriptionPlan{
+		Id:            7002,
+		Title:         "Waffo Plan",
+		PriceAmount:   19.99,
+		Currency:      "USD",
+		DurationUnit:  model.SubscriptionDurationMonth,
+		DurationValue: 1,
+		Enabled:       true,
+		TotalAmount:   1000,
+	}
+	require.NoError(t, db.Create(plan).Error)
+	require.NoError(t, db.Create(&model.SubscriptionOrder{
+		UserId:          1,
+		PlanId:          plan.Id,
+		Money:           plan.PriceAmount,
+		TradeNo:         "WAFFO_PANCAKE_SUB-1-654321-def456",
+		PaymentMethod:   model.PaymentMethodWaffoPancake,
+		PaymentProvider: model.PaymentProviderWaffoPancake,
+		CreateTime:      time.Now().Unix(),
+		Status:          common.TopUpStatusPending,
+	}).Error)
+
+	tradeNo, err := ResolveWaffoPancakeSubscriptionTradeNo(&waffoPancakeWebhookEvent{
+		Data: waffoPancakeWebhookData{
+			OrderID:                 "ORD_subscription",
+			OrderMerchantExternalID: "WAFFO_PANCAKE_SUB-1-654321-def456",
+		},
+	})
+	require.NoError(t, err)
+	require.Equal(t, "WAFFO_PANCAKE_SUB-1-654321-def456", tradeNo)
 }
 
 func TestResolveWaffoPancakeWebhookEnvironment(t *testing.T) {

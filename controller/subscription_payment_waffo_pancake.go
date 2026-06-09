@@ -101,10 +101,11 @@ func SubscriptionRequestWaffoPancakePay(c *gin.Context) {
 		currency = "USD"
 	}
 	session, err := service.CreateWaffoPancakeCheckoutSession(c.Request.Context(), &service.WaffoPancakeCreateSessionParams{
-		StoreID:     setting.WaffoPancakeStoreID,
-		ProductID:   strings.TrimSpace(plan.WaffoPancakeProductId),
-		ProductType: "onetime",
-		Currency:    currency,
+		StoreID:                 setting.WaffoPancakeStoreID,
+		ProductID:               strings.TrimSpace(plan.WaffoPancakeProductId),
+		ProductType:             "onetime",
+		Currency:                currency,
+		OrderMerchantExternalID: tradeNo,
 		PriceSnapshot: &service.WaffoPancakePriceSnapshot{
 			Amount:      formatWaffoPancakeAmount(plan.PriceAmount),
 			TaxIncluded: false,

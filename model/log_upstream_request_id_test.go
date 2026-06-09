@@ -113,7 +113,7 @@ func TestGetUserLogsFiltersByUpstreamRequestID(t *testing.T) {
 	require.Equal(t, "upstream-user-keep", logs[0].UpstreamRequestId)
 }
 
-func TestGetAllLogsUsesEscapedContainsFilters(t *testing.T) {
+func TestGetAllLogsUsesExplicitWildcardFilters(t *testing.T) {
 	setupLogUpstreamRequestIDTestDB(t)
 	require.NoError(t, LOG_DB.Create(&Log{
 		UserId:    1,
@@ -134,10 +134,22 @@ func TestGetAllLogsUsesEscapedContainsFilters(t *testing.T) {
 		RequestId: "drop",
 	}).Error)
 
-	logs, total, err := GetAllLogs(LogTypeUnknown, 0, 0, "4_", "alice", "desktop", 0, 10, 0, "", "", "")
+	logs, total, err := GetAllLogs(LogTypeUnknown, 0, 0, "gpt-4_pro", "alice-main", "desktop-token", 0, 10, 0, "", "", "")
 
 	require.NoError(t, err)
 	require.Equal(t, int64(1), total)
 	require.Len(t, logs, 1)
 	require.Equal(t, "keep", logs[0].RequestId)
+
+	logs, total, err = GetAllLogs(LogTypeUnknown, 0, 0, "gpt-4%", "alice-main", "desktop-token", 0, 10, 0, "", "", "")
+
+	require.NoError(t, err)
+	require.Equal(t, int64(2), total)
+	require.Len(t, logs, 2)
+
+	logs, total, err = GetAllLogs(LogTypeUnknown, 0, 0, "gpt-4%", "alice-main", "desktop", 0, 10, 0, "", "", "")
+
+	require.NoError(t, err)
+	require.Equal(t, int64(0), total)
+	require.Empty(t, logs)
 }

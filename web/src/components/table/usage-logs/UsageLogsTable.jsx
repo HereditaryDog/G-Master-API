@@ -25,6 +25,7 @@ import {
   IllustrationNoResultDark,
 } from '@douyinfe/semi-illustrations';
 import { getLogsColumns } from './UsageLogsColumnDefs';
+import UsageLogsMobileCards from './UsageLogsMobileCards';
 
 const LogsTable = (logsData) => {
   const {
@@ -44,6 +45,7 @@ const LogsTable = (logsData) => {
     hasExpandableRows,
     isAdminUser,
     billingDisplayMode,
+    isMobile,
     t,
     COLUMN_KEYS,
   } = logsData;
@@ -87,6 +89,10 @@ const LogsTable = (logsData) => {
   const expandRowRender = (record, index) => {
     return <Descriptions data={expandData[record.key]} />;
   };
+
+  if (isMobile) {
+    return <UsageLogsMobileCards {...logsData} />;
+  }
 
   return (
     <CardTable

@@ -1696,6 +1696,25 @@ const EditChannelModal = (props) => {
         showInfo(t('模型映射必须是合法的 JSON 格式！'));
         return;
       }
+      if (
+        !parsedModelMapping ||
+        typeof parsedModelMapping !== 'object' ||
+        Array.isArray(parsedModelMapping)
+      ) {
+        showInfo(t('模型映射必须是 JSON 对象！'));
+        return;
+      }
+      const invalidMappingValues = Object.entries(parsedModelMapping)
+        .filter(([, value]) => typeof value !== 'string')
+        .map(([key]) => key);
+      if (invalidMappingValues.length > 0) {
+        showInfo(
+          t('模型映射的目标模型必须是字符串: {{models}}', {
+            models: invalidMappingValues.join(', '),
+          }),
+        );
+        return;
+      }
     }
 
     const normalizedModels = (localInputs.models || [])
