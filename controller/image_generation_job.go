@@ -126,6 +126,7 @@ func RelayImageGenerationAsync(c *gin.Context) {
 		return
 	}
 	relayInfo.RelayMode = relayconstant.RelayModeImagesGenerations
+	relayInfo.RequestURLPath = "/v1/images/generations"
 
 	if newAPIError = prepareAsyncImageRelay(c, relayInfo, request); newAPIError != nil {
 		return

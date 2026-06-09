@@ -139,6 +139,10 @@ func TaskPollingLoop() {
 
 // DispatchPlatformUpdate 按平台分发轮询更新
 func DispatchPlatformUpdate(platform constant.TaskPlatform, taskChannelM map[int][]string, taskM map[string]*model.Task) {
+	if platformHandledOutsideTaskPolling(platform) {
+		return
+	}
+
 	switch platform {
 	case constant.TaskPlatformMidjourney:
 		// MJ 轮询由其自身处理，这里预留入口
@@ -149,6 +153,10 @@ func DispatchPlatformUpdate(platform constant.TaskPlatform, taskChannelM map[int
 			common.SysLog(fmt.Sprintf("UpdateVideoTasks fail: %s", err))
 		}
 	}
+}
+
+func platformHandledOutsideTaskPolling(platform constant.TaskPlatform) bool {
+	return platform == constant.TaskPlatformOpenAIImage
 }
 
 // UpdateSunoTasks 按渠道更新所有 Suno 任务

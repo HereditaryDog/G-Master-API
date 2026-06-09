@@ -386,6 +386,7 @@ func TestRelayImageGenerationAsyncQueuesExactPrompt(t *testing.T) {
 	require.NoError(t, common.Unmarshal(enqueued.requestBody, &request))
 	assert.Equal(t, prompt, request.Prompt)
 	assert.Equal(t, "gpt-image-2", request.Model)
+	assert.Equal(t, "/v1/images/generations", enqueued.relayInfo.RequestURLPath)
 
 	_, hasBodyStorage := enqueued.keys[common.KeyBodyStorage]
 	_, hasRequestBody := enqueued.keys[common.KeyRequestBody]
