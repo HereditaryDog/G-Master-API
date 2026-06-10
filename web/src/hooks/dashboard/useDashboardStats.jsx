@@ -47,7 +47,7 @@ const renderPeriodQuota = (quota) => {
   if (value <= 0) {
     return renderQuota(0);
   }
-  return trimFormattedDecimal(renderQuota(value, 4));
+  return trimFormattedDecimal(renderQuota(value));
 };
 
 const getHalfPeriodTrend = (series, t) => {
