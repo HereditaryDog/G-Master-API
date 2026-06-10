@@ -21,7 +21,7 @@ import React from 'react';
 import UsageLogsTable from '../../components/table/usage-logs';
 
 const Token = () => (
-  <div className='mt-[60px] px-2'>
+  <div className='gm-data-ops-page gm-usage-log-page'>
     <UsageLogsTable />
   </div>
 );

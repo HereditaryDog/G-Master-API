@@ -53,7 +53,7 @@ const TokensFilters = ({
       layout='horizontal'
       trigger='change'
       stopValidateWithError={false}
-      className='w-full md:w-auto order-1 md:order-2'
+      className='gm-data-ops-filters gm-token-filters w-full md:w-auto order-1 md:order-2'
     >
       <div className='flex flex-col md:flex-row items-center gap-2 w-full md:w-auto'>
         <div className='relative w-full md:w-56'>

@@ -61,10 +61,10 @@ const TokensActions = ({
 
   return (
     <>
-      <div className='flex flex-wrap gap-2 w-full md:w-auto order-2 md:order-1'>
+      <div className='gm-token-actions flex flex-wrap gap-2 w-full md:w-auto order-2 md:order-1'>
         <Button
           type='primary'
-          className='flex-1 md:flex-initial'
+          className='gm-data-ops-primary-action flex-1 md:flex-initial'
           onClick={() => {
             setEditingToken({
               id: undefined,
@@ -78,7 +78,7 @@ const TokensActions = ({
 
         <Button
           type='tertiary'
-          className='flex-1 md:flex-initial'
+          className='gm-data-ops-secondary-action flex-1 md:flex-initial'
           onClick={handleCopySelectedTokens}
           size='small'
         >
@@ -87,7 +87,7 @@ const TokensActions = ({
 
         <Button
           type='danger'
-          className='w-full md:w-auto'
+          className='gm-data-ops-danger-action w-full md:w-auto'
           onClick={handleDeleteSelectedTokens}
           size='small'
         >

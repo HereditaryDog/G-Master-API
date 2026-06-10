@@ -44,6 +44,7 @@ const LogsFilters = ({
       layout='vertical'
       trigger='change'
       stopValidateWithError={false}
+      className='gm-data-ops-filters gm-usage-log-filters'
     >
       <div className='flex flex-col gap-2'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2'>

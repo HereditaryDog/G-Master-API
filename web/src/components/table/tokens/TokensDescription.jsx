@@ -26,10 +26,11 @@ const { Text } = Typography;
 
 const TokensDescription = ({ compactMode, setCompactMode, t }) => {
   return (
-    <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-2 w-full'>
-      <div className='flex items-center text-blue-500'>
+    <div className='gm-data-ops-card-heading flex flex-col md:flex-row justify-between items-start md:items-center gap-2 w-full'>
+      <div className='gm-token-table-title flex items-center'>
         <Key size={16} className='mr-2' />
-        <Text>{t('令牌管理')}</Text>
+        <Text>{t('令牌列表')}</Text>
+        <span>{t('创建、复制、限制和停用密钥')}</span>
       </div>
 
       <CompactModeToggle

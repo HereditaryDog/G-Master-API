@@ -17,7 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Notification,
   Button,
@@ -31,6 +31,8 @@ import {
   showError,
   getModelCategories,
   selectFilter,
+  renderNumber,
+  renderQuota,
 } from '../../../helpers';
 import CardPro from '../../common/ui/CardPro';
 import TokensTable from './TokensTable';
@@ -42,6 +44,23 @@ import CCSwitchModal from './modals/CCSwitchModal';
 import { useTokensData } from '../../../hooks/tokens/useTokensData';
 import { useIsMobile } from '../../../hooks/common/useIsMobile';
 import { createCardProPagination } from '../../../helpers/utils';
+import {
+  CheckCircle2,
+  KeyRound,
+  MousePointer2,
+  ShieldCheck,
+} from 'lucide-react';
+
+const DataOpsMetricCard = ({ icon, label, value, helper, tone }) => (
+  <div className='gm-data-ops-kpi' data-tone={tone}>
+    <div className='gm-data-ops-kpi-copy'>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <em>{helper}</em>
+    </div>
+    <div className='gm-data-ops-kpi-icon'>{icon}</div>
+  </div>
+);
 
 function TokensPage() {
   // Define the function first, then pass it into the hook to avoid TDZ errors
@@ -375,8 +394,60 @@ function TokensPage() {
     t,
   } = tokensData;
 
+  const tokenMetrics = useMemo(() => {
+    const tokens = tokensData.tokens || [];
+    const enabledCount = tokens.filter((token) => token.status === 1).length;
+    const unlimitedCount = tokens.filter(
+      (token) => token.unlimited_quota,
+    ).length;
+    const currentPageUsedQuota = tokens.reduce(
+      (sum, token) => sum + (Number(token.used_quota) || 0),
+      0,
+    );
+    const revealedCount = Object.values(tokensData.showKeys || {}).filter(
+      Boolean,
+    ).length;
+
+    return [
+      {
+        label: t('总令牌'),
+        value: renderNumber(Number(tokensData.tokenCount) || 0),
+        helper: t('全部可管理密钥'),
+        tone: 'blue',
+        icon: <KeyRound size={18} />,
+      },
+      {
+        label: t('当前页启用'),
+        value: `${enabledCount}/${tokens.length}`,
+        helper: t('按当前筛选结果统计'),
+        tone: 'green',
+        icon: <CheckCircle2 size={18} />,
+      },
+      {
+        label: t('已选中'),
+        value: renderNumber(selectedKeys.length),
+        helper: t('批量复制或删除'),
+        tone: 'purple',
+        icon: <MousePointer2 size={18} />,
+      },
+      {
+        label: t('本页已用额度'),
+        value: renderQuota(currentPageUsedQuota),
+        helper: `${t('无限额度')} ${unlimitedCount} · ${t('已显示密钥')} ${revealedCount}`,
+        tone: 'cyan',
+        icon: <ShieldCheck size={18} />,
+      },
+    ];
+  }, [
+    selectedKeys.length,
+    t,
+    tokensData.showKeys,
+    tokensData.tokenCount,
+    tokensData.tokens,
+  ]);
+
   return (
-    <>
+    <div className='gm-data-ops-shell'>
       <EditTokenModal
         refresh={refresh}
         editingToken={editingToken}
@@ -391,8 +462,31 @@ function TokensPage() {
         modelOptions={modelOptions}
       />
 
+      <section className='gm-data-ops-header'>
+        <div className='gm-data-ops-header-copy'>
+          <div className='gm-data-ops-eyebrow'>
+            <KeyRound size={14} />
+            <span>{t('令牌管理')}</span>
+          </div>
+          <h1>{t('令牌管理')}</h1>
+          <p>{t('管理 API 密钥、额度、分组和客户端接入状态。')}</p>
+        </div>
+        <div className='gm-data-ops-header-meta'>
+          <span>{loading || searching ? t('同步中') : t('已同步')}</span>
+          <strong>{t('密钥工作台')}</strong>
+        </div>
+      </section>
+
+      <section className='gm-data-ops-kpi-grid'>
+        {tokenMetrics.map((metric) => (
+          <DataOpsMetricCard key={metric.label} {...metric} />
+        ))}
+      </section>
+
       <CardPro
         type='type1'
+        className='gm-data-ops-card gm-token-table-card'
+        bordered={false}
         descriptionArea={
           <TokensDescription
             compactMode={compactMode}
@@ -401,7 +495,7 @@ function TokensPage() {
           />
         }
         actionsArea={
-          <div className='flex flex-col md:flex-row justify-between items-center gap-2 w-full'>
+          <div className='gm-data-ops-action-row flex flex-col md:flex-row justify-between items-center gap-2 w-full'>
             <TokensActions
               selectedKeys={selectedKeys}
               setEditingToken={setEditingToken}
@@ -436,7 +530,7 @@ function TokensPage() {
       >
         <TokensTable {...tokensData} />
       </CardPro>
-    </>
+    </div>
   );
 }
 

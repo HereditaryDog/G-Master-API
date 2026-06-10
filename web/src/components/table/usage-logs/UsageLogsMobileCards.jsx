@@ -103,7 +103,7 @@ const UsageLogsMobileCards = ({
   }
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='gm-usage-log-mobile-cards flex flex-col gap-3'>
       {logs.map((record) => {
         const detailData = expandData?.[record.key] || [];
         const totalTokens =
@@ -112,7 +112,7 @@ const UsageLogsMobileCards = ({
         return (
           <Card
             key={record.key}
-            className='rounded-lg border border-gray-100 dark:border-gray-800'
+            className='gm-usage-log-mobile-card rounded-lg border border-gray-100 dark:border-gray-800'
           >
             <div className='flex items-start justify-between gap-3'>
               <div className='min-w-0'>
