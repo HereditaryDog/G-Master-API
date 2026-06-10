@@ -98,23 +98,28 @@ const DebugPanel = ({
 
   return (
     <Card
-      className='h-full flex flex-col'
+      className='gm-playground-panel gm-playground-debug-panel h-full flex flex-col'
       bordered={false}
       bodyStyle={{
-        padding: styleState.isMobile ? '16px' : '24px',
+        padding: 0,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
-      <div className='flex items-center justify-between mb-6 flex-shrink-0'>
-        <div className='flex items-center'>
-          <div className='w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center mr-3'>
+      <div className='gm-playground-panel-header'>
+        <div className='gm-playground-panel-title'>
+          <div className='gm-playground-panel-icon gm-playground-panel-icon-debug'>
             <Code size={20} className='text-white' />
           </div>
-          <Typography.Title heading={5} className='mb-0'>
-            {t('调试信息')}
-          </Typography.Title>
+          <div className='min-w-0'>
+            <Typography.Title heading={5} className='gm-playground-heading'>
+              {t('调试信息')}
+            </Typography.Title>
+            <Typography.Text className='gm-playground-subtitle'>
+              {t('请求、响应和 SSE 事件')}
+            </Typography.Text>
+          </div>
         </div>
 
         {styleState.isMobile && onCloseDebugPanel && (
@@ -129,7 +134,7 @@ const DebugPanel = ({
         )}
       </div>
 
-      <div className='flex-1 overflow-hidden debug-panel'>
+      <div className='gm-playground-debug-body debug-panel'>
         <Tabs
           renderArrow={renderArrow}
           type='card'
@@ -203,7 +208,7 @@ const DebugPanel = ({
         </Tabs>
       </div>
 
-      <div className='flex items-center justify-between mt-4 pt-4 flex-shrink-0'>
+      <div className='gm-playground-debug-footer'>
         {(debugData.timestamp || debugData.previewTimestamp) && (
           <div className='flex items-center gap-2'>
             <Clock size={14} className='text-gray-500' />

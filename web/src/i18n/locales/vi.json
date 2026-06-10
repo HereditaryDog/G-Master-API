@@ -4185,7 +4185,12 @@
     "（当前仅支持易支付接口，默认使用上方服务器地址作为回调地址！）": "(Hiện tại chỉ hỗ trợ giao diện Epay, địa chỉ máy chủ phía trên được sử dụng làm địa chỉ gọi lại theo mặc định!)",
     "，当前无生效订阅，将自动使用钱包": ", hiện không có gói đăng ký hiệu lực, sẽ tự động dùng ví.",
     "，时间：": ", thời gian:",
-    "，点击更新": ", nhấn để cập nhật"
+    "，点击更新": ", nhấn để cập nhật",
+    "Chat Completions 调试工作台": "Không gian gỡ lỗi Chat Completions",
+    "会话、模型和采样参数": "Phiên, mô hình và tham số lấy mẫu",
+    "请求、响应和 SSE 事件": "Yêu cầu, phản hồi và sự kiện SSE",
+    "就绪": "Sẵn sàng",
+    "非流式": "Không streaming"
   },
   "阶梯计费（表达式缺失）": "Tính phí theo bậc (thiếu biểu thức)"
 }

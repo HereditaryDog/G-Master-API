@@ -58,24 +58,28 @@ const SettingsPanel = ({
 
   return (
     <Card
-      className='h-full flex flex-col'
+      className='gm-playground-panel gm-playground-config-panel h-full flex flex-col'
       bordered={false}
       bodyStyle={{
-        padding: styleState.isMobile ? '16px' : '24px',
+        padding: 0,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
-      {/* 标题区域 - 与调试面板保持一致 */}
-      <div className='flex items-center justify-between mb-6 flex-shrink-0'>
-        <div className='flex items-center'>
-          <div className='w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mr-3'>
+      <div className='gm-playground-panel-header'>
+        <div className='gm-playground-panel-title'>
+          <div className='gm-playground-panel-icon gm-playground-panel-icon-config'>
             <Settings size={20} className='text-white' />
           </div>
-          <Typography.Title heading={5} className='mb-0'>
-            {t('模型配置')}
-          </Typography.Title>
+          <div className='min-w-0'>
+            <Typography.Title heading={5} className='gm-playground-heading'>
+              {t('模型配置')}
+            </Typography.Title>
+            <Typography.Text className='gm-playground-subtitle'>
+              {t('会话、模型和采样参数')}
+            </Typography.Text>
+          </div>
         </div>
 
         {styleState.isMobile && onCloseSettings && (
@@ -92,7 +96,7 @@ const SettingsPanel = ({
 
       {/* 移动端配置管理 */}
       {styleState.isMobile && (
-        <div className='mb-4 flex-shrink-0'>
+        <div className='gm-playground-mobile-config-actions'>
           <ConfigManager
             currentConfig={currentConfig}
             onConfigImport={onConfigImport}
@@ -103,18 +107,22 @@ const SettingsPanel = ({
         </div>
       )}
 
-      <div className='space-y-6 overflow-y-auto flex-1 pr-2 model-settings-scroll'>
+      <div className='gm-playground-config-scroll model-settings-scroll'>
         {/* 自定义请求体编辑器 */}
-        <CustomRequestEditor
-          customRequestMode={customRequestMode}
-          customRequestBody={customRequestBody}
-          onCustomRequestModeChange={onCustomRequestModeChange}
-          onCustomRequestBodyChange={onCustomRequestBodyChange}
-          defaultPayload={previewPayload}
-        />
+        <div className='gm-playground-config-section gm-playground-config-section-primary'>
+          <CustomRequestEditor
+            customRequestMode={customRequestMode}
+            customRequestBody={customRequestBody}
+            onCustomRequestModeChange={onCustomRequestModeChange}
+            onCustomRequestBodyChange={onCustomRequestBodyChange}
+            defaultPayload={previewPayload}
+          />
+        </div>
 
         {/* 分组选择 */}
-        <div className={customRequestMode ? 'opacity-50' : ''}>
+        <div
+          className={`gm-playground-config-section ${customRequestMode ? 'opacity-50' : ''}`}
+        >
           <div className='flex items-center gap-2 mb-2'>
             <Users size={16} className='text-gray-500' />
             <Typography.Text strong className='text-sm'>
@@ -146,7 +154,9 @@ const SettingsPanel = ({
         </div>
 
         {/* 模型选择 */}
-        <div className={customRequestMode ? 'opacity-50' : ''}>
+        <div
+          className={`gm-playground-config-section ${customRequestMode ? 'opacity-50' : ''}`}
+        >
           <div className='flex items-center gap-2 mb-2'>
             <Sparkles size={16} className='text-gray-500' />
             <Typography.Text strong className='text-sm'>
@@ -177,7 +187,9 @@ const SettingsPanel = ({
         </div>
 
         {/* 图片URL输入 */}
-        <div className={customRequestMode ? 'opacity-50' : ''}>
+        <div
+          className={`gm-playground-config-section ${customRequestMode ? 'opacity-50' : ''}`}
+        >
           <ImageUrlInput
             imageUrls={inputs.imageUrls}
             imageEnabled={inputs.imageEnabled}
@@ -190,7 +202,9 @@ const SettingsPanel = ({
         </div>
 
         {/* 参数控制组件 */}
-        <div className={customRequestMode ? 'opacity-50' : ''}>
+        <div
+          className={`gm-playground-config-section ${customRequestMode ? 'opacity-50' : ''}`}
+        >
           <ParameterControl
             inputs={inputs}
             parameterEnabled={parameterEnabled}
@@ -201,7 +215,9 @@ const SettingsPanel = ({
         </div>
 
         {/* 流式输出开关 */}
-        <div className={customRequestMode ? 'opacity-50' : ''}>
+        <div
+          className={`gm-playground-config-section gm-playground-stream-section ${customRequestMode ? 'opacity-50' : ''}`}
+        >
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2'>
               <ToggleLeft size={16} className='text-gray-500' />
@@ -228,7 +244,7 @@ const SettingsPanel = ({
 
       {/* 桌面端的配置管理放在底部 */}
       {!styleState.isMobile && (
-        <div className='flex-shrink-0 pt-3'>
+        <div className='gm-playground-config-footer'>
           <ConfigManager
             currentConfig={currentConfig}
             onConfigImport={onConfigImport}

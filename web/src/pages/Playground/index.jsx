@@ -497,7 +497,11 @@ const Playground = () => {
           )}
 
           <Layout.Content className='gm-playground-content relative flex-1 overflow-hidden'>
-            <div className='gm-playground-workspace overflow-hidden'>
+            <div
+              className={`gm-playground-workspace overflow-hidden ${
+                showDebugPanel ? 'gm-playground-workspace-debug-open' : ''
+              }`}
+            >
               <div className='gm-playground-chat flex flex-col'>
                 <ChatArea
                   chatRef={chatRef}
@@ -534,7 +538,7 @@ const Playground = () => {
 
             {/* 调试面板 - 移动端覆盖层 */}
             {showDebugPanel && isMobile && (
-              <div className='fixed top-0 left-0 right-0 bottom-0 z-[1000] bg-white overflow-auto shadow-lg'>
+              <div className='gm-playground-mobile-debug fixed top-0 left-0 right-0 bottom-0 z-[1000] overflow-auto shadow-lg'>
                 <OptimizedDebugPanel
                   debugData={debugData}
                   activeDebugTab={activeDebugTab}

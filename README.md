@@ -22,10 +22,10 @@
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前源码稳定基线：[`v1.0.0-rc.10-GM.1`](./VERSION)
+当前源码稳定基线：[`v1.0.0-rc.10-GM.2`](./VERSION)
 
 > [!NOTE]
-> `v1.0.0-rc.10-GM.1` 是 G-Master API 的 v1 RC 更新版本，重点增强 relay 稳定性、渠道测试与多 Key 状态处理、Waffo Pancake webhook 订单映射、余额购买订阅、使用日志移动端体验和授权文件保留策略，同时继续保留 Gaster Code 桌面端账号中心、异步图片生成、模型健康度日志兜底与现有 G-Master 控制台体验。
+> `v1.0.0-rc.10-GM.2` 在 rc.10 稳定基线之上重做操练场页面，采用 Open Design 设计稿落地为三栏调试工作台、固定输入区、可隐藏调试面板和移动端抽屉入口，同时继续保留 Gaster Code 桌面端账号中心、异步图片生成、模型健康度日志兜底与现有 G-Master 控制台体验。
 
 ## G-Master API 主要能力
 

@@ -3833,7 +3833,12 @@
     "请输入 Store ID": "请输入 Store ID",
     "请输入商户 ID": "请输入商户 ID",
     "请输入支付方式名称": "请输入支付方式名称",
-    "选择金额后直接跳转到 Waffo Pancake 结账页，支付完成后会回到账户页。": "选择金额后直接跳转到 Waffo Pancake 结账页，支付完成后会回到账户页。"
+    "选择金额后直接跳转到 Waffo Pancake 结账页，支付完成后会回到账户页。": "选择金额后直接跳转到 Waffo Pancake 结账页，支付完成后会回到账户页。",
+    "Chat Completions 调试工作台": "Chat Completions debug workspace",
+    "会话、模型和采样参数": "Session, model, and sampling parameters",
+    "请求、响应和 SSE 事件": "Requests, responses, and SSE events",
+    "就绪": "Ready",
+    "非流式": "Non-streaming"
   },
   "阶梯计费（表达式缺失）": "Tiered billing (expression missing)"
 }

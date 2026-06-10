@@ -3651,7 +3651,12 @@
     "（当前仅支持易支付接口，默认使用上方服务器地址作为回调地址！）": "(Actuellement, seule l'interface Epay est prise en charge, l'adresse du serveur ci-dessus est utilisée par défaut comme adresse de rappel !)",
     "，当前无生效订阅，将自动使用钱包": ", aucun abonnement actif, le portefeuille sera utilisé automatiquement.",
     "，时间：": ", time:",
-    "，点击更新": ", cliquez sur Mettre à jour"
+    "，点击更新": ", cliquez sur Mettre à jour",
+    "Chat Completions 调试工作台": "Espace de débogage Chat Completions",
+    "会话、模型和采样参数": "Session, modèle et paramètres d’échantillonnage",
+    "请求、响应和 SSE 事件": "Requêtes, réponses et événements SSE",
+    "就绪": "Prêt",
+    "非流式": "Non-streaming"
   },
   "阶梯计费（表达式缺失）": "Facturation par paliers (expression manquante)"
 }

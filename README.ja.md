@@ -9,4 +9,4 @@
 - [デプロイガイド](./docs/installation/BT.md)
 - [謝辞とライセンス](./ACKNOWLEDGMENTS.md)
 
-現在のソース安定ベースライン: [`v1.0.0-rc.10-GM.1`](./VERSION)
+現在のソース安定ベースライン: [`v1.0.0-rc.10-GM.2`](./VERSION)
