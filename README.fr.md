@@ -9,4 +9,4 @@ Points d’entrée recommandés :
 - [Guide de déploiement](./docs/installation/BT.md)
 - [Attribution et licence](./ACKNOWLEDGMENTS.md)
 
-Base stable actuelle du code source : [`v1.0.0-rc.10-GM.3`](./VERSION)
+Base stable actuelle du code source : [`v1.0.0-rc.10-GM.4`](./VERSION)

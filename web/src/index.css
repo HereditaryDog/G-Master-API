@@ -92,12 +92,11 @@ body.sidebar-collapsed {
 }
 
 body {
-  font-family:
-    Lato, 'Helvetica Neue', Arial, Helvetica, 'Microsoft YaHei', sans-serif;
+  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, 'Microsoft YaHei',
+    sans-serif;
   color: var(--semi-color-text-0);
   background-color: #f6f8ff;
-  background-image:
-    radial-gradient(
+  background-image: radial-gradient(
       circle at top left,
       var(--gm-brand-surface-glow-a),
       transparent 26%
@@ -117,8 +116,7 @@ body {
 }
 
 html.dark body {
-  background-image:
-    radial-gradient(
+  background-image: radial-gradient(
       circle at top left,
       var(--gm-brand-surface-glow-a),
       transparent 28%
@@ -341,8 +339,8 @@ html.dark .gm-user-dropdown {
 }
 
 code {
-  font-family:
-    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 /* ==================== 布局相关样式 ==================== */
@@ -727,8 +725,11 @@ html.dark .gm-playground-page {
   height: 100%;
   padding: 76px 18px 18px;
   gap: 16px;
-  background:
-    linear-gradient(135deg, rgba(var(--gm-brand-primary-rgb), 0.1), transparent 26%),
+  background: linear-gradient(
+      135deg,
+      rgba(var(--gm-brand-primary-rgb), 0.1),
+      transparent 26%
+    ),
     linear-gradient(180deg, var(--pg-bg), transparent 70%);
 }
 
@@ -787,8 +788,11 @@ html.dark .gm-playground-page {
   gap: 14px;
   padding: 16px 18px;
   border-bottom: 1px solid var(--pg-border);
-  background:
-    linear-gradient(90deg, rgba(var(--gm-brand-primary-rgb), 0.14), transparent 58%),
+  background: linear-gradient(
+      90deg,
+      rgba(var(--gm-brand-primary-rgb), 0.14),
+      transparent 58%
+    ),
     var(--pg-surface-strong);
 }
 
@@ -909,8 +913,11 @@ html.dark .gm-playground-page {
 }
 
 .gm-playground-chat-body {
-  background:
-    linear-gradient(180deg, rgba(148, 163, 184, 0.06), transparent 130px),
+  background: linear-gradient(
+      180deg,
+      rgba(148, 163, 184, 0.06),
+      transparent 130px
+    ),
     transparent;
 }
 
@@ -973,8 +980,11 @@ html.dark .gm-playground-page {
 .gm-playground-input-wrap {
   padding: 12px 16px 16px;
   border-top: 1px solid var(--pg-border);
-  background:
-    linear-gradient(180deg, transparent, rgba(var(--gm-brand-primary-rgb), 0.08)),
+  background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(var(--gm-brand-primary-rgb), 0.08)
+    ),
     var(--pg-surface-strong);
 }
 
@@ -1059,8 +1069,11 @@ html.dark .gm-playground-chat-card .semi-chat-chatBox-content {
 }
 
 .gm-playground-mobile-debug {
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(7, 11, 24, 0.98)),
+  background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.96),
+      rgba(7, 11, 24, 0.98)
+    ),
     #0f172a;
 }
 
@@ -1660,8 +1673,7 @@ html.dark .sbg-variant-green {
   padding: 24px;
   border-radius: 32px;
   border: 1px solid rgba(var(--gm-brand-primary-rgb), 0.14);
-  background:
-    linear-gradient(
+  background: linear-gradient(
       135deg,
       rgba(var(--gm-brand-primary-rgb), 0.08),
       rgba(var(--gm-brand-accent-rgb), 0.05)
@@ -1677,8 +1689,7 @@ html.dark .sbg-variant-green {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top left,
       rgba(var(--gm-brand-primary-rgb), 0.16),
       transparent 34%
@@ -1848,8 +1859,7 @@ html:not(.dark) .blur-ball-teal {
 }
 
 html.dark .provider-showcase {
-  background:
-    linear-gradient(
+  background: linear-gradient(
       135deg,
       rgba(var(--gm-brand-primary-rgb), 0.12),
       rgba(var(--gm-brand-accent-rgb), 0.06)
@@ -1898,8 +1908,11 @@ html.dark .provider-showcase {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(circle at -5% -10%, var(--pb1) 0%, transparent 60%),
+  background: radial-gradient(
+      circle at -5% -10%,
+      var(--pb1) 0%,
+      transparent 60%
+    ),
     radial-gradient(circle at 105% -10%, var(--pb2) 0%, transparent 55%),
     radial-gradient(circle at 5% 110%, var(--pb3) 0%, transparent 55%),
     radial-gradient(circle at 105% 110%, var(--pb4) 0%, transparent 50%);
@@ -1982,7 +1995,12 @@ html.dark .with-pastel-balls::before {
 /* ==================== 数据工作台：令牌管理 / 使用日志 ==================== */
 .gm-data-ops-page {
   --ops-page-bg: rgba(244, 247, 255, 0.76);
-  --ops-shell-bg: linear-gradient(135deg, #f7f9ff 0%, #edf3ff 56%, #e9f0fb 100%);
+  --ops-shell-bg: linear-gradient(
+    135deg,
+    #f7f9ff 0%,
+    #edf3ff 56%,
+    #e9f0fb 100%
+  );
   --ops-panel: rgba(255, 255, 255, 0.82);
   --ops-panel-strong: rgba(255, 255, 255, 0.94);
   --ops-panel-soft: rgba(241, 245, 255, 0.72);
@@ -1998,14 +2016,22 @@ html.dark .with-pastel-balls::before {
   min-height: 100vh;
   padding: 76px 18px 22px;
   color: var(--ops-text);
-  background:
-    linear-gradient(135deg, rgba(var(--gm-brand-primary-rgb), 0.1), transparent 28%),
+  background: linear-gradient(
+      135deg,
+      rgba(var(--gm-brand-primary-rgb), 0.1),
+      transparent 28%
+    ),
     linear-gradient(180deg, var(--ops-page-bg), transparent 78%);
 }
 
 html.dark .gm-data-ops-page {
   --ops-page-bg: rgba(7, 11, 24, 0.78);
-  --ops-shell-bg: linear-gradient(135deg, #18233b 0%, #111a2d 58%, #0b1120 100%);
+  --ops-shell-bg: linear-gradient(
+    135deg,
+    #18233b 0%,
+    #111a2d 58%,
+    #0b1120 100%
+  );
   --ops-panel: rgba(15, 23, 42, 0.76);
   --ops-panel-strong: rgba(17, 25, 43, 0.94);
   --ops-panel-soft: rgba(24, 35, 61, 0.72);
@@ -2045,15 +2071,25 @@ html.dark .gm-data-ops-shell {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.4), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.22)),
+  background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.4),
+      transparent 20%,
+      transparent 80%,
+      rgba(255, 255, 255, 0.22)
+    ),
     linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 38%);
   pointer-events: none;
 }
 
 html.dark .gm-data-ops-shell::before {
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.025)),
+  background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.045),
+      transparent 20%,
+      transparent 80%,
+      rgba(255, 255, 255, 0.025)
+    ),
     linear-gradient(180deg, rgba(139, 131, 255, 0.08), transparent 38%);
 }
 
@@ -2143,7 +2179,11 @@ html.dark .gm-data-ops-shell::before {
   padding: 16px;
   border: 1px solid var(--ops-border);
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--ops-panel-strong), var(--ops-panel-soft));
+  background: linear-gradient(
+    135deg,
+    var(--ops-panel-strong),
+    var(--ops-panel-soft)
+  );
   box-shadow: 0 16px 28px rgba(44, 54, 92, 0.1);
 }
 
@@ -2264,7 +2304,11 @@ html.dark .gm-data-ops-page .gm-data-ops-card.table-scroll-card {
 .gm-data-ops-card .semi-card-header {
   padding: 15px 16px 12px !important;
   border-bottom: 1px solid var(--ops-border) !important;
-  background: linear-gradient(180deg, var(--ops-panel-strong), var(--ops-panel));
+  background: linear-gradient(
+    180deg,
+    var(--ops-panel-strong),
+    var(--ops-panel)
+  );
 }
 
 .gm-data-ops-card .semi-card-header-main {
@@ -2545,8 +2589,7 @@ html.dark .gm-usage-log-mobile-card.semi-card {
   position: relative;
   min-height: 100vh;
   padding: 104px 20px 80px;
-  background:
-    linear-gradient(
+  background: linear-gradient(
       180deg,
       rgba(248, 250, 255, 0.96),
       rgba(243, 246, 255, 0.92)
@@ -2784,8 +2827,11 @@ html.dark .gm-usage-log-mobile-card.semi-card {
   justify-content: center;
   border-radius: 28px;
   padding: 26px 24px;
-  background:
-    linear-gradient(180deg, rgba(93, 116, 255, 0.96), rgba(125, 92, 248, 0.95)),
+  background: linear-gradient(
+      180deg,
+      rgba(93, 116, 255, 0.96),
+      rgba(125, 92, 248, 0.95)
+    ),
     radial-gradient(
       circle at top left,
       rgba(255, 255, 255, 0.26),
@@ -2997,9 +3043,8 @@ html.dark .gm-usage-log-mobile-card.semi-card {
 }
 
 .gm-docs-code-block code {
-  font-family:
-    'SFMono-Regular', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas,
-    monospace;
+  font-family: 'SFMono-Regular', SFMono-Regular, ui-monospace, Menlo, Monaco,
+    Consolas, monospace;
 }
 
 .gm-docs-group-section {
@@ -3059,8 +3104,11 @@ html.dark .gm-usage-log-mobile-card.semi-card {
 }
 
 html.dark .gm-docs-page {
-  background:
-    linear-gradient(180deg, rgba(11, 16, 28, 0.98), rgba(13, 19, 31, 0.98)),
+  background: linear-gradient(
+      180deg,
+      rgba(11, 16, 28, 0.98),
+      rgba(13, 19, 31, 0.98)
+    ),
     radial-gradient(
       circle at top left,
       rgba(96, 119, 255, 0.12),
@@ -3978,8 +4026,7 @@ html.dark .gm-docs-search-input:focus {
   overflow: hidden;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(248, 250, 252, 0.94), #ffffff),
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.94), #ffffff),
     radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.14),
@@ -4669,8 +4716,7 @@ html.dark .gm-docs-search-input:focus {
 
 html.dark .gm-zen-home {
   color: #e2e8f0;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top left,
       rgba(79, 70, 229, 0.2),
       transparent 24%
@@ -4745,8 +4791,11 @@ html.dark .gm-zen-btn-secondary:hover {
 
 html.dark .gm-zen-section {
   border-color: rgba(71, 85, 105, 0.34);
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(11, 18, 32, 0.95)),
+  background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(11, 18, 32, 0.95)
+    ),
     radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.12),
@@ -4848,8 +4897,11 @@ html.dark .gm-gaster-step-item,
 html.dark .gm-gaster-package-row,
 html.dark .gm-gaster-info-card {
   border-color: rgba(71, 85, 105, 0.34);
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(11, 18, 32, 0.95)),
+  background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(11, 18, 32, 0.95)
+    ),
     radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.12),
@@ -5256,8 +5308,7 @@ html.dark .gm-gaster-info-card a {
   padding: 52px 48px;
   border: 1px solid rgba(92, 103, 255, 0.08);
   border-radius: 32px;
-  background:
-    linear-gradient(
+  background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.92),
       rgba(251, 252, 255, 0.96)
@@ -5402,8 +5453,7 @@ html.dark .gm-gaster-info-card a {
   position: relative;
   padding: 22px;
   border: 1px solid rgba(97, 107, 255, 0.1);
-  background:
-    linear-gradient(
+  background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.92),
       rgba(247, 249, 255, 0.94)
@@ -5447,8 +5497,7 @@ html.dark .gm-gaster-info-card a {
   min-height: 184px;
   padding: 18px 16px;
   border-radius: 20px;
-  background:
-    linear-gradient(
+  background: linear-gradient(
       180deg,
       rgba(240, 243, 255, 0.9),
       rgba(255, 255, 255, 0.95)
@@ -5755,8 +5804,11 @@ html.dark .gm-home-bottom-shell,
 html.dark .gm-home-visual-card,
 html.dark .gm-home-key-table,
 html.dark .gm-home-chart-stage {
-  background:
-    linear-gradient(180deg, rgba(14, 19, 31, 0.92), rgba(10, 14, 24, 0.96)),
+  background: linear-gradient(
+      180deg,
+      rgba(14, 19, 31, 0.92),
+      rgba(10, 14, 24, 0.96)
+    ),
     radial-gradient(
       circle at top right,
       rgba(105, 120, 255, 0.1),
@@ -5902,8 +5954,7 @@ html.dark .gm-home-icon-orb {
   position: relative;
   min-height: calc(100vh - 60px);
   overflow: hidden;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top left,
       rgba(59, 130, 246, 0.12),
       transparent 32%
@@ -5972,8 +6023,7 @@ html.dark .gm-home-icon-orb {
   padding: 24px 28px;
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 30px;
-  background:
-    linear-gradient(
+  background: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.92),
       rgba(244, 247, 255, 0.88)
@@ -6092,8 +6142,7 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-stat-card-blue {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(59, 130, 246, 0.24),
       transparent 42%
@@ -6106,8 +6155,7 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-stat-card-green {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(16, 185, 129, 0.22),
       transparent 42%
@@ -6120,8 +6168,7 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-stat-card-amber {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(245, 158, 11, 0.2),
       transparent 42%
@@ -6134,8 +6181,7 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-stat-card-indigo {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.22),
       transparent 42%
@@ -6296,8 +6342,7 @@ html.dark .gm-home-icon-orb {
   padding: 11px 12px 10px;
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 16px;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0,
       rgba(99, 102, 241, 0.14),
       transparent 42%
@@ -6618,8 +6663,7 @@ html.dark .gm-home-icon-orb {
   padding: 32px 36px 36px;
   border: 1px solid rgba(61, 76, 108, 0.74);
   border-radius: 18px;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 12% 0%,
       rgba(103, 81, 204, 0.18),
       transparent 26%
@@ -6635,8 +6679,7 @@ html.dark .gm-home-icon-orb {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
+  background: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.045),
       transparent 18%,
@@ -6749,8 +6792,7 @@ html.dark .gm-home-icon-orb {
   overflow: hidden;
   border: 1px solid #34425d !important;
   border-radius: 9px !important;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(124, 88, 255, 0.18),
       transparent 40%
@@ -6867,8 +6909,7 @@ html.dark .gm-home-icon-orb {
   padding: 7px 9px;
   border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 14px;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(34, 197, 94, 0.18),
       transparent 48%
@@ -6892,8 +6933,7 @@ html.dark .gm-home-icon-orb {
 }
 
 .gm-console-kpi-signal[data-direction='down'] {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(239, 68, 68, 0.18),
       transparent 48%
@@ -6907,8 +6947,7 @@ html.dark .gm-home-icon-orb {
 
 .gm-console-kpi-signal[data-direction='flat'],
 .gm-console-kpi-signal[data-direction='neutral'] {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(148, 163, 184, 0.16),
       transparent 48%
@@ -6942,8 +6981,11 @@ html.dark .gm-home-icon-orb {
   padding: 18px;
   border: 1px solid var(--gm-dash-border);
   border-radius: 9px;
-  background:
-    radial-gradient(circle at 94% 0%, rgba(34, 197, 94, 0.09), transparent 42%),
+  background: radial-gradient(
+      circle at 94% 0%,
+      rgba(34, 197, 94, 0.09),
+      transparent 42%
+    ),
     var(--gm-dash-panel);
   box-shadow:
     0 18px 22px rgba(5, 9, 21, 0.2),
@@ -7068,8 +7110,7 @@ html.dark .gm-home-icon-orb {
   overflow: hidden;
   border: 1px solid var(--gm-dash-border);
   border-radius: 9px;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 50% 0%,
       rgba(103, 81, 204, 0.09),
       transparent 48%
@@ -7534,8 +7575,7 @@ html.dark .gm-home-icon-orb {
 
 .gm-console-layout .gm-console-extra-panels .semi-card {
   border-color: #34425d !important;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(124, 88, 255, 0.1),
       transparent 38%
@@ -7593,8 +7633,7 @@ html:not(.dark) .gm-console-layout {
   --gm-dash-text: #172033;
   --gm-dash-muted: #667391;
   border-color: rgba(129, 140, 248, 0.24);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 12% 0%,
       rgba(93, 120, 255, 0.17),
       transparent 30%
@@ -7611,8 +7650,7 @@ html:not(.dark) .gm-console-layout {
 }
 
 html:not(.dark) .gm-console-layout::before {
-  background:
-    linear-gradient(
+  background: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.7),
       transparent 18%,
@@ -7644,8 +7682,7 @@ html:not(.dark) .gm-console-header-button-secondary:hover {
 
 html:not(.dark) .gm-console-page .gm-console-kpi-card {
   border-color: rgba(130, 149, 188, 0.28) !important;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(99, 102, 241, 0.13),
       transparent 40%
@@ -7707,8 +7744,7 @@ html:not(.dark) .gm-console-kpi-card .gm-console-stat-avatar {
 
 html:not(.dark) .gm-console-kpi-signal {
   border-color: rgba(34, 197, 94, 0.18);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(34, 197, 94, 0.13),
       transparent 48%
@@ -7726,8 +7762,7 @@ html:not(.dark) .gm-console-kpi-signal strong {
 
 html:not(.dark) .gm-console-kpi-signal[data-direction='down'] {
   border-color: rgba(239, 68, 68, 0.2);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(239, 68, 68, 0.12),
       transparent 48%
@@ -7742,8 +7777,7 @@ html:not(.dark) .gm-console-kpi-signal[data-direction='down'] strong {
 html:not(.dark) .gm-console-kpi-signal[data-direction='flat'],
 html:not(.dark) .gm-console-kpi-signal[data-direction='neutral'] {
   border-color: rgba(130, 149, 188, 0.24);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(130, 149, 188, 0.12),
       transparent 48%
@@ -7757,8 +7791,11 @@ html:not(.dark) .gm-console-kpi-signal[data-direction='neutral'] strong {
 }
 
 html:not(.dark) .gm-perf-health-panel {
-  background:
-    radial-gradient(circle at 94% 0%, rgba(34, 197, 94, 0.1), transparent 42%),
+  background: radial-gradient(
+      circle at 94% 0%,
+      rgba(34, 197, 94, 0.1),
+      transparent 42%
+    ),
     rgba(255, 255, 255, 0.92);
   box-shadow:
     0 18px 32px rgba(80, 95, 142, 0.12),
@@ -7780,8 +7817,7 @@ html:not(.dark) .gm-perf-metrics {
 
 html:not(.dark) .gm-figma-panel {
   border-color: var(--gm-dash-border);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 50% 0%,
       rgba(99, 102, 241, 0.08),
       transparent 48%
@@ -7866,8 +7902,7 @@ html:not(.dark) .gm-system-card[data-tone='muted'] strong {
 
 html:not(.dark) .gm-console-layout .gm-console-extra-panels .semi-card {
   border-color: rgba(130, 149, 188, 0.28) !important;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(99, 102, 241, 0.08),
       transparent 38%
@@ -8177,8 +8212,11 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
   padding: 32px 36px;
   border: 1px solid rgba(132, 148, 190, 0.24);
   border-radius: 30px;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(101, 88, 232, 0.13), transparent 31%),
+  background: radial-gradient(
+      circle at 0% 0%,
+      rgba(101, 88, 232, 0.13),
+      transparent 31%
+    ),
     radial-gradient(circle at 82% 0%, rgba(34, 211, 238, 0.1), transparent 28%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(241, 246, 255, 0.78));
   box-shadow:
@@ -8191,8 +8229,10 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
   inset: 0;
   pointer-events: none;
   content: '';
-  background-image:
-    linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+  background-image: linear-gradient(
+      rgba(99, 102, 241, 0.08) 1px,
+      transparent 1px
+    ),
     linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
   background-size: 18px 18px;
   mask-image: radial-gradient(circle at 5% 12%, #000 0%, transparent 34%);
@@ -8236,8 +8276,11 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
   justify-content: center;
   border: 1px solid rgba(109, 93, 255, 0.24);
   border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.2), transparent 60%),
+  background: radial-gradient(
+      circle at 50% 0%,
+      rgba(124, 58, 237, 0.2),
+      transparent 60%
+    ),
     rgba(255, 255, 255, 0.68);
   color: #6253e6;
   box-shadow:
@@ -8387,8 +8430,7 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
   margin: 0 10px 0 0;
   border: 1px solid rgba(124, 58, 237, 0.28);
   border-radius: 18px;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 50% 0%,
       rgba(124, 58, 237, 0.24),
       transparent 66%
@@ -8506,8 +8548,7 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
 
 .gm-pricing-model-card-selected {
   border-color: rgba(99, 102, 241, 0.35) !important;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.14),
       transparent 38%
@@ -8534,8 +8575,7 @@ html:not(.dark) .gm-console-layout .gm-console-extra-panels .bg-gray-50 {
 }
 
 html.dark .gm-app-shell {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top left,
       rgba(59, 130, 246, 0.18),
       transparent 26%
@@ -8572,8 +8612,7 @@ html.dark .gm-console-header {
 
 html.dark .gm-console-page .gm-console-kpi-card {
   border-color: #34425d !important;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 100% 0%,
       rgba(124, 88, 255, 0.18),
       transparent 40%
@@ -8586,8 +8625,7 @@ html.dark .gm-console-page .gm-console-kpi-card {
 
 html.dark .gm-app-body .gm-app-sider .sidebar-container {
   border-color: rgba(71, 85, 105, 0.42);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(79, 70, 229, 0.18),
       transparent 34%
@@ -8698,8 +8736,11 @@ html.dark .gm-app-body .gm-app-sider .gm-sidebar-collapse-trigger:hover {
 }
 
 html.dark .gm-console-page .gm-console-stat-card::before {
-  background:
-    linear-gradient(135deg, rgba(148, 163, 184, 0.1), rgba(15, 23, 42, 0.02)),
+  background: linear-gradient(
+      135deg,
+      rgba(148, 163, 184, 0.1),
+      rgba(15, 23, 42, 0.02)
+    ),
     radial-gradient(
       circle at top right,
       rgba(255, 255, 255, 0.04),
@@ -8708,8 +8749,7 @@ html.dark .gm-console-page .gm-console-stat-card::before {
 }
 
 html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-blue {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(59, 130, 246, 0.26),
       transparent 44%
@@ -8718,8 +8758,7 @@ html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-blue {
 }
 
 html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-green {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(16, 185, 129, 0.22),
       transparent 44%
@@ -8728,8 +8767,7 @@ html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-green {
 }
 
 html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-amber {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(245, 158, 11, 0.22),
       transparent 44%
@@ -8738,8 +8776,7 @@ html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-amber {
 }
 
 html.dark .gm-console-page .gm-console-stat-card.gm-console-stat-card-indigo {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.24),
       transparent 44%
@@ -8781,8 +8818,11 @@ html.dark .gm-console-header-title.gm-console-header-welcome {
 
 html.dark .gm-console-header-summary-item {
   border-color: rgba(148, 163, 184, 0.16);
-  background:
-    radial-gradient(circle at 100% 0, rgba(99, 102, 241, 0.2), transparent 42%),
+  background: radial-gradient(
+      circle at 100% 0,
+      rgba(99, 102, 241, 0.2),
+      transparent 42%
+    ),
     rgba(15, 23, 42, 0.58);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
@@ -8878,8 +8918,7 @@ html.dark .gm-console-stat-card::before {
 }
 
 html.dark .gm-console-stat-card-blue {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(59, 130, 246, 0.28),
       transparent 46%
@@ -8888,8 +8927,7 @@ html.dark .gm-console-stat-card-blue {
 }
 
 html.dark .gm-console-stat-card-green {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(16, 185, 129, 0.24),
       transparent 46%
@@ -8898,8 +8936,7 @@ html.dark .gm-console-stat-card-green {
 }
 
 html.dark .gm-console-stat-card-amber {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(245, 158, 11, 0.24),
       transparent 46%
@@ -8908,8 +8945,7 @@ html.dark .gm-console-stat-card-amber {
 }
 
 html.dark .gm-console-stat-card-indigo {
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at top right,
       rgba(99, 102, 241, 0.26),
       transparent 46%
@@ -8930,8 +8966,11 @@ html.dark .gm-console-stat-avatar {
 
 html.dark .gm-pricing-hero-card {
   border-color: rgba(80, 95, 130, 0.5);
-  background:
-    radial-gradient(circle at 2% 5%, rgba(99, 102, 241, 0.16), transparent 32%),
+  background: radial-gradient(
+      circle at 2% 5%,
+      rgba(99, 102, 241, 0.16),
+      transparent 32%
+    ),
     radial-gradient(circle at 78% 0%, rgba(14, 165, 233, 0.1), transparent 30%),
     linear-gradient(135deg, rgba(14, 23, 42, 0.96), rgba(12, 20, 36, 0.96));
   box-shadow:
@@ -8940,15 +8979,16 @@ html.dark .gm-pricing-hero-card {
 }
 
 html.dark .gm-pricing-hero-card::before {
-  background-image:
-    linear-gradient(rgba(129, 140, 248, 0.1) 1px, transparent 1px),
+  background-image: linear-gradient(
+      rgba(129, 140, 248, 0.1) 1px,
+      transparent 1px
+    ),
     linear-gradient(90deg, rgba(129, 140, 248, 0.1) 1px, transparent 1px);
 }
 
 html.dark .gm-pricing-hero-emblem {
   border-color: rgba(124, 58, 237, 0.42);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 50% 0%,
       rgba(124, 58, 237, 0.32),
       transparent 62%
@@ -9016,8 +9056,7 @@ html.dark .gm-pricing-hero-stat-label {
 
 html.dark .gm-pricing-hero-brand-mark {
   border-color: rgba(139, 92, 246, 0.46);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       circle at 50% 0%,
       rgba(124, 58, 237, 0.32),
       transparent 68%
@@ -9128,5 +9167,1817 @@ html.dark .gm-pricing-hero-brand-mark {
   .gm-pricing-copy-button,
   .gm-pricing-filter-button {
     width: 100%;
+  }
+}
+
+/* ==================== Gaster Code product page ==================== */
+.gm-gaster-code-page.gm-zen-home {
+  --bg: oklch(100% 0 0);
+  --surface: oklch(99% 0.002 250);
+  --surface-strong: oklch(96.5% 0.004 250);
+  --fg: oklch(16% 0.005 260);
+  --muted: oklch(48% 0.01 260);
+  --subtle: oklch(68% 0.008 260);
+  --border: oklch(89% 0.006 260);
+  --border-strong: oklch(80% 0.009 260);
+  --accent: oklch(56% 0.16 255);
+  --accent-deep: oklch(42% 0.17 255);
+  --ok: oklch(60% 0.14 155);
+  --warn: oklch(68% 0.13 75);
+  --code-bg: oklch(17% 0.015 260);
+  --code-fg: oklch(93% 0.007 260);
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Cascadia Code', ui-monospace,
+    Menlo, Consolas, monospace;
+  min-width: 320px;
+  min-height: calc(100vh - 64px);
+  overflow-x: clip;
+  color: var(--fg);
+  background: var(--bg);
+  font-family: var(--font-body);
+  line-height: 1.55;
+}
+
+html.dark .gm-gaster-code-page.gm-zen-home {
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.gm-gaster-code-page *,
+.gm-gaster-code-page *::before,
+.gm-gaster-code-page *::after {
+  box-sizing: border-box;
+}
+
+.gm-gaster-code-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gm-gaster-code-page button,
+.gm-gaster-code-page summary {
+  font: inherit;
+}
+
+.gm-gaster-code-page .page-shell {
+  background: linear-gradient(
+    180deg,
+    oklch(100% 0 0) 0%,
+    oklch(98.8% 0.003 250) 46%,
+    oklch(100% 0 0) 100%
+  );
+}
+
+.gm-gaster-code-page .section {
+  padding: clamp(76px, 9vw, 150px) clamp(20px, 4vw, 72px);
+}
+
+.gm-gaster-code-page .inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.gm-gaster-code-page .hero {
+  display: grid;
+  min-height: min(980px, 100svh);
+  align-items: center;
+  padding-top: clamp(68px, 10vw, 128px);
+  padding-bottom: clamp(34px, 6vw, 72px);
+}
+
+.gm-gaster-code-page .hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1fr);
+  gap: clamp(36px, 6vw, 88px);
+  align-items: center;
+}
+
+.gm-gaster-code-page .release-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .release-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ok);
+  box-shadow: 0 0 0 5px color-mix(in oklch, var(--ok) 16%, transparent);
+}
+
+.gm-gaster-code-page h1,
+.gm-gaster-code-page h2,
+.gm-gaster-code-page h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.gm-gaster-code-page .hero h1 {
+  margin-left: -0.04em;
+  color: var(--fg);
+  font-size: clamp(72px, 10.8vw, 164px);
+  font-weight: 760;
+  line-height: 0.91;
+}
+
+.gm-gaster-code-page .hero-copy {
+  max-width: 690px;
+  margin-top: clamp(24px, 3vw, 36px);
+  color: oklch(33% 0.01 260);
+  font-size: clamp(23px, 2.3vw, 34px);
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+
+.gm-gaster-code-page .cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 34px;
+}
+
+.gm-gaster-code-page .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.gm-gaster-code-page .button svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.gm-gaster-code-page .button.primary {
+  color: white;
+  background: var(--accent);
+  box-shadow: 0 14px 30px color-mix(in oklch, var(--accent) 20%, transparent);
+}
+
+.gm-gaster-code-page .button.secondary {
+  color: var(--accent-deep);
+  background: color-mix(in oklch, var(--accent) 7%, white);
+  border-color: color-mix(in oklch, var(--accent) 18%, var(--border));
+}
+
+.gm-gaster-code-page .button:hover {
+  transform: translateY(-1px);
+}
+
+.gm-gaster-code-page .fineprint {
+  max-width: 650px;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.gm-gaster-code-page .hero-visual {
+  position: relative;
+  display: grid;
+  min-height: 560px;
+  place-items: center;
+}
+
+.gm-gaster-code-page .app-window {
+  width: min(100%, 780px);
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--border) 80%, white);
+  border-radius: 30px;
+  background: var(--surface);
+  box-shadow:
+    0 42px 90px color-mix(in oklch, black 14%, transparent),
+    0 2px 0 white inset;
+}
+
+.gm-gaster-code-page .window-bar {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  height: 54px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklch, white 92%, var(--surface-strong));
+}
+
+.gm-gaster-code-page .traffic {
+  display: flex;
+  gap: 8px;
+}
+
+.gm-gaster-code-page .traffic i {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.gm-gaster-code-page .traffic i:nth-child(1) {
+  background: oklch(72% 0.18 30);
+}
+
+.gm-gaster-code-page .traffic i:nth-child(2) {
+  background: oklch(82% 0.15 85);
+}
+
+.gm-gaster-code-page .traffic i:nth-child(3) {
+  background: oklch(70% 0.16 150);
+}
+
+.gm-gaster-code-page .window-title {
+  justify-self: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.gm-gaster-code-page .status-chip {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--ok) 9%, white);
+  color: oklch(42% 0.11 154);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gm-gaster-code-page .status-chip::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentcolor;
+}
+
+.gm-gaster-code-page .workspace {
+  display: grid;
+  grid-template-columns: 188px minmax(0, 1fr);
+  min-height: 504px;
+}
+
+.gm-gaster-code-page .sidebar {
+  padding: 18px 14px;
+  border-right: 1px solid var(--border);
+  background: oklch(97% 0.004 260);
+}
+
+.gm-gaster-code-page .side-label {
+  margin: 6px 6px 10px;
+  color: var(--subtle);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gm-gaster-code-page .session {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 4px;
+  padding: 11px 10px;
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.gm-gaster-code-page .session strong {
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gm-gaster-code-page .session.active {
+  background: white;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.gm-gaster-code-page .main-pane {
+  display: grid;
+  grid-template-rows: auto minmax(220px, 1fr) 160px;
+  background: white;
+}
+
+.gm-gaster-code-page .pane-head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.gm-gaster-code-page .project-name {
+  display: grid;
+  gap: 2px;
+}
+
+.gm-gaster-code-page .project-name strong {
+  font-size: 17px;
+}
+
+.gm-gaster-code-page .project-name span,
+.gm-gaster-code-page .pane-meta {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.gm-gaster-code-page .chat-area {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  padding: 20px 22px;
+  background: linear-gradient(180deg, white 0%, oklch(99% 0.002 250) 100%);
+}
+
+.gm-gaster-code-page .message {
+  max-width: 84%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  color: oklch(30% 0.01 260);
+  background: white;
+  box-shadow: 0 1px 0 color-mix(in oklch, black 5%, transparent);
+  font-size: 14px;
+}
+
+.gm-gaster-code-page .message.user {
+  justify-self: end;
+  color: white;
+  background: var(--fg);
+  border-color: var(--fg);
+}
+
+.gm-gaster-code-page .message code {
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.93em;
+}
+
+.gm-gaster-code-page .terminal {
+  margin: 0;
+  overflow: hidden;
+  padding: 15px 18px;
+  border-top: 1px solid oklch(24% 0.012 260);
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.gm-gaster-code-page .terminal span {
+  color: oklch(72% 0.16 150);
+}
+
+.gm-gaster-code-page .terminal b {
+  color: oklch(79% 0.11 235);
+  font-weight: 600;
+}
+
+.gm-gaster-code-page .section-head {
+  max-width: 880px;
+  margin: 0 auto clamp(42px, 6vw, 76px);
+  text-align: center;
+}
+
+.gm-gaster-code-page .section-kicker {
+  margin-bottom: 14px;
+  color: var(--accent-deep);
+  font-size: 15px;
+  font-weight: 760;
+}
+
+.gm-gaster-code-page .section h2,
+.gm-gaster-code-page .download-copy h2 {
+  color: var(--fg);
+  font-size: clamp(42px, 6vw, 86px);
+  font-weight: 760;
+  line-height: 0.98;
+}
+
+.gm-gaster-code-page .section-lede {
+  max-width: 780px;
+  margin: 22px auto 0;
+  color: var(--muted);
+  font-size: clamp(19px, 2vw, 25px);
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.gm-gaster-code-page .visual-band {
+  overflow: hidden;
+  padding: clamp(24px, 5vw, 64px);
+  border: 1px solid color-mix(in oklch, var(--border) 60%, white);
+  border-radius: 42px;
+  background: linear-gradient(180deg, oklch(96.8% 0.004 260), white 72%);
+}
+
+.gm-gaster-code-page .product-showcase {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: clamp(28px, 5vw, 70px);
+  align-items: center;
+}
+
+.gm-gaster-code-page .showcase-copy h3,
+.gm-gaster-code-page .cap-copy h3,
+.gm-gaster-code-page .download-copy h3 {
+  margin-bottom: 18px;
+  color: var(--fg);
+  font-size: clamp(30px, 3vw, 48px);
+  font-weight: 735;
+  line-height: 1.05;
+}
+
+.gm-gaster-code-page .showcase-copy p,
+.gm-gaster-code-page .cap-copy p,
+.gm-gaster-code-page .download-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  text-wrap: pretty;
+}
+
+.gm-gaster-code-page .mini-stack {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.gm-gaster-code-page .mini-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.gm-gaster-code-page .mini-row b {
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.gm-gaster-code-page .mini-row span {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .deep-window {
+  padding: 18px;
+  border-radius: 34px;
+  background: oklch(12% 0.012 260);
+  color: white;
+  box-shadow: 0 32px 70px color-mix(in oklch, black 22%, transparent);
+}
+
+.gm-gaster-code-page .deep-screen {
+  overflow: hidden;
+  border: 1px solid oklch(28% 0.015 260);
+  border-radius: 24px;
+  background: oklch(15% 0.015 260);
+}
+
+.gm-gaster-code-page .deep-top {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid oklch(27% 0.014 260);
+  color: oklch(78% 0.01 260);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.gm-gaster-code-page .code-lines {
+  min-height: 360px;
+  padding: 22px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  line-height: 1.85;
+}
+
+.gm-gaster-code-page .code-lines .dim {
+  color: oklch(62% 0.01 260);
+}
+
+.gm-gaster-code-page .code-lines .blue {
+  color: oklch(76% 0.11 245);
+}
+
+.gm-gaster-code-page .code-lines .green {
+  color: oklch(78% 0.13 150);
+}
+
+.gm-gaster-code-page .code-lines .yellow {
+  color: oklch(84% 0.11 90);
+}
+
+.gm-gaster-code-page .capability-list {
+  display: grid;
+  gap: clamp(56px, 8vw, 112px);
+  margin-top: clamp(26px, 5vw, 58px);
+}
+
+.gm-gaster-code-page .cap-row {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.88fr) minmax(0, 1.12fr);
+  gap: clamp(32px, 6vw, 92px);
+  align-items: center;
+  padding-bottom: clamp(44px, 6vw, 78px);
+  border-bottom: 1px solid var(--border);
+}
+
+.gm-gaster-code-page .cap-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.gm-gaster-code-page .cap-row:nth-child(even) .cap-copy {
+  order: 2;
+}
+
+.gm-gaster-code-page .cap-visual {
+  display: grid;
+  min-height: 360px;
+  overflow: hidden;
+  place-items: center;
+  padding: clamp(20px, 4vw, 42px);
+  border: 1px solid var(--border);
+  border-radius: 38px;
+  background: var(--surface);
+}
+
+.gm-gaster-code-page .context-map {
+  display: grid;
+  width: 100%;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.gm-gaster-code-page .map-row {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: white;
+}
+
+.gm-gaster-code-page .map-row mark {
+  color: var(--accent-deep);
+  background: transparent;
+  font-weight: 750;
+}
+
+.gm-gaster-code-page .map-row small {
+  color: var(--muted);
+}
+
+.gm-gaster-code-page .verify-panel {
+  width: 100%;
+  margin: 0;
+  padding: 24px;
+  border-radius: 28px;
+  background: var(--code-bg);
+  box-shadow: inset 0 0 0 1px oklch(27% 0.014 260);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.gm-gaster-code-page .verify-panel .cmd {
+  color: oklch(77% 0.13 245);
+}
+
+.gm-gaster-code-page .verify-panel .pass {
+  color: oklch(80% 0.14 150);
+}
+
+.gm-gaster-code-page .verify-panel .note {
+  color: oklch(70% 0.02 260);
+}
+
+.gm-gaster-code-page .entry-panel {
+  display: grid;
+  width: 100%;
+  gap: 18px;
+}
+
+.gm-gaster-code-page .entry-line {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: white;
+}
+
+.gm-gaster-code-page .entry-line b {
+  color: var(--fg);
+  font-size: 16px;
+}
+
+.gm-gaster-code-page .entry-line span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.gm-gaster-code-page .workflow {
+  background: oklch(97.5% 0.004 260);
+}
+
+.gm-gaster-code-page .flow-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 34px;
+  background: var(--border);
+}
+
+.gm-gaster-code-page .flow-step {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 14px;
+  min-height: 260px;
+  padding: 28px 24px;
+  background: white;
+}
+
+.gm-gaster-code-page .flow-num {
+  color: var(--accent-deep);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.gm-gaster-code-page .flow-step h3 {
+  color: var(--fg);
+  font-size: clamp(23px, 2vw, 31px);
+  font-weight: 730;
+  line-height: 1.08;
+}
+
+.gm-gaster-code-page .flow-step p {
+  align-self: end;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .download-layout {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(34px, 5vw, 72px);
+  align-items: start;
+}
+
+.gm-gaster-code-page .download-copy {
+  position: sticky;
+  top: 36px;
+}
+
+.gm-gaster-code-page .repo-line {
+  margin-top: 26px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .repo-line a {
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.gm-gaster-code-page .download-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.gm-gaster-code-page .download-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  background: white;
+  box-shadow: 0 18px 40px color-mix(in oklch, black 5%, transparent);
+}
+
+.gm-gaster-code-page .download-card h3 {
+  margin-bottom: 7px;
+  color: var(--fg);
+  font-size: 26px;
+  font-weight: 730;
+}
+
+.gm-gaster-code-page .download-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .download-card .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.gm-gaster-code-page .tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.gm-gaster-code-page .download-card .button {
+  min-width: 136px;
+}
+
+.gm-gaster-code-page .secondary-assets {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .secondary-assets h3 {
+  margin: 0 0 8px;
+  color: var(--fg);
+  font-size: 24px;
+  font-weight: 730;
+}
+
+.gm-gaster-code-page .secondary-assets p {
+  margin: 0;
+}
+
+.gm-gaster-code-page .asset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.gm-gaster-code-page .asset-list .tag {
+  color: var(--accent-deep);
+}
+
+.gm-gaster-code-page .privacy {
+  color: white;
+  background: var(--fg);
+}
+
+.gm-gaster-code-page .privacy .section h2,
+.gm-gaster-code-page .privacy h2 {
+  color: white;
+}
+
+.gm-gaster-code-page .privacy .section-kicker {
+  color: oklch(78% 0.11 245);
+}
+
+.gm-gaster-code-page .privacy .section-lede {
+  color: oklch(78% 0.01 260);
+}
+
+.gm-gaster-code-page .privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid oklch(34% 0.01 260);
+  border-radius: 34px;
+  background: oklch(34% 0.01 260);
+}
+
+.gm-gaster-code-page .privacy-item {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+  min-height: 250px;
+  padding: 28px;
+  background: oklch(20% 0.008 260);
+}
+
+.gm-gaster-code-page .privacy-item h3 {
+  color: white;
+  font-size: 24px;
+  font-weight: 730;
+  line-height: 1.08;
+}
+
+.gm-gaster-code-page .privacy-item p {
+  margin: 0;
+  color: oklch(78% 0.01 260);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.gm-gaster-code-page details {
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: white;
+}
+
+.gm-gaster-code-page summary {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 730;
+  list-style: none;
+}
+
+.gm-gaster-code-page summary::-webkit-details-marker {
+  display: none;
+}
+
+.gm-gaster-code-page summary::after {
+  content: '+';
+  color: var(--accent-deep);
+  font-size: 24px;
+  line-height: 1;
+  transition: transform 180ms ease;
+}
+
+.gm-gaster-code-page details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.gm-gaster-code-page details p {
+  margin: 0;
+  padding: 0 24px 24px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.gm-gaster-code-page .closing {
+  padding: clamp(58px, 7vw, 104px) clamp(20px, 4vw, 72px);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.gm-gaster-code-page .closing a {
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.gm-gaster-code-page .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 700ms ease,
+    transform 700ms ease;
+}
+
+.gm-gaster-code-page .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1060px) {
+  .gm-gaster-code-page .hero {
+    min-height: auto;
+  }
+
+  .gm-gaster-code-page .hero-grid,
+  .gm-gaster-code-page .product-showcase,
+  .gm-gaster-code-page .download-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .hero-visual {
+    min-height: auto;
+  }
+
+  .gm-gaster-code-page .download-copy {
+    position: static;
+  }
+
+  .gm-gaster-code-page .flow-strip,
+  .gm-gaster-code-page .privacy-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .gm-gaster-code-page .section {
+    padding: 68px 18px;
+  }
+
+  .gm-gaster-code-page .hero {
+    padding-top: 64px;
+  }
+
+  .gm-gaster-code-page .hero h1 {
+    font-size: clamp(64px, 17vw, 104px);
+  }
+
+  .gm-gaster-code-page .hero-copy {
+    font-size: clamp(21px, 6vw, 28px);
+  }
+
+  .gm-gaster-code-page .app-window {
+    border-radius: 24px;
+  }
+
+  .gm-gaster-code-page .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .sidebar {
+    display: none;
+  }
+
+  .gm-gaster-code-page .window-bar {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .gm-gaster-code-page .status-chip {
+    display: none;
+  }
+
+  .gm-gaster-code-page .pane-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gm-gaster-code-page .message {
+    max-width: 100%;
+  }
+
+  .gm-gaster-code-page .visual-band,
+  .gm-gaster-code-page .cap-visual {
+    border-radius: 28px;
+  }
+
+  .gm-gaster-code-page .cap-row,
+  .gm-gaster-code-page .cap-row:nth-child(even) {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .cap-row:nth-child(even) .cap-copy {
+    order: 0;
+  }
+
+  .gm-gaster-code-page .flow-strip,
+  .gm-gaster-code-page .privacy-grid,
+  .gm-gaster-code-page .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .flow-step {
+    min-height: 210px;
+  }
+
+  .gm-gaster-code-page .download-card {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .download-card .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .gm-gaster-code-page .button {
+    width: 100%;
+  }
+
+  .gm-gaster-code-page .release-line {
+    font-size: 14px;
+  }
+
+  .gm-gaster-code-page .mini-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .gm-gaster-code-page .main-pane {
+    grid-template-rows: auto minmax(230px, 1fr) 178px;
+  }
+
+  .gm-gaster-code-page .chat-area,
+  .gm-gaster-code-page .pane-head {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .gm-gaster-code-page .terminal {
+    font-size: 11px;
+  }
+
+  .gm-gaster-code-page .map-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .gm-gaster-code-page .map-row small {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-gaster-code-page .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .gm-gaster-code-page .button {
+    transition: none;
+  }
+
+  .gm-gaster-code-page .button:hover {
+    transform: none;
+  }
+}
+
+/* ==================== Gaster Code spacious tech revision ==================== */
+.gm-gaster-code-page.gm-zen-home {
+  --bg: oklch(11% 0.022 260);
+  --ink: oklch(14% 0.012 260);
+  --paper: oklch(99.4% 0.002 250);
+  --paper-soft: oklch(96.8% 0.006 250);
+  --glass: color-mix(in oklch, oklch(19% 0.035 258) 76%, transparent);
+  --glass-strong: oklch(18% 0.028 260);
+  --line: color-mix(in oklch, white 12%, transparent);
+  --line-dark: oklch(86% 0.01 255);
+  --tech-blue: oklch(66% 0.18 245);
+  --tech-cyan: oklch(78% 0.12 205);
+  --tech-green: oklch(76% 0.15 154);
+  --muted-dark: oklch(75% 0.025 252);
+  --muted-light: oklch(45% 0.012 255);
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Cascadia Code', ui-monospace,
+    Menlo, Consolas, monospace;
+  background: var(--bg);
+  color: var(--paper);
+}
+
+html.dark .gm-gaster-code-page.gm-zen-home {
+  background: var(--bg);
+  color: var(--paper);
+}
+
+.gm-gaster-code-page .page-shell {
+  background: linear-gradient(180deg, transparent 0 16%, var(--paper) 30% 100%),
+    var(--bg);
+}
+
+.gm-gaster-code-page .inner {
+  width: min(1320px, 100%);
+}
+
+.gm-gaster-code-page .section {
+  padding: clamp(112px, 12vw, 210px) clamp(20px, 5vw, 88px);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.gm-gaster-code-page .hero {
+  position: relative;
+  isolation: isolate;
+  min-height: min(1040px, calc(100svh + 120px));
+  overflow: hidden;
+  padding-top: clamp(78px, 8vw, 116px);
+  padding-bottom: clamp(76px, 9vw, 128px);
+  background: linear-gradient(
+      115deg,
+      rgba(34, 118, 255, 0.28) 0%,
+      transparent 38%
+    ),
+    linear-gradient(245deg, rgba(78, 232, 255, 0.16) 0%, transparent 34%),
+    linear-gradient(180deg, #030611 0%, #08111f 64%, #0b1020 100%);
+  color: white;
+}
+
+.gm-gaster-code-page .hero::before {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  content: '';
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.075) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-position: center top;
+  background-size: 86px 86px;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 16%,
+    black 68%,
+    transparent 100%
+  );
+}
+
+.gm-gaster-code-page .hero::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  height: 42%;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(82, 150, 255, 0.16) 36%,
+    var(--paper) 100%
+  );
+}
+
+.gm-gaster-code-page .hero-grid {
+  grid-template-columns: 1fr;
+  gap: clamp(34px, 5vw, 66px);
+  justify-items: center;
+}
+
+.gm-gaster-code-page .hero-text {
+  width: min(1040px, 100%);
+  text-align: center;
+}
+
+.gm-gaster-code-page .hero .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.gm-gaster-code-page .hero h1 {
+  margin: 0 auto;
+  color: white;
+  font-size: clamp(76px, 11vw, 152px);
+  font-weight: 780;
+  line-height: 0.88;
+  text-shadow: 0 24px 80px rgba(57, 138, 255, 0.28);
+}
+
+.gm-gaster-code-page .hero-copy {
+  max-width: 1080px;
+  margin: clamp(26px, 3vw, 38px) auto 0;
+  color: oklch(86% 0.022 250);
+  font-size: clamp(24px, 2.55vw, 38px);
+  line-height: 1.18;
+}
+
+.gm-gaster-code-page .release-line {
+  justify-content: center;
+  margin: clamp(22px, 3vw, 30px) auto 0;
+  color: var(--muted-dark);
+  font-size: 15px;
+}
+
+.gm-gaster-code-page .release-dot {
+  background: var(--tech-green);
+  box-shadow:
+    0 0 0 5px rgba(91, 255, 178, 0.12),
+    0 0 28px rgba(91, 255, 178, 0.45);
+}
+
+.gm-gaster-code-page .cta-row {
+  justify-content: center;
+  margin-top: clamp(24px, 3vw, 34px);
+}
+
+.gm-gaster-code-page .button {
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 720;
+}
+
+.gm-gaster-code-page .button.primary {
+  color: oklch(99% 0 0);
+  background: linear-gradient(135deg, var(--tech-blue), var(--tech-cyan));
+  box-shadow:
+    0 18px 46px rgba(34, 119, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.gm-gaster-code-page .button.secondary {
+  color: oklch(91% 0.025 246);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px);
+}
+
+.gm-gaster-code-page .section:not(.hero) .button.secondary {
+  color: oklch(36% 0.13 246);
+  border-color: color-mix(in oklch, var(--tech-blue) 22%, var(--line-dark));
+  background: color-mix(in oklch, var(--tech-blue) 7%, white);
+}
+
+.gm-gaster-code-page .fineprint {
+  max-width: 760px;
+  margin: 18px auto 0;
+  color: oklch(72% 0.02 250);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.gm-gaster-code-page .hero-visual {
+  width: min(1120px, 100%);
+  min-height: auto;
+  margin-top: -4px;
+  perspective: 1500px;
+}
+
+.gm-gaster-code-page .hero-visual::before {
+  position: absolute;
+  inset: -34px 7% auto;
+  height: 76px;
+  content: '';
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(98, 194, 255, 0.34),
+    transparent
+  );
+  filter: blur(26px);
+}
+
+.gm-gaster-code-page .app-window {
+  width: min(100%, 1120px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 34px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0.055)
+  );
+  box-shadow:
+    0 44px 120px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(100, 185, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(28px);
+}
+
+.gm-gaster-code-page .window-bar {
+  grid-template-columns: 86px 1fr auto;
+  height: 62px;
+  border-bottom-color: rgba(255, 255, 255, 0.11);
+  background: rgba(4, 9, 20, 0.52);
+}
+
+.gm-gaster-code-page .window-title {
+  color: oklch(83% 0.018 250);
+  font-size: 13px;
+}
+
+.gm-gaster-code-page .status-chip {
+  color: var(--tech-green);
+  background: rgba(102, 255, 181, 0.09);
+}
+
+.gm-gaster-code-page .workspace {
+  grid-template-columns: 230px minmax(0, 1fr);
+  min-height: clamp(540px, 48vw, 650px);
+}
+
+.gm-gaster-code-page .sidebar {
+  border-right-color: rgba(255, 255, 255, 0.1);
+  background: rgba(4, 8, 18, 0.62);
+}
+
+.gm-gaster-code-page .side-label {
+  color: oklch(62% 0.03 252);
+}
+
+.gm-gaster-code-page .session {
+  color: oklch(70% 0.022 252);
+}
+
+.gm-gaster-code-page .session strong {
+  color: white;
+}
+
+.gm-gaster-code-page .session.active {
+  background: rgba(97, 178, 255, 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(119, 201, 255, 0.18),
+    0 16px 32px rgba(0, 0, 0, 0.18);
+}
+
+.gm-gaster-code-page .main-pane {
+  grid-template-rows: auto minmax(240px, 1fr) 190px;
+  background: rgba(5, 10, 22, 0.72);
+}
+
+.gm-gaster-code-page .pane-head {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.gm-gaster-code-page .project-name strong {
+  color: white;
+}
+
+.gm-gaster-code-page .project-name span,
+.gm-gaster-code-page .pane-meta {
+  color: oklch(74% 0.024 252);
+}
+
+.gm-gaster-code-page .chat-area {
+  padding: 30px;
+  background: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.034) 1px, transparent 1px),
+    rgba(5, 10, 22, 0.42);
+  background-size: 44px 44px;
+}
+
+.gm-gaster-code-page .message {
+  border-color: rgba(255, 255, 255, 0.12);
+  color: oklch(86% 0.018 250);
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.18);
+}
+
+.gm-gaster-code-page .message.user {
+  border-color: rgba(114, 201, 255, 0.36);
+  background: linear-gradient(135deg, rgba(38, 115, 255, 0.95), #0e1b37);
+}
+
+.gm-gaster-code-page .terminal {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  background: #050913;
+  color: oklch(90% 0.02 250);
+  font-size: 13px;
+}
+
+.gm-gaster-code-page .terminal span {
+  color: var(--tech-green);
+}
+
+.gm-gaster-code-page .terminal b {
+  color: var(--tech-cyan);
+}
+
+.gm-gaster-code-page .section-head {
+  max-width: 980px;
+  margin-bottom: clamp(62px, 8vw, 120px);
+}
+
+.gm-gaster-code-page .section-kicker {
+  color: oklch(45% 0.14 244);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gm-gaster-code-page .section h2,
+.gm-gaster-code-page .download-copy h2 {
+  color: var(--ink);
+  font-size: clamp(48px, 7vw, 108px);
+  font-weight: 780;
+  line-height: 0.95;
+}
+
+.gm-gaster-code-page .section-lede {
+  max-width: 860px;
+  color: var(--muted-light);
+  font-size: clamp(20px, 2.3vw, 30px);
+  line-height: 1.42;
+}
+
+.gm-gaster-code-page .visual-band {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(42px, 7vw, 96px);
+  border-color: rgba(255, 255, 255, 0.12);
+  border-radius: 38px;
+  background: linear-gradient(
+      120deg,
+      rgba(36, 124, 255, 0.22),
+      transparent 42%
+    ),
+    linear-gradient(180deg, #07111f, #050812);
+  color: white;
+}
+
+.gm-gaster-code-page .product-showcase {
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.72fr);
+  gap: clamp(44px, 7vw, 96px);
+}
+
+.gm-gaster-code-page .showcase-copy h3,
+.gm-gaster-code-page .cap-copy h3,
+.gm-gaster-code-page .download-copy h3 {
+  color: inherit;
+  font-size: clamp(34px, 4.5vw, 64px);
+  line-height: 0.98;
+}
+
+.gm-gaster-code-page .showcase-copy p,
+.gm-gaster-code-page .cap-copy p,
+.gm-gaster-code-page .download-copy p {
+  color: color-mix(in oklch, currentcolor 62%, transparent);
+  font-size: 19px;
+  line-height: 1.8;
+}
+
+.gm-gaster-code-page .mini-stack {
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.gm-gaster-code-page .mini-row {
+  grid-template-columns: 120px 1fr;
+  padding-top: 20px;
+  border-top-color: rgba(255, 255, 255, 0.16);
+}
+
+.gm-gaster-code-page .mini-row b,
+.gm-gaster-code-page .mini-row span {
+  color: color-mix(in oklch, currentcolor 72%, transparent);
+}
+
+.gm-gaster-code-page .deep-window {
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 38px 100px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.gm-gaster-code-page .deep-screen {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #050913;
+}
+
+.gm-gaster-code-page .deep-top {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  color: oklch(78% 0.02 250);
+}
+
+.gm-gaster-code-page .code-lines {
+  min-height: 430px;
+}
+
+.gm-gaster-code-page .capability-list {
+  gap: clamp(96px, 13vw, 170px);
+}
+
+.gm-gaster-code-page .cap-row {
+  grid-template-columns: minmax(320px, 0.76fr) minmax(0, 1.24fr);
+  gap: clamp(42px, 8vw, 120px);
+  min-height: 560px;
+  padding-bottom: clamp(96px, 12vw, 160px);
+  border-bottom-color: var(--line-dark);
+}
+
+.gm-gaster-code-page .cap-copy p {
+  color: var(--muted-light);
+}
+
+.gm-gaster-code-page .cap-visual {
+  min-height: 460px;
+  border-color: oklch(83% 0.014 255);
+  border-radius: 34px;
+  background: linear-gradient(rgba(2, 8, 19, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2, 8, 19, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, white, oklch(96% 0.007 250));
+  background-size: 46px 46px;
+}
+
+.gm-gaster-code-page .map-row,
+.gm-gaster-code-page .entry-line {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 50px rgba(8, 18, 40, 0.06);
+}
+
+.gm-gaster-code-page .context-map {
+  gap: 18px;
+}
+
+.gm-gaster-code-page .map-row {
+  min-height: 62px;
+}
+
+.gm-gaster-code-page .map-row mark {
+  color: oklch(45% 0.14 244);
+}
+
+.gm-gaster-code-page .verify-panel {
+  min-height: 340px;
+  border-radius: 22px;
+  background: linear-gradient(
+      120deg,
+      rgba(48, 133, 255, 0.12),
+      transparent 42%
+    ),
+    #050913;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 26px 80px rgba(8, 18, 40, 0.2);
+}
+
+.gm-gaster-code-page .verify-panel .cmd {
+  color: var(--tech-cyan);
+}
+
+.gm-gaster-code-page .verify-panel .pass {
+  color: var(--tech-green);
+}
+
+.gm-gaster-code-page .workflow {
+  background: linear-gradient(
+    180deg,
+    var(--paper) 0%,
+    oklch(94.8% 0.01 252) 100%
+  );
+}
+
+.gm-gaster-code-page .flow-strip {
+  gap: 18px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.gm-gaster-code-page .flow-step {
+  position: relative;
+  min-height: 330px;
+  padding: 32px 26px;
+  border: 1px solid var(--line-dark);
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 28px 70px rgba(8, 18, 40, 0.06);
+}
+
+.gm-gaster-code-page .flow-step::before {
+  position: absolute;
+  top: 52px;
+  right: -19px;
+  width: 18px;
+  height: 1px;
+  content: '';
+  background: oklch(73% 0.035 250);
+}
+
+.gm-gaster-code-page .flow-step:last-child::before {
+  display: none;
+}
+
+.gm-gaster-code-page .flow-num {
+  color: oklch(45% 0.14 244);
+}
+
+.gm-gaster-code-page .download-layout {
+  grid-template-columns: minmax(360px, 0.76fr) minmax(0, 1.24fr);
+  gap: clamp(54px, 8vw, 112px);
+}
+
+.gm-gaster-code-page .download-card {
+  min-height: 188px;
+  padding: 32px;
+  border-color: var(--line-dark);
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(8, 18, 40, 0.07);
+}
+
+.gm-gaster-code-page .tag {
+  min-height: 31px;
+  border-radius: 6px;
+  background: oklch(94.8% 0.009 252);
+  color: oklch(43% 0.018 255);
+}
+
+.gm-gaster-code-page .secondary-assets {
+  margin-top: 34px;
+  padding: 28px;
+  border: 1px solid var(--line-dark);
+  border-radius: 8px;
+  background: white;
+}
+
+.gm-gaster-code-page .privacy {
+  background: linear-gradient(
+      120deg,
+      rgba(39, 126, 255, 0.18),
+      transparent 44%
+    ),
+    #050913;
+}
+
+.gm-gaster-code-page .privacy .section-head {
+  text-align: left;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.gm-gaster-code-page .privacy-grid {
+  gap: 18px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.gm-gaster-code-page .privacy-item {
+  min-height: 280px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.gm-gaster-code-page .faq-grid {
+  gap: 18px;
+}
+
+.gm-gaster-code-page details {
+  border-color: var(--line-dark);
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(8, 18, 40, 0.05);
+}
+
+.gm-gaster-code-page summary {
+  min-height: 76px;
+}
+
+.gm-gaster-code-page .closing {
+  border-top-color: var(--line-dark);
+  background: var(--paper);
+}
+
+@media (max-width: 1060px) {
+  .gm-gaster-code-page .hero {
+    min-height: auto;
+  }
+
+  .gm-gaster-code-page .product-showcase,
+  .gm-gaster-code-page .download-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .flow-strip,
+  .gm-gaster-code-page .privacy-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gm-gaster-code-page .flow-step::before {
+    display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .gm-gaster-code-page .section {
+    padding: 88px 18px;
+  }
+
+  .gm-gaster-code-page .hero {
+    padding-top: 76px;
+    padding-bottom: 88px;
+  }
+
+  .gm-gaster-code-page .hero h1 {
+    font-size: clamp(64px, 18vw, 112px);
+  }
+
+  .gm-gaster-code-page .hero-copy {
+    font-size: clamp(22px, 6vw, 30px);
+  }
+
+  .gm-gaster-code-page .app-window {
+    border-radius: 26px;
+  }
+
+  .gm-gaster-code-page .workspace {
+    grid-template-columns: 1fr;
+    min-height: 560px;
+  }
+
+  .gm-gaster-code-page .window-bar {
+    grid-template-columns: 78px 1fr;
+  }
+
+  .gm-gaster-code-page .cap-row,
+  .gm-gaster-code-page .cap-row:nth-child(even) {
+    min-height: auto;
+    padding-bottom: 86px;
+  }
+
+  .gm-gaster-code-page .cap-visual {
+    min-height: 380px;
+  }
+
+  .gm-gaster-code-page .flow-strip,
+  .gm-gaster-code-page .privacy-grid,
+  .gm-gaster-code-page .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .flow-step {
+    min-height: 260px;
+  }
+}
+
+@media (max-width: 520px) {
+  .gm-gaster-code-page .hero-text {
+    text-align: left;
+  }
+
+  .gm-gaster-code-page .release-line,
+  .gm-gaster-code-page .cta-row {
+    justify-content: flex-start;
+  }
+
+  .gm-gaster-code-page .fineprint {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .gm-gaster-code-page .window-title {
+    justify-self: start;
+  }
+
+  .gm-gaster-code-page .main-pane {
+    grid-template-rows: auto minmax(250px, 1fr) 210px;
+  }
+
+  .gm-gaster-code-page .chat-area {
+    padding: 18px;
+  }
+
+  .gm-gaster-code-page .visual-band {
+    padding: 26px;
+    border-radius: 26px;
+  }
+
+  .gm-gaster-code-page .mini-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .download-card,
+  .gm-gaster-code-page .secondary-assets {
+    padding: 22px;
   }
 }

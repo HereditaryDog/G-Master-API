@@ -2,7 +2,7 @@
 
 Gaster Code 桌面端使用网页登录 + 本地 loopback 回调完成授权。桌面端不收集用户密码，不复用网页 cookie，也不会通过 URL 接收长期 token。
 
-G-Master API 前台提供公开详情页 `/gaster-code`，顶栏位于“首页”之后。该页面用于向所有用户介绍 Gaster Code 的本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、绘图、多模态入口和 IM 远程入口等能力，并引导用户从公开 release-only 仓库下载桌面端。
+G-Master API 前台提供公开详情页 `/gaster-code`，顶栏位于“首页”之后。该页面采用更宽松的科技产品页叙事，用于向所有用户介绍 Gaster Code 的本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、绘图、多模态入口和 IM 远程入口等能力，并引导用户从公开 release-only 仓库下载桌面端。
 
 Public download URL:
 
@@ -10,13 +10,14 @@ Public download URL:
 https://github.com/HereditaryDog/gaster-code-releases/releases/latest
 ```
 
-Updater metadata URL:
+Updater metadata URLs:
 
 ```text
-https://github.com/HereditaryDog/gaster-code-releases/releases/latest/download/latest.json
+https://github.com/HereditaryDog/gaster-code-releases/releases/latest/download/latest-mac.yml
+https://github.com/HereditaryDog/gaster-code-releases/releases/latest/download/latest.yml
 ```
 
-The release-only repository distributes installers, signatures, and updater metadata. It must be used for public downloads instead of linking to the private Gaster Code source repository.
+The release-only repository distributes installers, update archives, updater metadata, and unsigned macOS installation guidance such as `install-macos-unsigned.sh`. It must be used for public downloads instead of linking to the private Gaster Code source repository.
 
 Base URL:
 
@@ -250,7 +251,16 @@ Response:
     "entitlements": {
       "can_use_builtin_provider": true,
       "enabled_models": ["deepseek-v4-pro", "gpt-image-2"],
-      "enabled_features": ["account", "billing", "subscription", "provider_token", "chat", "terminal", "desktop_workflow", "image_generation"],
+      "enabled_features": [
+        "account",
+        "billing",
+        "subscription",
+        "provider_token",
+        "chat",
+        "terminal",
+        "desktop_workflow",
+        "image_generation"
+      ],
       "expires_at": 1772592000
     },
     "can_use_builtin_provider": true,
@@ -277,7 +287,11 @@ All success responses use:
 All failure responses use:
 
 ```json
-{ "success": false, "code": "GMASTER_BILLING_PLAN_UNAVAILABLE", "message": "subscription plan is unavailable" }
+{
+  "success": false,
+  "code": "GMASTER_BILLING_PLAN_UNAVAILABLE",
+  "message": "subscription plan is unavailable"
+}
 ```
 
 Stable error codes:

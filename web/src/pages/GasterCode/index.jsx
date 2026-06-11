@@ -17,44 +17,270 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Bot,
-  CheckCircle2,
-  Code2,
-  Download,
-  ExternalLink,
-  FolderSearch,
-  Home,
-  MessageSquare,
-  PackageCheck,
-  Palette,
-  RefreshCw,
-  Settings2,
-  ShieldCheck,
-  Terminal,
-  Users,
-  Workflow,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Download, ExternalLink } from 'lucide-react';
 import {
   GASTER_CODE_DOWNLOAD_CONTENT,
-  GASTER_CODE_PAGE_CONTENT,
   GASTER_CODE_DOWNLOAD_URL,
+  GASTER_CODE_PAGE_CONTENT,
+  GASTER_CODE_RELEASE_URL,
+  GASTER_CODE_REPOSITORY_URL,
 } from './gasterCodeDownload';
 
-const featureIcons = [
-  FolderSearch,
-  Code2,
-  Terminal,
-  Bot,
-  Settings2,
-  Palette,
-  MessageSquare,
-];
+const SectionHead = ({ id, kicker, title, description }) => (
+  <div className='section-head'>
+    <div className='section-kicker'>{kicker}</div>
+    <h2 id={id}>{title}</h2>
+    <p className='section-lede'>{description}</p>
+  </div>
+);
 
-const audienceIcons = [Bot, Code2, Workflow, MessageSquare];
+const ProductPreview = ({ preview }) => (
+  <div className='hero-visual reveal' aria-label='Gaster Code desktop preview'>
+    <div className='app-window'>
+      <div className='window-bar'>
+        <div className='traffic' aria-hidden='true'>
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+        <div className='window-title'>{preview.windowTitle}</div>
+        <div className='status-chip'>{preview.status}</div>
+      </div>
+      <div className='workspace'>
+        <aside className='sidebar' aria-label='Session preview'>
+          <div className='side-label'>Sessions</div>
+          {preview.sessions.map((session) => (
+            <div
+              className={`session ${session.active ? 'active' : ''}`}
+              key={session.title}
+            >
+              <strong>{session.title}</strong>
+              <span>{session.meta}</span>
+            </div>
+          ))}
+          <div className='side-label'>Tools</div>
+          {preview.tools.map((tool) => (
+            <div className='session' key={tool.title}>
+              <strong>{tool.title}</strong>
+              <span>{tool.meta}</span>
+            </div>
+          ))}
+        </aside>
+        <div className='main-pane'>
+          <div className='pane-head'>
+            <div className='project-name'>
+              <strong>{preview.project}</strong>
+              <span>{preview.projectMeta}</span>
+            </div>
+            <div className='pane-meta'>{preview.modelMeta}</div>
+          </div>
+          <div className='chat-area'>
+            {preview.messages.map((message) => (
+              <div
+                className={`message ${message.role === 'user' ? 'user' : ''}`}
+                key={message.text}
+              >
+                {message.text}
+              </div>
+            ))}
+          </div>
+          <pre className='terminal' aria-label='Terminal output preview'>
+            <span>{preview.terminalLines[0].slice(0, 1)}</span>
+            {preview.terminalLines[0].slice(1)}
+            {'\n'}
+            <b>{preview.terminalLines[1].split(' ')[0]}</b>
+            {preview.terminalLines[1].replace(
+              preview.terminalLines[1].split(' ')[0],
+              '',
+            )}
+            {'\n'}
+            {preview.terminalLines.slice(2).map((line) => (
+              <React.Fragment key={line}>
+                <span>✓</span> {line}
+                {'\n'}
+              </React.Fragment>
+            ))}
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const CodeShowcase = ({ pageContent }) => (
+  <div className='deep-window' aria-label='Code and terminal visual preview'>
+    <div className='deep-screen'>
+      <div className='deep-top'>
+        <span>repo / selected workspace</span>
+        <span>gm-api: ready</span>
+      </div>
+      <div className='code-lines'>
+        <div>
+          <span className='dim'>01</span> <span className='blue'>const</span>{' '}
+          release ={' '}
+          <span className='green'>{`"${pageContent.release.version}"`}</span>;
+        </div>
+        <div>
+          <span className='dim'>02</span> <span className='blue'>const</span>{' '}
+          assets = [
+        </div>
+        <div>
+          <span className='dim'>03</span>{' '}
+          <span className='green'>"mac-arm64.dmg"</span>,
+        </div>
+        <div>
+          <span className='dim'>04</span>{' '}
+          <span className='green'>"win-x64.exe"</span>,
+        </div>
+        <div>
+          <span className='dim'>05</span>{' '}
+          <span className='green'>"latest.yml"</span>
+        </div>
+        <div>
+          <span className='dim'>06</span> ];
+        </div>
+        <br />
+        <div>
+          <span className='yellow'>assistant</span>.edit(
+          <span className='green'>"download section"</span>);
+        </div>
+        <div>
+          <span className='yellow'>terminal</span>.run(
+          <span className='green'>"bun run build"</span>);
+        </div>
+        <div>
+          <span className='dim'># source repo remains private</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const CapabilityVisual = ({ item }) => {
+  if (item.type === 'context') {
+    return (
+      <div className='context-map'>
+        {item.rows.map((row) => (
+          <div className='map-row' key={row.index}>
+            <mark>{row.index}</mark>
+            <span>{row.label}</span>
+            <small>{row.status}</small>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (item.type === 'verify') {
+    return (
+      <pre className='verify-panel'>
+        {item.lines.map((line) => {
+          if (line.startsWith('$')) {
+            return (
+              <React.Fragment key={line}>
+                <span className='cmd'>{line}</span>
+                {'\n'}
+              </React.Fragment>
+            );
+          }
+
+          if (line.startsWith('No ')) {
+            return (
+              <React.Fragment key={line}>
+                <span className='note'>{line}</span>
+                {'\n'}
+              </React.Fragment>
+            );
+          }
+
+          return (
+            <React.Fragment key={line}>
+              <span className='pass'>✓</span> {line}
+              {'\n'}
+            </React.Fragment>
+          );
+        })}
+      </pre>
+    );
+  }
+
+  return (
+    <div className='entry-panel'>
+      {item.rows.map((row) => (
+        <div className='entry-line' key={row.title}>
+          <b>{row.title}</b>
+          <span>{row.text}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const DownloadSection = ({ pageContent }) => (
+  <section className='section reveal' aria-labelledby='download-title'>
+    <div className='inner download-layout'>
+      <div className='download-copy'>
+        <div className='section-kicker'>{pageContent.download.kicker}</div>
+        <h2 id='download-title'>{pageContent.download.title}</h2>
+        <p>{pageContent.download.description}</p>
+        <p className='repo-line'>
+          {pageContent.download.repositoryLabel}:{' '}
+          <a
+            href={GASTER_CODE_REPOSITORY_URL}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            {pageContent.download.repositoryText}
+          </a>
+        </p>
+      </div>
+
+      <div className='download-grid'>
+        {pageContent.packages.map((item) => (
+          <article className='download-card' key={item.system}>
+            <div>
+              <h3>{item.system}</h3>
+              <p>{item.device}</p>
+              <div className='meta'>
+                <span className='tag'>{item.file}</span>
+                <span className='tag'>{item.note}</span>
+              </div>
+            </div>
+            <a
+              className='button primary'
+              href={item.url}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <Download />
+              {item.action}
+            </a>
+          </article>
+        ))}
+
+        <div className='secondary-assets'>
+          <h3>{pageContent.download.secondaryTitle}</h3>
+          <p>{pageContent.download.secondaryDescription}</p>
+          <div className='asset-list'>
+            {pageContent.secondaryAssets.map((item) => (
+              <a
+                className='tag'
+                href={item.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                key={item.label}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 const GasterCode = () => {
   const { i18n } = useTranslation();
@@ -66,184 +292,214 @@ const GasterCode = () => {
     ? GASTER_CODE_PAGE_CONTENT.zh
     : GASTER_CODE_PAGE_CONTENT.en;
 
+  useEffect(() => {
+    const root = document.querySelector('.gm-gaster-code-page');
+    if (!root) return undefined;
+
+    const nodes = Array.from(root.querySelectorAll('.reveal'));
+
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach((node) => node.classList.add('is-visible'));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.16 },
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+
+    return () => observer.disconnect();
+  }, [i18n.language]);
+
   return (
     <div className='w-full overflow-x-hidden'>
-      <div className='gm-zen-home gm-gaster-code-page'>
-        <div className='gm-zen-shapes' aria-hidden='true'>
-          <div className='gm-zen-shape'></div>
-          <div className='gm-zen-shape'></div>
-          <div className='gm-zen-shape'></div>
-          <div className='gm-zen-shape'></div>
-        </div>
-
-        <section className='gm-gaster-hero'>
-          <div className='gm-gaster-hero-copy'>
-            <span className='gm-zen-download-eyebrow'>
-              {pageContent.hero.eyebrow}
-            </span>
-            <h1>{pageContent.hero.title}</h1>
-            <p>{pageContent.hero.description}</p>
-            <div className='gm-gaster-hero-actions'>
-              <a
-                href={GASTER_CODE_DOWNLOAD_URL}
-                className='gm-zen-btn gm-zen-btn-primary'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Download />
-                <strong>{downloadContent.primaryAction}</strong>
-              </a>
-              <Link to='/' className='gm-zen-btn gm-zen-btn-secondary'>
-                <Home />
-                <strong>{isChinese ? '返回首页' : 'Back Home'}</strong>
-              </Link>
-            </div>
-          </div>
-
-          <div className='gm-gaster-hero-panel' aria-label='Gaster Code'>
-            <div className='gm-gaster-window-bar'>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div className='gm-gaster-terminal'>
-              <p>$ gaster-code</p>
-              <p>G-Master API connected</p>
-              <p>workspace ready</p>
-              <p>local terminal enabled</p>
-            </div>
-          </div>
-        </section>
-
-        <div className='gm-zen-sections gm-gaster-sections'>
-          <section className='gm-zen-section gm-gaster-feature-section gm-zen-visible-first'>
-            <h2>
-              {isChinese ? 'Gaster Code 能做什么' : 'What Gaster Code Can Do'}
-            </h2>
-            <div className='gm-gaster-capability-grid'>
-              {pageContent.features.map((item, index) => {
-                const Icon = featureIcons[index] || CheckCircle2;
-                const shouldCenter =
-                  index === pageContent.features.length - 1 &&
-                  pageContent.features.length % 3 === 1;
-                return (
-                  <article
-                    className={`gm-gaster-capability-card ${
-                      shouldCenter ? 'gm-gaster-capability-card-centered' : ''
-                    }`}
-                    key={item.title}
+      <main className='gm-zen-home gm-gaster-code-page'>
+        <div className='page-shell'>
+          <section className='hero section'>
+            <div className='inner hero-grid'>
+              <div className='hero-text reveal'>
+                <h1>{pageContent.hero.title}</h1>
+                <p className='hero-copy'>{pageContent.hero.description}</p>
+                <div className='release-line'>
+                  <span className='release-dot' aria-hidden='true'></span>
+                  <span>{pageContent.release.line}</span>
+                  <span>{pageContent.release.repositoryLine}</span>
+                </div>
+                <div
+                  className='cta-row'
+                  aria-label='Gaster Code primary actions'
+                >
+                  <a
+                    className='button primary'
+                    href={GASTER_CODE_DOWNLOAD_URL}
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    <div className='gm-gaster-card-icon'>
-                      <Icon />
-                    </div>
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                  </article>
-                );
-              })}
+                    <Download />
+                    {downloadContent.primaryAction}
+                  </a>
+                  <a
+                    className='button secondary'
+                    href={GASTER_CODE_REPOSITORY_URL}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <ExternalLink />
+                    {pageContent.hero.secondaryAction}
+                  </a>
+                </div>
+                <p className='fineprint'>{pageContent.hero.fineprint}</p>
+              </div>
+              <ProductPreview preview={pageContent.preview} />
             </div>
           </section>
 
-          <section className='gm-zen-section gm-gaster-audience-section gm-zen-visible-first'>
-            <h2>{isChinese ? '适合谁使用' : 'Who It Is For'}</h2>
-            <div className='gm-gaster-audience-grid'>
-              {pageContent.audience.map((item, index) => {
-                const Icon = audienceIcons[index] || Users;
-                return (
-                  <article className='gm-gaster-audience-card' key={item.title}>
-                    <Icon />
-                    <div>
+          <section className='section reveal' aria-labelledby='product-title'>
+            <div className='inner'>
+              <SectionHead
+                id='product-title'
+                kicker={pageContent.product.kicker}
+                title={pageContent.product.title}
+                description={pageContent.product.description}
+              />
+              <div className='visual-band product-showcase'>
+                <CodeShowcase pageContent={pageContent} />
+                <div className='showcase-copy'>
+                  <h3>{pageContent.product.heading}</h3>
+                  <p>{pageContent.product.body}</p>
+                  <div className='mini-stack'>
+                    {pageContent.product.proofRows.map((row) => (
+                      <div className='mini-row' key={row.label}>
+                        <b>{row.label}</b>
+                        <span>{row.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            className='section reveal'
+            aria-labelledby='capabilities-title'
+          >
+            <div className='inner'>
+              <SectionHead
+                id='capabilities-title'
+                kicker={pageContent.capabilitiesIntro.kicker}
+                title={pageContent.capabilitiesIntro.title}
+                description={pageContent.capabilitiesIntro.description}
+              />
+              <div className='capability-list'>
+                {pageContent.capabilities.map((item) => (
+                  <article className='cap-row' key={item.title}>
+                    <div className='cap-copy'>
                       <h3>{item.title}</h3>
                       <p>{item.description}</p>
                     </div>
+                    <div className='cap-visual'>
+                      <CapabilityVisual item={item} />
+                    </div>
                   </article>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </section>
 
-          <section className='gm-zen-section gm-gaster-steps-section gm-zen-visible-first'>
-            <h2>{isChinese ? '使用方式' : 'How To Use'}</h2>
-            <div className='gm-gaster-steps-list'>
-              {pageContent.steps.map((step, index) => (
-                <article className='gm-gaster-step-item' key={step.title}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <div>
+          <section
+            className='section workflow reveal'
+            aria-labelledby='workflow-title'
+          >
+            <div className='inner'>
+              <SectionHead
+                id='workflow-title'
+                kicker={pageContent.workflowIntro.kicker}
+                title={pageContent.workflowIntro.title}
+                description={pageContent.workflowIntro.description}
+              />
+              <div className='flow-strip' aria-label='Gaster Code workflow'>
+                {pageContent.steps.map((step, index) => (
+                  <article className='flow-step' key={step.title}>
+                    <div className='flow-num'>
+                      {String(index + 1).padStart(2, '0')}
+                    </div>
                     <h3>{step.title}</h3>
                     <p>{step.description}</p>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                ))}
+              </div>
             </div>
           </section>
 
-          <section className='gm-zen-section gm-gaster-release-section gm-zen-visible-first'>
-            <div className='gm-gaster-section-heading'>
-              <h2>
-                {isChinese ? '下载与更新说明' : 'Download and Update Notes'}
-              </h2>
-              <p>
-                {isChinese
-                  ? '公开仓库只分发安装包、签名文件和自动更新所需元数据，不暴露私有主仓库。'
-                  : 'The public repository distributes installers, signatures, and updater metadata without exposing the private source repository.'}
-              </p>
-            </div>
-            <div className='gm-gaster-package-table'>
-              {pageContent.packages.map((item) => (
-                <div className='gm-gaster-package-row' key={item.system}>
-                  <strong>{item.system}</strong>
-                  <code>{item.file}</code>
-                  <span>{item.device}</span>
-                </div>
-              ))}
-            </div>
-            <div className='gm-gaster-info-grid'>
-              <article className='gm-gaster-info-card'>
-                <RefreshCw />
-                <h3>{pageContent.update.title}</h3>
-                <p>{pageContent.update.description}</p>
-                <a
-                  href={pageContent.update.metadataUrl}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  {pageContent.update.metadataLabel}
-                  <ExternalLink />
-                </a>
-              </article>
-              <article className='gm-gaster-info-card'>
-                <ShieldCheck />
-                <h3>{pageContent.privacy.title}</h3>
-                <p>{pageContent.privacy.description}</p>
-              </article>
-              <article className='gm-gaster-info-card'>
-                <PackageCheck />
-                <h3>{isChinese ? '发布内容' : 'Release Assets'}</h3>
-                <p>
-                  {isChinese
-                    ? '每个公开版本包含用户安装包、自动更新包、签名文件和 updater 元数据 latest.json。'
-                    : 'Each public version includes user installers, auto-update packages, signatures, and latest.json metadata.'}
-                </p>
-              </article>
+          <DownloadSection pageContent={pageContent} />
+
+          <section
+            className='section privacy reveal'
+            aria-labelledby='privacy-title'
+          >
+            <div className='inner'>
+              <SectionHead
+                id='privacy-title'
+                kicker={pageContent.privacy.kicker}
+                title={pageContent.privacy.title}
+                description={pageContent.privacy.description}
+              />
+              <div className='privacy-grid'>
+                {pageContent.privacy.items.map((item) => (
+                  <article className='privacy-item' key={item.title}>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </section>
 
-          <section className='gm-zen-section gm-gaster-faq-section gm-zen-visible-first'>
-            <h2>{isChinese ? '常见问题' : 'FAQ'}</h2>
-            <div className='gm-gaster-faq-list'>
-              {pageContent.faqs.map((item) => (
-                <article
-                  className='gm-gaster-capability-card'
-                  key={item.question}
-                >
-                  <h3>{item.question}</h3>
-                  <p>{item.answer}</p>
-                </article>
-              ))}
+          <section className='section reveal' aria-labelledby='faq-title'>
+            <div className='inner'>
+              <SectionHead
+                id='faq-title'
+                kicker='FAQ'
+                title={isChinese ? '常见问题' : 'Frequently Asked Questions'}
+                description={
+                  isChinese
+                    ? '下载、更新和源码边界放在同一个页面里，避免用户在公开仓库和产品站之间来回猜。'
+                    : 'Download, update, and source-boundary guidance live on the same page so users do not have to infer from the public repository.'
+                }
+              />
+              <div className='faq-grid'>
+                {pageContent.faqs.map((item, index) => (
+                  <details key={item.question} open={index === 0}>
+                    <summary>{item.question}</summary>
+                    <p>{item.answer}</p>
+                  </details>
+                ))}
+              </div>
             </div>
           </section>
+
+          <div className='closing'>
+            Gaster Code · G-Master API desktop workspace ·{' '}
+            <a
+              href={GASTER_CODE_RELEASE_URL}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {pageContent.release.version} public release
+            </a>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

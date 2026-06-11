@@ -18,14 +18,16 @@
 ## 项目说明
 
 > [!IMPORTANT]
+>
 > - `G-Master API` 面向 **自托管、多模型统一接入、用户与令牌管理、渠道管理、计费与控制台运营** 场景。
 > - 当前公开站点为 `https://gmapi.fun`，OpenAI 兼容基址为 `https://gmapi.fun/v1`，用户/管理接口基址为 `https://gmapi.fun/api`。
 > - 若你计划对公网开放服务，请自行评估合规、资费、安全、日志留存、备份和运维责任。
 
-当前源码稳定基线：[`v1.0.0-rc.10-GM.3`](./VERSION)
+当前源码稳定基线：[`v1.0.0-rc.10-GM.4`](./VERSION)
 
 > [!NOTE]
-> `v1.0.0-rc.10-GM.3` 在 rc.10 稳定基线之上继续重做控制台运营页面，令牌管理和使用日志采用更紧凑的数据工作台、指标摘要、筛选工具栏和移动端卡片视图，同时保留 `v1.0.0-rc.10-GM.2` 的操练场三栏调试工作台、Gaster Code 桌面端账号中心、异步图片生成、模型健康度日志兜底与现有 G-Master 控制台体验。
+>
+> `v1.0.0-rc.10-GM.4` 在 rc.10 稳定基线之上重新设计 Gaster Code 产品介绍页，加入更具科技感的暗色首屏、宽松产品叙事、桌面端工作区预览和真实 release-only 下载资产说明，同时保留 `v1.0.0-rc.10-GM.3` 的令牌管理、使用日志工作台、操练场三栏调试、Gaster Code 桌面端账号中心、异步图片生成、模型健康度日志兜底与现有 G-Master 控制台体验。
 
 ## G-Master API 主要能力
 
@@ -78,18 +80,18 @@ docker compose up -d --build
 
 ## 文档
 
-| 分类 | 链接 | 说明 |
-| --- | --- | --- |
-| AI 客户端配置文档 | [gmapi.fun/docs/ai-client](https://gmapi.fun/docs/ai-client) | Apifox 公开文档入口 |
-| OpenClaw 英文页 | [gmapi.fun/docs/openclaw-en](https://gmapi.fun/docs/openclaw-en) | Apifox OpenClaw 英文配置页 |
-| 部署说明 | [docs/installation/BT.md](./docs/installation/BT.md) | 宝塔 / VPS 场景说明 |
+| 分类                   | 链接                                                                   | 说明                                               |
+| ---------------------- | ---------------------------------------------------------------------- | -------------------------------------------------- |
+| AI 客户端配置文档      | [gmapi.fun/docs/ai-client](https://gmapi.fun/docs/ai-client)           | Apifox 公开文档入口                                |
+| OpenClaw 英文页        | [gmapi.fun/docs/openclaw-en](https://gmapi.fun/docs/openclaw-en)       | Apifox OpenClaw 英文配置页                         |
+| 部署说明               | [docs/installation/BT.md](./docs/installation/BT.md)                   | 宝塔 / VPS 场景说明                                |
 | Gaster Code 桌面端授权 | [docs/gaster-code-desktop-auth.md](./docs/gaster-code-desktop-auth.md) | 桌面端网页登录、Provider Token、下载入口与更新说明 |
-| 图片生成异步任务 | [docs/image-generation-async.md](./docs/image-generation-async.md) | `gpt-image-2` 等长耗时图片模型的创建任务与轮询接口 |
-| 接口整理 | [docs/apifox/README.md](./docs/apifox/README.md) | Apifox 导入与接口整理 |
-| 贡献指南 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 提交 PR、Issue 与协作约定 |
-| 更新日志 | [CHANGELOG.md](./CHANGELOG.md) | 版本历史与发布记录 |
-| 授权与致谢 | [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md) | 授权、许可证与归属说明 |
-| 安全策略 | [.github/SECURITY.md](./.github/SECURITY.md) | 漏洞反馈与安全提醒 |
+| 图片生成异步任务       | [docs/image-generation-async.md](./docs/image-generation-async.md)     | `gpt-image-2` 等长耗时图片模型的创建任务与轮询接口 |
+| 接口整理               | [docs/apifox/README.md](./docs/apifox/README.md)                       | Apifox 导入与接口整理                              |
+| 贡献指南               | [CONTRIBUTING.md](./CONTRIBUTING.md)                                   | 提交 PR、Issue 与协作约定                          |
+| 更新日志               | [CHANGELOG.md](./CHANGELOG.md)                                         | 版本历史与发布记录                                 |
+| 授权与致谢             | [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md)                             | 授权、许可证与归属说明                             |
+| 安全策略               | [.github/SECURITY.md](./.github/SECURITY.md)                           | 漏洞反馈与安全提醒                                 |
 
 ## 主要特性
 
@@ -111,9 +113,9 @@ docker compose up -d --build
 - 公开页面：`/gaster-code`，顶栏位于“首页”之后，可在后台“顶栏管理”中控制显示状态。
 - 下载入口：<https://github.com/HereditaryDog/gaster-code-releases/releases/latest>。
 - 统一账号入口：`POST /api/gaster-code/auth/start` 支持 `intent=login` 与 `intent=register`；缺省按登录授权处理，注册完成后继续同一 PKCE 授权回调。
-- 当前公开稳定安装包覆盖 macOS Apple Silicon、macOS Intel、Linux x64。
-- 页面说明本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、桌面端会话、绘图与 IM 远程入口等能力。
-- 公开下载仓库只分发安装包、签名文件和 updater 元数据，不暴露 Gaster Code 私有主仓库。
+- 当前公开稳定安装包覆盖 macOS Apple Silicon 与 Windows x64，macOS updater 继续使用公开 ZIP 与 `latest-mac.yml`，Windows updater 使用 `latest.yml`。
+- 页面采用更宽松的科技产品页叙事，说明本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、桌面端会话、绘图与 IM 远程入口等能力。
+- 公开下载仓库只分发安装包、ZIP 更新包、updater 元数据和未签名 macOS 安装说明，不暴露 Gaster Code 私有主仓库。
 - 绘图页可使用 `POST /v1/images/generations/async` 创建图片任务，再轮询 `/v1/images/jobs/{task_id}`，避免长连接等待导致 524；异步队列会对上游 504/524 超时执行受控重试，并保留客户端传入的原始提示词。
 
 ### 存储与部署兼容
