@@ -238,8 +238,12 @@ const DownloadSection = ({ pageContent }) => (
       </div>
 
       <div className='download-grid'>
-        {pageContent.packages.map((item) => (
-          <article className='download-card' key={item.system}>
+        {pageContent.packages.map((item, index) => (
+          <article
+            className='download-card reveal-unit'
+            key={item.system}
+            style={{ '--reveal-index': index }}
+          >
             <div>
               <h3>{item.system}</h3>
               <p>{item.device}</p>
@@ -260,7 +264,10 @@ const DownloadSection = ({ pageContent }) => (
           </article>
         ))}
 
-        <div className='secondary-assets'>
+        <div
+          className='secondary-assets reveal-unit'
+          style={{ '--reveal-index': pageContent.packages.length }}
+        >
           <h3>{pageContent.download.secondaryTitle}</h3>
           <p>{pageContent.download.secondaryDescription}</p>
           <div className='asset-list'>
@@ -312,7 +319,7 @@ const GasterCode = () => {
           }
         });
       },
-      { threshold: 0.16 },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
     );
 
     nodes.forEach((node) => observer.observe(node));
@@ -371,7 +378,10 @@ const GasterCode = () => {
                 title={pageContent.product.title}
                 description={pageContent.product.description}
               />
-              <div className='visual-band product-showcase'>
+              <div
+                className='visual-band product-showcase reveal-unit'
+                style={{ '--reveal-index': 0 }}
+              >
                 <CodeShowcase pageContent={pageContent} />
                 <div className='showcase-copy'>
                   <h3>{pageContent.product.heading}</h3>
@@ -401,8 +411,12 @@ const GasterCode = () => {
                 description={pageContent.capabilitiesIntro.description}
               />
               <div className='capability-list'>
-                {pageContent.capabilities.map((item) => (
-                  <article className='cap-row' key={item.title}>
+                {pageContent.capabilities.map((item, index) => (
+                  <article
+                    className='cap-row reveal-unit'
+                    key={item.title}
+                    style={{ '--reveal-index': index }}
+                  >
                     <div className='cap-copy'>
                       <h3>{item.title}</h3>
                       <p>{item.description}</p>
@@ -429,7 +443,11 @@ const GasterCode = () => {
               />
               <div className='flow-strip' aria-label='Gaster Code workflow'>
                 {pageContent.steps.map((step, index) => (
-                  <article className='flow-step' key={step.title}>
+                  <article
+                    className='flow-step reveal-unit'
+                    key={step.title}
+                    style={{ '--reveal-index': index }}
+                  >
                     <div className='flow-num'>
                       {String(index + 1).padStart(2, '0')}
                     </div>
@@ -455,8 +473,12 @@ const GasterCode = () => {
                 description={pageContent.privacy.description}
               />
               <div className='privacy-grid'>
-                {pageContent.privacy.items.map((item) => (
-                  <article className='privacy-item' key={item.title}>
+                {pageContent.privacy.items.map((item, index) => (
+                  <article
+                    className='privacy-item reveal-unit'
+                    key={item.title}
+                    style={{ '--reveal-index': index }}
+                  >
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
                   </article>
@@ -479,7 +501,12 @@ const GasterCode = () => {
               />
               <div className='faq-grid'>
                 {pageContent.faqs.map((item, index) => (
-                  <details key={item.question} open={index === 0}>
+                  <details
+                    className='reveal-unit'
+                    key={item.question}
+                    open={index === 0}
+                    style={{ '--reveal-index': index }}
+                  >
                     <summary>{item.question}</summary>
                     <p>{item.answer}</p>
                   </details>

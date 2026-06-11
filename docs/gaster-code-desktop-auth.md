@@ -2,7 +2,7 @@
 
 Gaster Code 桌面端使用网页登录 + 本地 loopback 回调完成授权。桌面端不收集用户密码，不复用网页 cookie，也不会通过 URL 接收长期 token。
 
-G-Master API 前台提供公开详情页 `/gaster-code`，顶栏位于“首页”之后。该页面采用更宽松的科技产品页叙事，用于向所有用户介绍 Gaster Code 的本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、绘图、多模态入口和 IM 远程入口等能力，并引导用户从公开 release-only 仓库下载桌面端。
+G-Master API 前台提供公开详情页 `/gaster-code`，顶栏位于“首页”之后。该页面采用更宽松的科技产品页叙事，并补齐浅色/深色主题、移动端排版和滚动 reveal 动效，用于向所有用户介绍 Gaster Code 的本地项目理解、代码编辑与调试、终端工作流、G-Master API 模型接入、绘图、多模态入口和 IM 远程入口等能力，并引导用户从公开 release-only 仓库下载桌面端。
 
 Public download URL:
 

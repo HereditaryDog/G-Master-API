@@ -10981,3 +10981,591 @@ html.dark .gm-gaster-code-page.gm-zen-home {
     padding: 22px;
   }
 }
+
+/* ==================== Gaster Code final theme and motion polish ==================== */
+.gm-gaster-code-page.gm-zen-home {
+  --gc-bg: oklch(98.4% 0.004 250);
+  --gc-surface: oklch(100% 0 0);
+  --gc-surface-soft: oklch(96.2% 0.008 252);
+  --gc-card: oklch(100% 0 0);
+  --gc-ink: oklch(15% 0.014 260);
+  --gc-muted: oklch(45% 0.018 258);
+  --gc-subtle: oklch(62% 0.014 258);
+  --gc-border: oklch(87% 0.012 255);
+  --gc-border-strong: oklch(78% 0.018 255);
+  --gc-blue: oklch(56% 0.19 252);
+  --gc-cyan: oklch(74% 0.13 205);
+  --gc-green: oklch(72% 0.17 152);
+  --gc-hero-ink: oklch(98% 0.006 255);
+  --gc-hero-muted: oklch(80% 0.025 255);
+  --gc-shadow: 0 28px 80px color-mix(in oklch, black 10%, transparent);
+  --gc-shadow-strong: 0 44px 130px
+    color-mix(in oklch, oklch(18% 0.05 260) 30%, transparent);
+  color: var(--gc-ink);
+  background: var(--gc-bg);
+  font-family: var(--font-body);
+  font-feature-settings:
+    'kern' 1,
+    'liga' 1;
+  text-rendering: geometricPrecision;
+}
+
+html.dark .gm-gaster-code-page.gm-zen-home {
+  --gc-bg: oklch(11.5% 0.018 262);
+  --gc-surface: oklch(15.5% 0.022 262);
+  --gc-surface-soft: oklch(18% 0.026 262);
+  --gc-card: oklch(17.5% 0.025 262);
+  --gc-ink: oklch(95% 0.008 255);
+  --gc-muted: oklch(75% 0.02 255);
+  --gc-subtle: oklch(58% 0.022 255);
+  --gc-border: color-mix(in oklch, white 14%, transparent);
+  --gc-border-strong: color-mix(in oklch, white 22%, transparent);
+  --gc-shadow: 0 30px 90px color-mix(in oklch, black 36%, transparent);
+  --gc-shadow-strong: 0 50px 150px color-mix(in oklch, black 48%, transparent);
+  color: var(--gc-ink);
+  background: var(--gc-bg);
+}
+
+.gm-gaster-code-page .page-shell {
+  background: var(--gc-bg);
+}
+
+.gm-gaster-code-page .section {
+  padding: clamp(92px, 10vw, 168px) clamp(22px, 5vw, 88px);
+  color: var(--gc-ink);
+  background: var(--gc-bg);
+}
+
+.gm-gaster-code-page .inner {
+  width: min(1240px, 100%);
+}
+
+.gm-gaster-code-page h1,
+.gm-gaster-code-page h2,
+.gm-gaster-code-page h3 {
+  color: inherit;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.gm-gaster-code-page .hero {
+  min-height: min(940px, calc(100svh + 72px));
+  padding-top: clamp(92px, 9vw, 146px);
+  padding-bottom: clamp(80px, 9vw, 132px);
+  background: radial-gradient(
+      circle at 18% 18%,
+      color-mix(in oklch, var(--gc-blue) 34%, transparent),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 82% 8%,
+      color-mix(in oklch, var(--gc-cyan) 22%, transparent),
+      transparent 32%
+    ),
+    linear-gradient(135deg, #060814 0%, #091321 48%, #050711 100%);
+  color: var(--gc-hero-ink);
+}
+
+.gm-gaster-code-page .hero::before {
+  opacity: 0.84;
+  background-size: 72px 72px;
+}
+
+.gm-gaster-code-page .hero::after {
+  height: 34%;
+  background: linear-gradient(180deg, transparent, var(--gc-bg));
+}
+
+.gm-gaster-code-page .hero-grid {
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(42px, 7vw, 108px);
+  justify-items: stretch;
+}
+
+.gm-gaster-code-page .hero-text {
+  width: min(660px, 100%);
+  text-align: left;
+}
+
+.gm-gaster-code-page .hero h1 {
+  margin: 0;
+  color: var(--gc-hero-ink);
+  font-size: clamp(68px, 8.4vw, 128px);
+  font-weight: 760;
+  line-height: 0.92;
+  text-shadow: 0 24px 80px rgba(72, 135, 255, 0.24);
+}
+
+.gm-gaster-code-page .hero-copy {
+  max-width: 650px;
+  margin-top: clamp(24px, 3vw, 36px);
+  color: var(--gc-hero-muted);
+  font-size: clamp(21px, 2.05vw, 30px);
+  line-height: 1.32;
+}
+
+.gm-gaster-code-page .release-line {
+  justify-content: flex-start;
+  margin: 0 0 24px;
+  color: color-mix(in oklch, var(--gc-hero-muted) 86%, transparent);
+  font-size: 14px;
+}
+
+.gm-gaster-code-page .release-dot {
+  background: var(--gc-green);
+}
+
+.gm-gaster-code-page .cta-row {
+  justify-content: flex-start;
+}
+
+.gm-gaster-code-page .button {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 720;
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    background 220ms ease;
+}
+
+.gm-gaster-code-page .button:hover {
+  transform: translateY(-2px);
+}
+
+.gm-gaster-code-page .button.primary {
+  color: white;
+  background: linear-gradient(135deg, var(--gc-blue), var(--gc-cyan));
+  box-shadow:
+    0 18px 44px color-mix(in oklch, var(--gc-blue) 25%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.gm-gaster-code-page .button.secondary,
+.gm-gaster-code-page .section:not(.hero) .button.secondary {
+  color: var(--gc-ink);
+  border-color: var(--gc-border);
+  background: color-mix(in oklch, var(--gc-surface) 84%, transparent);
+}
+
+.gm-gaster-code-page .hero .button.secondary {
+  color: var(--gc-hero-ink);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.gm-gaster-code-page .fineprint {
+  max-width: 650px;
+  color: color-mix(in oklch, var(--gc-hero-muted) 82%, transparent);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.gm-gaster-code-page .hero-visual {
+  width: min(100%, 900px);
+  justify-self: end;
+}
+
+.gm-gaster-code-page .app-window {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 28px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0.055)
+  );
+  box-shadow: var(--gc-shadow-strong);
+  backdrop-filter: blur(28px);
+}
+
+.gm-gaster-code-page .window-bar {
+  background: rgba(6, 10, 22, 0.62);
+}
+
+.gm-gaster-code-page .workspace {
+  min-height: clamp(500px, 46vw, 610px);
+}
+
+.gm-gaster-code-page .section-head {
+  max-width: 860px;
+  margin-bottom: clamp(48px, 6vw, 88px);
+}
+
+.gm-gaster-code-page .section-kicker {
+  color: var(--gc-blue);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.gm-gaster-code-page .section h2,
+.gm-gaster-code-page .download-copy h2 {
+  max-width: 880px;
+  color: var(--gc-ink);
+  font-size: clamp(36px, 4.8vw, 72px);
+  font-weight: 740;
+  line-height: 1.05;
+}
+
+.gm-gaster-code-page .section-lede {
+  color: var(--gc-muted);
+  font-size: clamp(18px, 1.65vw, 24px);
+  line-height: 1.55;
+}
+
+.gm-gaster-code-page .visual-band {
+  border-color: color-mix(in oklch, white 13%, transparent);
+  border-radius: 30px;
+  background: radial-gradient(
+      circle at 18% 10%,
+      color-mix(in oklch, var(--gc-blue) 26%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #07101e, #050811 68%);
+  color: white;
+  box-shadow: var(--gc-shadow-strong);
+}
+
+.gm-gaster-code-page .product-showcase {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
+  gap: clamp(38px, 6vw, 88px);
+}
+
+.gm-gaster-code-page .showcase-copy h3,
+.gm-gaster-code-page .cap-copy h3,
+.gm-gaster-code-page .download-copy h3 {
+  font-size: clamp(28px, 3vw, 48px);
+  line-height: 1.12;
+}
+
+.gm-gaster-code-page .showcase-copy p,
+.gm-gaster-code-page .cap-copy p,
+.gm-gaster-code-page .download-copy p {
+  color: var(--gc-muted);
+  font-size: clamp(16px, 1.32vw, 18px);
+  line-height: 1.8;
+}
+
+.gm-gaster-code-page .visual-band .showcase-copy p,
+.gm-gaster-code-page .visual-band .mini-row span,
+.gm-gaster-code-page .visual-band .mini-row b {
+  color: color-mix(in oklch, white 72%, transparent);
+}
+
+.gm-gaster-code-page .capability-list {
+  gap: clamp(72px, 10vw, 132px);
+}
+
+.gm-gaster-code-page .cap-row {
+  min-height: 480px;
+  padding-bottom: clamp(68px, 9vw, 118px);
+  border-bottom-color: var(--gc-border);
+}
+
+.gm-gaster-code-page .cap-visual {
+  min-height: 420px;
+  border-color: var(--gc-border);
+  border-radius: 28px;
+  background: linear-gradient(
+      color-mix(in oklch, var(--gc-ink) 4%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--gc-ink) 3.5%, transparent) 1px,
+      transparent 1px
+    ),
+    var(--gc-card);
+  background-size: 44px 44px;
+  box-shadow: var(--gc-shadow);
+}
+
+.gm-gaster-code-page .map-row,
+.gm-gaster-code-page .entry-line,
+.gm-gaster-code-page .flow-step,
+.gm-gaster-code-page .download-card,
+.gm-gaster-code-page .secondary-assets,
+.gm-gaster-code-page details {
+  border-color: var(--gc-border);
+  background: var(--gc-card);
+  box-shadow: var(--gc-shadow);
+}
+
+.gm-gaster-code-page .map-row mark,
+.gm-gaster-code-page .flow-num,
+.gm-gaster-code-page .repo-line a,
+.gm-gaster-code-page .asset-list .tag,
+.gm-gaster-code-page .closing a {
+  color: var(--gc-blue);
+}
+
+.gm-gaster-code-page .map-row span,
+.gm-gaster-code-page .entry-line b,
+.gm-gaster-code-page .flow-step h3,
+.gm-gaster-code-page .download-card h3,
+.gm-gaster-code-page .secondary-assets h3,
+.gm-gaster-code-page summary {
+  color: var(--gc-ink);
+}
+
+.gm-gaster-code-page .map-row small,
+.gm-gaster-code-page .entry-line span,
+.gm-gaster-code-page .flow-step p,
+.gm-gaster-code-page .download-card p,
+.gm-gaster-code-page .secondary-assets,
+.gm-gaster-code-page details p,
+.gm-gaster-code-page .repo-line,
+.gm-gaster-code-page .closing {
+  color: var(--gc-muted);
+}
+
+.gm-gaster-code-page .workflow {
+  background: linear-gradient(180deg, var(--gc-bg), var(--gc-surface-soft));
+}
+
+.gm-gaster-code-page .flow-strip,
+.gm-gaster-code-page .privacy-grid {
+  border: 0;
+  background: transparent;
+}
+
+.gm-gaster-code-page .flow-step {
+  min-height: 292px;
+  border-radius: 10px;
+}
+
+.gm-gaster-code-page .download-layout {
+  grid-template-columns: minmax(310px, 0.62fr) minmax(0, 1.38fr);
+  gap: clamp(48px, 7vw, 104px);
+}
+
+.gm-gaster-code-page .download-copy {
+  top: 52px;
+  max-width: 500px;
+}
+
+.gm-gaster-code-page .download-copy h2 {
+  font-size: clamp(40px, 5vw, 74px);
+}
+
+.gm-gaster-code-page .download-card {
+  min-height: 176px;
+  padding: 28px;
+  border-radius: 12px;
+}
+
+.gm-gaster-code-page .secondary-assets {
+  margin-top: 24px;
+  padding: 26px;
+  border: 1px solid var(--gc-border);
+  border-radius: 12px;
+}
+
+.gm-gaster-code-page .tag {
+  border: 1px solid color-mix(in oklch, var(--gc-border) 74%, transparent);
+  border-radius: 8px;
+  background: var(--gc-surface-soft);
+  color: var(--gc-muted);
+}
+
+.gm-gaster-code-page .privacy {
+  background: radial-gradient(
+      circle at 18% 4%,
+      color-mix(in oklch, var(--gc-blue) 22%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #07101e, #050811 70%);
+}
+
+.gm-gaster-code-page .privacy h2 {
+  color: white;
+}
+
+.gm-gaster-code-page .privacy .section-lede,
+.gm-gaster-code-page .privacy-item p {
+  color: oklch(78% 0.018 255);
+}
+
+.gm-gaster-code-page .privacy-item {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.gm-gaster-code-page .faq-grid {
+  gap: 18px;
+}
+
+.gm-gaster-code-page details {
+  border-radius: 12px;
+}
+
+.gm-gaster-code-page .reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 640ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.gm-gaster-code-page .reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.gm-gaster-code-page .reveal .reveal-unit {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(0.992);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--reveal-index, 0) * 70ms);
+  will-change: opacity, transform;
+}
+
+.gm-gaster-code-page .reveal.is-visible .reveal-unit {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.gm-gaster-code-page .hero .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html.dark .gm-gaster-code-page .section:not(.hero):not(.privacy),
+html.dark .gm-gaster-code-page .workflow,
+html.dark .gm-gaster-code-page .closing {
+  background: var(--gc-bg);
+}
+
+html.dark .gm-gaster-code-page .section h2,
+html.dark .gm-gaster-code-page .download-copy h2,
+html.dark .gm-gaster-code-page .cap-copy h3,
+html.dark .gm-gaster-code-page .download-copy h3 {
+  color: var(--gc-ink);
+}
+
+html.dark .gm-gaster-code-page .tag {
+  background: color-mix(in oklch, var(--gc-blue) 11%, var(--gc-surface));
+}
+
+@media (max-width: 1060px) {
+  .gm-gaster-code-page .hero-grid,
+  .gm-gaster-code-page .product-showcase,
+  .gm-gaster-code-page .download-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-gaster-code-page .hero-text,
+  .gm-gaster-code-page .download-copy {
+    width: min(760px, 100%);
+    max-width: none;
+  }
+
+  .gm-gaster-code-page .hero-visual {
+    justify-self: center;
+  }
+
+  .gm-gaster-code-page .download-copy {
+    position: static;
+  }
+}
+
+@media (max-width: 820px) {
+  .gm-gaster-code-page .section {
+    padding: 78px 18px;
+  }
+
+  .gm-gaster-code-page .hero {
+    min-height: auto;
+    padding-top: 78px;
+    padding-bottom: 74px;
+  }
+
+  .gm-gaster-code-page .hero h1 {
+    font-size: clamp(58px, 15vw, 92px);
+  }
+
+  .gm-gaster-code-page .hero-copy {
+    font-size: clamp(19px, 5vw, 25px);
+  }
+
+  .gm-gaster-code-page .section h2,
+  .gm-gaster-code-page .download-copy h2 {
+    font-size: clamp(32px, 9vw, 48px);
+    line-height: 1.12;
+  }
+
+  .gm-gaster-code-page .visual-band {
+    padding: 28px;
+    border-radius: 24px;
+  }
+
+  .gm-gaster-code-page .cap-row {
+    min-height: auto;
+    padding-bottom: 70px;
+  }
+
+  .gm-gaster-code-page .cap-visual {
+    min-height: 340px;
+  }
+
+  .gm-gaster-code-page .flow-step {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 520px) {
+  .gm-gaster-code-page .hero-text {
+    text-align: center;
+  }
+
+  .gm-gaster-code-page .release-line,
+  .gm-gaster-code-page .cta-row {
+    justify-content: center;
+  }
+
+  .gm-gaster-code-page .hero h1 {
+    font-size: clamp(54px, 16vw, 78px);
+  }
+
+  .gm-gaster-code-page .fineprint {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .gm-gaster-code-page .download-card,
+  .gm-gaster-code-page .secondary-assets {
+    padding: 22px;
+  }
+
+  .gm-gaster-code-page .download-card .button,
+  .gm-gaster-code-page .button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-gaster-code-page .reveal,
+  .gm-gaster-code-page .reveal .reveal-unit {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .gm-gaster-code-page .button {
+    transition: none;
+  }
+
+  .gm-gaster-code-page .button:hover {
+    transform: none;
+  }
+}

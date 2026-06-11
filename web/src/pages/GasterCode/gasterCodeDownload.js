@@ -116,10 +116,10 @@ export const GASTER_CODE_PAGE_CONTENT = {
     },
     product: {
       kicker: '桌面工作台',
-      title: '一个本地控制台。项目、对话、终端，都在现场。',
+      title: '项目、对话、终端，都在本地现场。',
       description:
         'Gaster Code 不是公开源码编辑器，也不是云端 IDE。它是贴在项目目录旁边的桌面端，让模型响应、文件变更和命令回读都留在开发现场。',
-      heading: '不是聊天窗口外挂，而是面向真实项目的任务舱。',
+      heading: '不是聊天外挂，是面向真实项目的任务舱。',
       body: '侧栏保留多会话上下文，主区域承载任务说明与模型输出，底部终端用于执行用户触发的本地命令。公开页面只展示产品与安装资产，不暗示源码开放。',
       proofRows: [
         { label: 'Context', text: '仅在用户选择的目录内读取与修改文件。' },
@@ -132,7 +132,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     },
     capabilitiesIntro: {
       kicker: '能力叙事',
-      title: '把 AI 编码助手拉回本地执行现场。',
+      title: '让 AI 编码回到本地执行现场。',
       description:
         '不是图标列表，而是一条真实的开发路径：理解项目、改动代码、跑验证，再把模型、多模态和远程入口收进同一个桌面端。',
     },
@@ -223,7 +223,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     ],
     download: {
       kicker: '下载',
-      title: `最新版 ${GASTER_CODE_RELEASE_VERSION}。公开资产，私有源码。`,
+      title: `下载 ${GASTER_CODE_RELEASE_VERSION}`,
       description:
         'Gaster Code 的公开仓库只用于发布安装器、ZIP 更新包和 updater 元数据。它不是源码仓库，也不暴露私有实现。',
       repositoryLabel: 'Release-only repo',
@@ -264,7 +264,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     ],
     privacy: {
       kicker: '边界',
-      title: '本地工作，就应该把边界说清楚。',
+      title: '本地工作，边界清楚。',
       description:
         'Gaster Code 的强项是贴近本地开发现场。越贴近文件和命令，越需要把访问、执行、模型请求和更新来源说明白。',
       items: [
@@ -366,8 +366,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     },
     product: {
       kicker: 'Desktop Workspace',
-      title:
-        'One local command center. Project, conversation, and terminal stay on site.',
+      title: 'Projects, conversations, and terminal stay local.',
       description:
         'Gaster Code is not a public source editor or a cloud IDE. It is a local desktop app that keeps model output, file changes, and command feedback near the project folder you choose.',
       heading: 'Not a chat add-on. A task cockpit for real projects.',
@@ -389,7 +388,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     },
     capabilitiesIntro: {
       kicker: 'Capabilities',
-      title: 'Bring AI coding assistance back to the local execution site.',
+      title: 'Bring AI coding back to local execution.',
       description:
         'A real development path: understand the project, edit code, run verification, and keep models, multimodal input, and remote entry points inside the desktop boundary.',
     },
@@ -487,7 +486,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     ],
     download: {
       kicker: 'Download',
-      title: `Latest ${GASTER_CODE_RELEASE_VERSION}. Public assets, private source.`,
+      title: `Download ${GASTER_CODE_RELEASE_VERSION}`,
       description:
         'The public repository distributes installers, ZIP update packages, and updater metadata. It is not the source repository.',
       repositoryLabel: 'Release-only repo',
@@ -528,7 +527,7 @@ export const GASTER_CODE_PAGE_CONTENT = {
     ],
     privacy: {
       kicker: 'Boundaries',
-      title: 'Local work should state its boundaries clearly.',
+      title: 'Local work, clear boundaries.',
       description:
         'The closer an app gets to files and commands, the clearer its access, execution, model requests, and update sources need to be.',
       items: [
